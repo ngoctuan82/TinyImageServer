@@ -1,2 +1,2 @@
 # TinyImageServer
-Project for Apply Research 
+Project for Applied Research 
