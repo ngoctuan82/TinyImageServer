@@ -1,7 +1,8 @@
 description "Tiny Image Server\377";
 
 uses
-	Core;
+	Core,
+	Skylark;
 
 file
 	TIS.cpp;
