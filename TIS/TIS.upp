@@ -1,0 +1,11 @@
+description "Tiny Image Server\377";
+
+uses
+	Core;
+
+file
+	TIS.cpp;
+
+mainconfig
+	"" = "";
+
