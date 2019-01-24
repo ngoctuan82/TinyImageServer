@@ -1,0 +1,84 @@
+#include "TIS.h"
+
+
+
+	//String GetFileTimeText(const String& path)
+	//{
+//		return IntStr64(FileGetTime(path).Get());
+//	}
+	// favicon 
+
+	SKYLARK(HomePage, "")
+	{
+		http << "<!DOCTYPE html><html><body>Parameter: " << http[0] << "</html></body>";
+	}
+	
+	SKYLARK(Admin, "admin")
+	{
+		http.RenderResult("admin/index.html");
+	}
+	
+	
+	SKYLARK(HTML, "html/**")
+	{
+		String file;
+		for(int i = 0; i < http.GetParamCount(); i++) {
+			if(i)
+				file << '/';
+			file << http[i];
+		}
+	
+		if(SkylarkApp::Config().caching == 2 && file.StartsWith("ver")) {
+			int q = file.Find('/');
+			if(q >= 0)
+				file = file.Mid(q + 1);
+		}
+	
+		String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+		if(!path.GetCount()) {
+			http.Response(404, "Not found");
+			return;
+		}
+	
+		String ext = ToLower(GetFileExt(file));
+		String type = "text";
+		if(ext == ".css")
+			type = "text/css";
+		else
+		if(ext == ".js")
+			type = "text/javascript";
+		else
+		if(ext == ".png" || ext == ".jpg" || ext == ".gif")
+			type = "image/" + ext.Mid(1);
+		
+		if(SkylarkApp::Config().caching > 0) {
+			String tag = IntStr64(FileGetTime(path).Get());//GetFileTimeText(path);
+			http.SetHeader("Cache-Control", "public, max-age=2592000");
+			http.SetHeader("ETag", tag);
+			if(http.GetHeader("if-none-match") == tag){
+				http.Response(304, "Not Modified");
+				return;
+			}
+		}
+		
+		http.Content(type, LoadFile(path));
+	}
+	
+	
+	SKYLARK(Params, "params/**")
+	{
+		http << "<!DOCTYPE html><html><body>Parameters: ";
+		for(int i = 0; i < http.GetParamCount(); i++)
+			http << http[i] << " ";
+		http << "</html></body>";
+	}
+	
+	SKYLARK(CatchAll, "**")
+	{
+		http.Redirect(HomePage);
+	}
+	
+	SKYLARK(Favicon, "/favicon.ico")
+	{
+		http.ContentType("image/png") << LoadFile(GetDataFile("favicon.png"));
+	}

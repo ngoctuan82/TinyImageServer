@@ -1,50 +1,6 @@
-#include <Skylark/Skylark.h>
-
-using namespace Upp;
-
-SKYLARK(HomePage, "")
-{
-	http << "<!DOCTYPE html><html><body>Parameter: " << http[0] << "</html></body>";
-}
-
-SKYLARK(Admin, "admin")
-{
-	http.RenderResult("admin/index.html");
-}
+#include "TIS.h"
 
 
-SKYLARK(Param, "*/param")
-{
-	http << "<!DOCTYPE html><html><body>Parameter: " << http[0] << "</html></body>";
-}
-
-SKYLARK(Params, "params/**")
-{
-	http << "<!DOCTYPE html><html><body>Parameters: ";
-	for(int i = 0; i < http.GetParamCount(); i++)
-		http << http[i] << " ";
-	http << "</html></body>";
-}
-
-SKYLARK(CatchAll, "**")
-{
-	http.Redirect(HomePage);
-}
-
-SKYLARK(Favicon, "/favicon.ico")
-{
-	http.ContentType("image/png") << LoadFile(GetDataFile("favicon.png"));
-}
-
-struct MyApp : SkylarkApp {
-	MyApp() {
-		root = "tis";
-	#ifdef _DEBUG
-		prefork = 0;
-		use_caching = false;
-	#endif
-	}
-};
 
 CONSOLE_APP_MAIN
 {
@@ -53,5 +9,5 @@ CONSOLE_APP_MAIN
 	Ini::skylark_log = true;
 #endif
 
-	MyApp().Run();	
+	TISApp().Run();	
 }

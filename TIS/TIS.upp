@@ -5,7 +5,14 @@ uses
 	Skylark;
 
 file
-	TIS.cpp;
+	src readonly separator,
+	htmlserver.icpp,
+	TIS.h,
+	TIS.cpp,
+	html readonly separator,
+	html/index.html,
+	html/user/index.html,
+	html/admin/index.html;
 
 mainconfig
 	"" = "";
