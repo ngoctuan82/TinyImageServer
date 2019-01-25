@@ -1,0 +1,16 @@
+#include "TIS.h"
+#include "poco.h"
+
+	
+	
+SKYLARK(ApiTest, "api/**")
+{
+	DataPacket data;
+	data.Status="Ready";
+	data.IsError=true;
+	
+	for(int i = 0; i < http.GetParamCount(); i++)	data.Data.Add("param"+i,http[i]);
+
+
+	http << StoreAsJson(data, true);
+}

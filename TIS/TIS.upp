@@ -5,7 +5,11 @@ uses
 	Skylark;
 
 file
-	src readonly separator,
+	DataPacket.cpp,
+	poco.h,
+	Server readonly separator,
+	common.icpp,
+	api.icpp,
 	htmlserver.icpp,
 	TIS.h,
 	TIS.cpp,

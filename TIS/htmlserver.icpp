@@ -2,32 +2,18 @@
 
 
 
-	//String GetFileTimeText(const String& path)
-	//{
-//		return IntStr64(FileGetTime(path).Get());
-//	}
-	// favicon 
 
-	SKYLARK(HomePage, "")
-	{
-		http << "<!DOCTYPE html><html><body>Parameter: " << http[0] << "</html></body>";
-	}
-	
-	SKYLARK(Admin, "admin")
-	{
-		http.RenderResult("admin/index.html");
-	}
-	
-	
+	/*
+	This code is modified from the standard code of Skylark static function
+	*/
 	SKYLARK(HTML, "html/**")
 	{
 		String file;
-		for(int i = 0; i < http.GetParamCount(); i++) {
-			if(i)
-				file << '/';
-			file << http[i];
-		}
+		Vector<String> params;
+ 		for(int i = 0; i < http.GetParamCount(); i++) params.Add(http[i]);
+		if( http.GetParamCount() >0) file = Join(params,"/",true);
 	
+		// check caching
 		if(SkylarkApp::Config().caching == 2 && file.StartsWith("ver")) {
 			int q = file.Find('/');
 			if(q >= 0)
@@ -39,9 +25,11 @@
 			http.Response(404, "Not found");
 			return;
 		}
-	
+		
+		// check extension
 		String ext = ToLower(GetFileExt(file));
 		String type = "text";
+		
 		if(ext == ".css")
 			type = "text/css";
 		else
@@ -50,9 +38,9 @@
 		else
 		if(ext == ".png" || ext == ".jpg" || ext == ".gif")
 			type = "image/" + ext.Mid(1);
-		
+		// Cache header if server is configured with caching flag
 		if(SkylarkApp::Config().caching > 0) {
-			String tag = IntStr64(FileGetTime(path).Get());//GetFileTimeText(path);
+			String tag = IntStr64(FileGetTime(path).Get());
 			http.SetHeader("Cache-Control", "public, max-age=2592000");
 			http.SetHeader("ETag", tag);
 			if(http.GetHeader("if-none-match") == tag){
@@ -65,20 +53,3 @@
 	}
 	
 	
-	SKYLARK(Params, "params/**")
-	{
-		http << "<!DOCTYPE html><html><body>Parameters: ";
-		for(int i = 0; i < http.GetParamCount(); i++)
-			http << http[i] << " ";
-		http << "</html></body>";
-	}
-	
-	SKYLARK(CatchAll, "**")
-	{
-		http.Redirect(HomePage);
-	}
-	
-	SKYLARK(Favicon, "/favicon.ico")
-	{
-		http.ContentType("image/png") << LoadFile(GetDataFile("favicon.png"));
-	}
