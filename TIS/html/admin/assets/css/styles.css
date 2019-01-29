@@ -438,7 +438,7 @@
 }
 
 .search-box input {
-    width: 350px;
+    width: 100%;
     border-radius: 33px;
     border: none;
     height: 40px;
