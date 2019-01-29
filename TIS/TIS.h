@@ -17,7 +17,7 @@ struct TISApp : SkylarkApp {
 	TISApp() {
 		root = "tis";
 		path <<";" << "/home/tony/MyApps/TinyImageServer/TIS/html/"; // development path
-		path << ";"<<"."; // deployment path for current folder
+		path << ";"<<"/html"; // deployment path for current folder
 	#ifdef _DEBUG
 		prefork = 0;
 		use_caching = false;
