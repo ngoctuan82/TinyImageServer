@@ -1,0 +1,129 @@
+#include"poco.h"
+
+
+
+// how to map object to json strings
+void DataPacket::Jsonize(JsonIO & json)
+{
+	json
+	("Status",Status)
+	("IsError",IsError)
+	("Data", Data)
+	;
+}
+
+
+
+void D_USERINFO::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID)
+	("EMAIL",data.EMAIL)
+	("PASSWORD",data.PASSWORD)
+	("APIKEY",data.APIKEY)
+	("FULLNAME",data.FULLNAME )
+	("PHONE",data.PHONE )
+	("DATEOFBIRTH",data.DATEOFBIRTH)
+	("STATUS",data.STATUS)
+	("ISADMIN",data.ISADMIN)
+	;
+}
+
+void D_USERSETTING::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("USERID",data.USERID)
+	("MAXFILESIZE",data.MAXFILESIZE)
+	("FILEEXTENSION",data.FILEEXTENSION)
+
+	;
+}
+
+void D_ADMINSETTING::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("ROOTPATH",data.ROOTPATH)
+	("STATICPATH",data.STATICPATH)
+	("IMAGEPATH",data.IMAGEPATH)
+	("BACKUPPATH",data.BACKUPPATH)
+	("SERVERPORT",data.SERVERPORT)
+	("HOSTNAME",data.HOSTNAME)
+
+	;
+}
+
+void D_IMAGEFILE::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("USERID",data.USERID)
+	("FILENAME",data.FILENAME)
+	("MODIFIEDDATE",data.MODIFIEDDATE)
+	("FILETYPE",data.FILETYPE)
+	("FILESIZE",data.FILESIZE)
+	("REALFILEPATH",data.REALFILEPATH)
+	("WIDTH",data.WIDTH)
+	("HEIGHT",data.HEIGHT)
+	("TAG",data.TAG)
+	("DESCRIPTION",data.DESCRIPTION)
+
+	;
+}
+
+void D_DAILYSUMMARY::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("USERID",data.USERID)
+	("LOGDATE",data.LOGDATE)
+	("NOOFUPLOADFILE",data.NOOFUPLOADFILE)
+	("NOOFDOWNLOADFILE",data.NOOFDOWNLOADFILE)
+	("TOTALUPLOADSIZE",data.TOTALUPLOADSIZE)
+	("TOTALDOWNLOADSIZE",data.TOTALDOWNLOADSIZE)
+
+	;
+}
+
+void D_BACKUPRESTORETASK::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("USERID",data.USERID)
+	("ISBACKUPTASK",data.ISBACKUPTASK)
+	("CREATEDDATE",data.CREATEDDATE)
+	("FINISHDATE",data.FINISHDATE)
+	("SOURCEFOLDERPATH",data.SOURCEFOLDERPATH)
+	("TARGETFOLDERPATH",data.TARGETFOLDERPATH)
+	("PROCCESED",data.PROCCESED)
+	("TOTALFILES",data.TOTALFILES)
+	("STATUS",data.STATUS)
+
+	;
+}
+
+void D_TRANSFORMATIONSETTING::Jsonize(JsonIO & json)
+{
+	json
+	("ID",data.ID )
+	("USERID",data.USERID)
+	("TRANSFORMTYPE",data.TRANSFORMTYPE)
+	("DELETEDORIGINALFILE",data.DELETEDORIGINALFILE)
+	("PROCCESSORDER",data.PROCCESSORDER)
+
+	;
+}
+
+void D_TRANSFORMATIONTASK::Jsonize(JsonIO & json)
+{
+	json
+	("ID ",data.ID )
+	("TRANSFORMATIONSETTINGID",data.TRANSFORMATIONSETTINGID)
+	("CREATEDDATE",data.CREATEDDATE)
+	("FINISHDATE",data.FINISHDATE)
+	("FULLSOURCEFILEPATH",data.FULLSOURCEFILEPATH)
+	("FULLTARGETFILDEPATH",data.FULLTARGETFILDEPATH)
+	("STATUS",data.STATUS)
+	;
+}

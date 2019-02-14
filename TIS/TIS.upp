@@ -2,11 +2,16 @@ description "Tiny Image Server\377";
 
 uses
 	Core,
-	Skylark;
+	Skylark,
+	plugin/sqlite3;
 
 file
-	DataPacket.cpp,
-	poco.h,
+	SQL readonly separator,
+	TISDB.h,
+	TISDB.cpp,
+	Poco.cpp,
+	tisdb.sch,
+	Poco.h,
 	Server readonly separator,
 	common.icpp,
 	api.icpp,
