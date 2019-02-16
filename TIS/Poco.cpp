@@ -30,14 +30,15 @@ void D_USERINFO::Jsonize(JsonIO & json)
 }
 
 D_USERINFO D_USERINFO::Create(Http& http){
-		S_USERINFO pObj; // params container
+	
+	S_USERINFO pObj; // params container
 	
 	try{
 	//	pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =((String)http["EMAIL"]);
-		pObj.EMAIL.Trim(0);
 		pObj.PASSWORD =(String)http["PASSWORD"];
-		pObj.APIKEY= GetApikey(pObj.EMAIL);    // gen the api key
+			pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
+		pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];
 		pObj.DATEOFBIRTH=(String)http["DATEOFBIRTH"];
@@ -46,17 +47,30 @@ D_USERINFO D_USERINFO::Create(Http& http){
 	}
 	catch(...)
 	{
-		Cout() << "error get params";
+		Cout() << "Error D_USERINFO::Create";
 	}
 	// check any same email registered
 	D_USERINFO tObj = GetByApiKey(pObj.APIKEY);
 	
-	Cout()<<"\npObj"<<pObj<<"\n";
-	Cout()<<"tObj"<<tObj<<"\n";
+//	Cout()<<"\npObj"<<pObj<<"\n";
+//	Cout()<<"tObj"<<tObj<<"\n";	
+//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
+//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
+
+
 	
-	if(tObj.data.ID >0)
+	if(tObj.data.ID < 0)
 	{
-		SQL *  Insert( USERINFO )(EMAIL,PASSWORD, APIKEY,FULLNAME,PHONE, DATEOFBIRTH, STATUS, ISADMIN)(pObj.EMAIL,pObj.PASSWORD, pObj.APIKEY,pObj.FULLNAME,pObj.PHONE, pObj.DATEOFBIRTH, pObj.STATUS, 0);
+		SQL *  Insert( USERINFO )
+				//(ID,pObj.ID)
+				(EMAIL,pObj.EMAIL)
+				(PASSWORD,pObj.PASSWORD)
+				(APIKEY,pObj.APIKEY)
+				(FULLNAME,pObj.FULLNAME)
+				(PHONE,pObj.PHONE)
+				(DATEOFBIRTH,pObj.DATEOFBIRTH)
+				(STATUS,pObj.STATUS)
+				(ISADMIN,0);
 		//----------------------------------------
 		tObj = GetByApiKey(pObj.APIKEY);
 		Cout()<<"\nCreated User:"<<tObj<<"\n";
@@ -67,8 +81,62 @@ D_USERINFO D_USERINFO::Create(Http& http){
 	}
 	return tObj;
 }
-void D_USERINFO::Update(Http& http){
+
+/*
+	update user information based on ID
+	ex:
+		http://127.0.0.1:8001/tis/api/user/update?ID=3&EMAIL=user23@simaget.com&PASSWORD=12345&FULLNAME=user2%20simaget&PHONE=987654321&DATEOFBIRTH=2000/03/01
+*/
+D_USERINFO D_USERINFO::Edit(Http& http){
+	S_USERINFO pObj; // params container
 	
+	try{
+		pObj.ID =atoi((String)http["ID"]);    // most important
+		pObj.EMAIL =((String)http["EMAIL"]);
+		pObj.PASSWORD =(String)http["PASSWORD"];	
+			pObj.PASSWORD =AsString(GetHashValue(pObj.PASSWORD));
+		pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
+		pObj.FULLNAME =(String)http["FULLNAME"];
+		pObj.PHONE =(String)http["PHONE"];
+		pObj.DATEOFBIRTH=(String)http["DATEOFBIRTH"];
+		pObj.STATUS=atoi((String)http["STATUS"]);
+	//	pObj.ISADMIN= atoi((String)http["ISADMIN"])>0?1:0; // dont allow  privillege admin right
+	}
+	catch(...)
+	{
+		Cout() << "Error D_USERINFO::Update";
+	}
+	// check any same email registered
+	D_USERINFO tObj = GetById(pObj.ID);
+	
+	Cout()<<"\npObj"<<pObj<<"\n";
+	Cout()<<"tObj"<<tObj<<"\n";	
+	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
+	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
+
+	
+	if(tObj.data.ID > 0)
+	{
+		SQL *  Update( USERINFO )
+				//(ID,pObj.ID)
+				(EMAIL,pObj.EMAIL)
+				(PASSWORD,pObj.PASSWORD)
+				(APIKEY,pObj.APIKEY)
+				(FULLNAME,pObj.FULLNAME)
+				(PHONE,pObj.PHONE)
+				(DATEOFBIRTH,pObj.DATEOFBIRTH)
+				(STATUS,pObj.STATUS)
+			//	(ISADMIN,pObj.ISADMIN) // dont update this 
+				.Where( ID == pObj.ID);
+		//----------------------------------------
+		tObj = GetByApiKey(pObj.APIKEY);
+		Cout()<<"\nUpdated User:"<<tObj<<"\n";
+	}
+	else
+	{
+		Cout()<<"\nUser did not exist:"<<tObj.data.EMAIL<<"\n";
+	}
+	return tObj;
 }
 void D_USERINFO::Delete(Http& http){
 	
@@ -173,8 +241,8 @@ D_USERINFO D_USERINFO::GetByApiKey(int apikey){
 }
 
 D_USERINFO D_USERINFO::GetByEmail(String email){
-	email.Trim(0);
-	int apikey = GetApikey(email);
+	
+	int apikey = GetHashValue(email);
 	return GetByApiKey(apikey);
 }
 
@@ -187,7 +255,7 @@ D_USERINFO D_USERINFO::GetById(int id){
 		SqlBool where;
 		where = ID == id;// condition
 		
-		SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).OrderBy ( ID, FULLNAME );
+		SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where);
 	
 		
 		while ( SQL.Fetch ( x ) ){

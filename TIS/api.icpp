@@ -27,7 +27,7 @@ SKYLARK ( usercreate, "api/user/create" )
 {
 	D_USERINFO user;
 	
-	user.Create(http);
+	user = user.Create(http);
 	//------------------------------------------
 	Vector<D_USERINFO>  vector;
 	if(user.data.ID > 0) vector.Add(user);
@@ -42,7 +42,7 @@ SKYLARK ( userupdate, "api/user/update/*" )
 {
 	D_USERINFO user;
 	
-	user.Update(http);
+	user = user.Edit(http);
 	//------------------------------------------
 	Vector<D_USERINFO>  vector;
 	if(user.data.ID > 0) vector.Add(user);

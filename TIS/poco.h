@@ -28,7 +28,7 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	
 	// CRUD
 	D_USERINFO Create(Http& http);				// API
-	void Update(Http& http);					// API
+	D_USERINFO Edit(Http& http);					// API
 	void Delete(Http& http);					// API
 	
 	Vector<D_USERINFO> Retrieve(Http& http);	// API
@@ -40,7 +40,7 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	D_USERINFO GetByEmail(String email);
 	D_USERINFO GetById(int id);
 	//
-	int GetApikey(String email) const {return CombineHash(email,10+email.GetCount());};				// get hash value for apikey
+	int GetHashValue(String email) const {int hash =CombineHash(email,10+email.GetCount()); return abs(hash);   };				// get hash value for apikey
 };
 
 struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
@@ -57,7 +57,6 @@ struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
 	
 	
 };
-
 
 
 struct D_USERSETTING:  Moveable<D_USERSETTING>
