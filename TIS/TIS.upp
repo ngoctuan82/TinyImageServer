@@ -6,6 +6,8 @@ uses
 	plugin/sqlite3;
 
 file
+	util.h,
+	Util readonly separator,
 	SQL readonly separator,
 	TISDB.h,
 	TISDB.cpp,

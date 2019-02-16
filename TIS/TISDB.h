@@ -19,4 +19,29 @@ void InitTISDB();
 void InitTISModel();
 void OpenSQLite(Sqlite3Session& sqlite3);
 
+//----------------------------------------------
+
+struct Crud {
+
+	SqlId       table;
+	SqlId       key;
+	SqlSet      columns;
+	//-------------------------------------------
+
+	void Create(Http& http);
+
+	void Edit(Http& http);
+	
+	void Delete(Http& http);
+	
+	void Select(Http& http);
+
+	typedef Crud CLASSNAME;
+
+	Crud() { key = SqlId("ID"); columns = SqlSet(SqlAll()); }
+};
+
+
+
+
 #endif

@@ -76,26 +76,23 @@
                         <div class="horizontal-menu">
                             <nav>
                                 <ul id="nav_menu">
-                                    <li class="active">
+                                    <li >
                                         <a href="index.html"><i class="ti-dashboard"></i><span>Dashboard</span></a>
                                        
                                     </li>
-                                    <li >
+                                    <li class="active">
                                         <a href="indexFileMgmt.html"><i class="ti-layout-sidebar-left"></i><span>File management</span></a>
                                         
                                     </li>
                                     <li>
-                                        <a href="javascript:void(0)"><i class="ti-settings"></i><span>Transformation</span></a>
+                                        <a href="indexTransform.html"><i class="ti-settings"></i><span>Transformation</span></a>
                                         
                                     </li>
                                     <li>
                                         <a href="indexAccMgmt.html"><i class="ti-settings"></i><span>Account Management</span></a>
                                         
                                     </li>
-                                     <li>
-                                        <a href="javascript:void(0)"><i class="ti-settings"></i><span>Backup</span></a>
-                                        
-                                    </li>
+                                     
                                    </ul>
                             </nav>
                         </div>
@@ -116,7 +113,7 @@
                     <!-- seo fact area start -->
                     <div class="col-lg-8">
                         <div class="row">
-                           <div class="search-box pull-left">
+                           <div class="search-box pull-left" style="margin-left: 10px;margin-right: 10px">
                             <form action="#">
                                 <input type="text" name="search" placeholder="Search..." required>
                                 <i class="ti-search"></i>
@@ -132,22 +129,18 @@
                         
                   <div class=" clearfix">
                         <ul class="notification-area pull-right">
-                            <li id="full-view"><i class="ti-fullscreen"></i></li>
-                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                            <li class="dropdown">
-                                
-                                
-                            </li>
+                            <li class="dropdown"></li>
                              <li>
-                            	<button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
                                             Sort by Name
                                         </button>
                                         <div class="dropdown-menu">                                           
                                             <a class="dropdown-item" href="#">Ascending</a>
                                             <a class="dropdown-item" href="#">Descending</a>
                                         </div>
+                                        
                             </li>
-                            <li>
+                            <li style="margin-left:0;">
                             	<button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
                                             Sort by Date
                                         </button>
@@ -156,7 +149,9 @@
                                             <a class="dropdown-item" href="#">Descending</a>
                                         </div>
                             </li>
-                           
+                           <li id="full-view" style="margin-left: 10px;margin-right: 5px;"><i class="ti-fullscreen"></i></li>
+                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
+                            
                             
                         </ul>
                     </div>
@@ -371,10 +366,11 @@
     <div class="col-lg-4">
     <div class="row">
     <h3>Preview</h3>
-    <img src="assets\images\icon\close.png" width="28" height="9" alt="close icon"align="right" />
+    <img src="assets\images\icon\close.png" style="position:absolute;right:25px" width="28" height="9" alt="close icon"align="right" />
     </div>
     <!--<img src="assets\images\icon\logo.png" width="300" height="300" alt="no image" />--->
-   <div class="col-lg-4 col-md-6 mt-5">
+    <div class="row">
+   <div class="col-lg-11 col-md-11 mt-5">
                             <div class="card card-bordered">
                                 <img class="card-img-top img-fluid" src="assets/images/card/card-img3.jpg" alt="image">
                                 <div class="card-body">
@@ -396,7 +392,7 @@
                                 </div>
                             </div>
                         </div>
-                </div>
+               </div> </div>
             </div>
             
         </div>

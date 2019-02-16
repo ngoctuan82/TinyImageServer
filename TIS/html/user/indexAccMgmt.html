@@ -92,10 +92,7 @@
                                         <a href="indexAccMgmt.html"><i class="ti-settings"></i><span>Account Management</span></a>
                                         
                                     </li>
-                                     <li>
-                                        <a href="javascript:void(0)"><i class="ti-settings"></i><span>Backup</span></a>
-                                        
-                                    </li>
+                                    
                                    </ul>
                             </nav>
                         </div>
@@ -123,34 +120,140 @@
                                         <h4 class="header-title">Basic form</h4>
                                         <form>
                                             <div class="form-group">
-                                                <label for="exampleInputEmail1">Email address</label>
-                                                <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                                <small id="emailHelp" class="form-text text-muted">We'll never share your
-                                                    email with anyone else.</small>
+                                               <label for="example-text-input" class="col-form-label">Username</label>
+                                            <input class="form-control" type="text" value="Carlos Rath" id="example-text-input">
+                                               
                                             </div>
                                             <div class="form-group">
-                                                <label for="exampleInputPassword1">Password</label>
+                                                <label for="exampleInputEmail1">Email address</label>
+                                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                                            </div>
+                                            <div class="form-group">
+                                               <label for="exampleInputPassword1">Password</label>
                                                 <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                                
                                             </div>
-                                            <div class="form-group">
-                                                <label for="exampleInputEmail1">Email address</label>
-                                                <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                                <small id="emailHelp" class="form-text text-muted">We'll never share your
-                                                    email with anyone else.</small>
-                                            </div>
-                                            <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4">Submit</button>
+                                              <div class="form-group">
+                                            <label for="example-date-input" class="col-form-label">Date of Birth</label>
+                                            <input class="form-control" type="date" value="2018-03-05" id="example-date-input">
+                                        </div>
+                                          <div class="col-auto my-1">
+                                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                                </div>
                                         </form>
                                     </div>
                                 </div>
                             </div>
                             <!-- basic form end -->
-                    </div></div>
-   </div>
+                    </div>
+                 <!--   <div class="row">
+                     <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title">Backup & Restore</h4>
+                                        
+                                        
+                                        </div>
+                    </div>
+                    </div>-->
+                    <div class="row">
+                     <!-- basic form start -->
+                            <div class="col-12 mt-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title">Backup & Restore</h4>
+                                        <table class="table table-hover progress-table text-center">
+                                            <thead class="text-uppercase">
+                                                <tr>
+                                                    <th scope="col">Id</th>
+                                                    <th scope="col">FileName</th>
+                                                    <th scope="col">Upload Date</th>                                                   												    
+                                                    <th scope="col">Status</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">1</th>
+                                                    <td>image1</td>
+                                                    <td>09 / 07 / 2018</td>
+                                                   
+                                                    <td><span class="status-p bg-primary">Deleted</span></td>
+                                                    <td>
+                                                    <ul>
+                                                    	<li>
+                                                    		<img src="assets/images/icon/backup.png" width="25" height="25"/>
+                                                    	
+                                                    		<img src="assets/images/icon/restore.png" width="25" height="25"/>
+                                                    	</li>
+                                                    </ul>
+                                                     <!--   <ul class="d-flex justify-content-center">
+                                                            <li class="mr-3"><a href="#" class="text-secondary"><i class="fa fa-edit"></i></a></li>
+                                                            <li><a href="#" class="text-danger"><i class="ti-trash"></i></a></li>
+                                                        </ul>-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">2</th>
+                                                    <td>image2</td>
+                                                    <td>09 / 07 / 2018</td>
+                                                   
+                                                    <td><span class="status-p bg-primary">Deleted</span></td>
+                                                    <td>
+                                                        <ul>
+                                                    	<li>
+                                                    		<img src="assets/images/icon/backup.png" width="25" height="25"/>
+                                                    	
+                                                    		<img src="assets/images/icon/restore.png" width="25" height="25"/>
+                                                    	</li>
+                                                    </ul>
+                                                    </td>
+                                                </tr>
+                                               <tr>
+                                                    <th scope="row">3</th>
+                                                    <td>image3</td>
+                                                    <td>09 / 07 / 2018</td>
+                                                    
+                                                    <td><span class="status-p bg-primary">Deleted</span></td>
+                                                    <td>
+                                                        <ul>
+                                                    	<li>
+                                                    		<img src="assets/images/icon/backup.png" width="28" height="28"/>
+                                                    	
+                                                    		<img src="assets/images/icon/restore.png" width="28" height="28"/>
+                                                    	</li>
+                                                    </ul>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">4</th>
+                                                    <td>image4</td>
+                                                    <td>09 / 07 / 2018</td>
+                                                    
+                                                    <td><span class="status-p bg-primary">Restored</span></td>
+                                                    <td>
+                                                        <ul>
+                                                    	<li>
+                                                    		<img src="assets/images/icon/backup.png" width="25" height="25"/>
+                                                    	
+                                                    		<img src="assets/images/icon/restore.png" width="25" height="25"/>
+                                                    	</li>
+                                                    </ul>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- basic form end -->
+                    </div>
+  					 </div>
   
                 </div>
             </div>
             
         </div>
+         </div>
         <!-- main content area end -->
         <!-- footer area start-->
         <footer>
@@ -159,7 +262,7 @@
             </div>
         </footer>
         <!-- footer area end-->
-    </div>
+   
     <!-- main wrapper start -->
   
     <!-- jquery latest version -->

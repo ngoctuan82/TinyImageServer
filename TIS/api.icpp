@@ -19,10 +19,52 @@ SKYLARK ( ApiTest, "api/**" )
 	http << StoreAsJson ( data, true );
 }
 
-
-
-SKYLARK ( usersettingread, "api/usersetting/**" )
+/*
+	create a user
+	http://127.0.0.1:8001/tis/api/user/create?EMAIL=user@simaget.com&PASSWORD=1234&APIKEY=&FULLNAME=TISUSER&PHONE=123456789&DATEOFBIRTH=2018/01/01&STATUS=1&ISADMIN=0
+*/
+SKYLARK ( usercreate, "api/user/create" )
 {
+	D_USERINFO user;
+	
+	user.Create(http);
+	//------------------------------------------
+	Vector<D_USERINFO>  vector;
+	if(user.data.ID > 0) vector.Add(user);
+	http << StoreAsJson(vector);
+}
+
+/*
+	update a user
+	http://127.0.0.1:8001/tis/api/user/update/09876?EMAIL=user@simaget.com&PASSWORD=1234&APIKEY=&FULLNAME=TISUSER&PHONE=123456789&DATEOFBIRTH=2018/01/01&STATUS=1&ISADMIN=0
+*/
+SKYLARK ( userupdate, "api/user/update/*" )
+{
+	D_USERINFO user;
+	
+	user.Update(http);
+	//------------------------------------------
+	Vector<D_USERINFO>  vector;
+	if(user.data.ID > 0) vector.Add(user);
+	http << StoreAsJson(vector);
+}
+/*
+	get a list of user based on the condition
+	ex: ID, EMAIL, FULLNAME, APIKEY
+		http://127.0.0.1:8001/tis/api/user/get/1234?FULLNAME=user
+*/
+SKYLARK ( userget, "api/user/get/*" )
+{
+	Cout()<< " param " << http[0] ;
+	
+	D_USERINFO user;
+	http<< user.RetrieveAsJson(http);
+/*	Cout()<<"here";
+	for ( int i = 0; i < http.GetParamCount(); i++ )
+		Cout()<< "param"<< http[i] ;
+	
+	
+	
 	Sql sql;
 	sql * Select ( SqlAll() ).From ( USERINFO ).OrderBy ( ID, FULLNAME );
 
@@ -38,9 +80,25 @@ SKYLARK ( usersettingread, "api/usersetting/**" )
 	Vector<D_USERINFO>  vector;
 	S_USERINFO x;
 
-	while ( sql.Fetch ( x ) )
-		vector.Add ( D_USERINFO(x) );
+	while ( sql.Fetch ( x ) ) vector.Add ( D_USERINFO(x) );
 
-	http << StoreAsJson(vector);
-
+	http << StoreAsJson(vector,true);
+*/
+	
 }
+
+/*
+	login api
+	ex:
+		view-source:http://127.0.0.1:8001/tis/api/user/login?USERNAME=user&PASSWORD=1234
+*/
+SKYLARK ( userlogin, "api/user/login" )
+{
+	D_USERINFO user;
+	user = user.Login(http);
+	//------------------------------------------
+	Vector<D_USERINFO>  vector;
+	if(user.data.ID > 0) vector.Add(user);
+	http << StoreAsJson(vector, true);
+}
+
