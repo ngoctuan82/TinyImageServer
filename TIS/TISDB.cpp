@@ -3,9 +3,8 @@
 #include <Sql/sch_schema.h>
 #include <Sql/sch_source.h>
 /*
- implementation for tisdb with sqlite3
+ Implementation for tisdb with sqlite3
  reference from tutorial of U++ with SQL
- 
 */
 
 void InitTISModel()
@@ -19,6 +18,9 @@ void InitTISModel()
 	#endif
 }
 
+/*
+	Open SQLite
+*/
 void OpenSQLite(Sqlite3Session& sqlite3)
 {
 	if(!sqlite3.Open(ConfigFile(DBFILE))) {
@@ -32,7 +34,9 @@ void OpenSQLite(Sqlite3Session& sqlite3)
 	SQL = sqlite3;
 }
 
-
+/*
+	init database
+*/
 void InitTISDB()
 {
 	Sqlite3Session sqlsession;

@@ -21,24 +21,28 @@ void OpenSQLite(Sqlite3Session& sqlite3);
 
 //----------------------------------------------
 
-struct Crud {
+struct PAGINATION {
 
-	SqlId       table;
-	SqlId       key;
-	SqlSet      columns;
-	//-------------------------------------------
+	int SIZE = 20;
+	int PAGE = 1;
+	int OFFSET = SIZE*PAGE;
 
-	void Create(Http& http);
+	typedef PAGINATION CLASSNAME;
 
-	void Edit(Http& http);
-	
-	void Delete(Http& http);
-	
-	void Select(Http& http);
-
-	typedef Crud CLASSNAME;
-
-	Crud() { key = SqlId("ID"); columns = SqlSet(SqlAll()); }
+	PAGINATION(Http & http) {
+		try{
+			String sSize = (String)http["SIZE"];
+			String sPage = (String)http["PAGE"];
+			
+			this->PAGE = sPage.IsEmpty()?0:atoi(sPage);
+			this->SIZE = sSize.IsEmpty()?20:atoi(sSize);
+			this->OFFSET = this->PAGE * this->SIZE;
+		}
+		catch(...)
+		{
+			Cout() << "Error get params PAGINATION";
+		}
+	}
 };
 
 

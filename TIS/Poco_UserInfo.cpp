@@ -147,15 +147,8 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	int size = 20;
 	
 	S_USERINFO pObj; // params container
-	
+	PAGINATION pager(http);
 	try{
-		
-		String sSize = (String)http["SIZE"];
-		String sPage = (String)http["PAGE"];
-		
-		page = sPage.IsEmpty()?0:atoi(sPage);
-		size = sSize.IsEmpty()?20:atoi(sSize);
-		
 		pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =(String)http["EMAIL"];
 	//	pObj.PASSWORD =(String)http["PASSWORD"];
@@ -171,8 +164,6 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	{
 		Cout() << "error get params";
 	}
-	
-	int offset = page * size;
 	int row =0;
 	//-------------
 	SqlBool where;
@@ -184,7 +175,7 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 
 	Cout()<<pObj<<"\n";
 	
-	SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).OrderBy ( ID, FULLNAME ).Limit(offset, size);
+	SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).OrderBy ( ID, FULLNAME ).Limit(pager.OFFSET, pager.SIZE);
 	
 	Vector<D_USERINFO>  vector;
 	S_USERINFO x;
@@ -192,7 +183,7 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	while ( SQL.Fetch ( x ) ){
 		vector.Add ( D_USERINFO(x) );
 		row++;
-		if(row >= size) break;
+		if(row >= pager.SIZE) break;
 	}
 	//--------------------------------------------------------
 	return vector;
@@ -272,30 +263,7 @@ D_USERINFO D_USERINFO::GetById(int id){
 }
 
 //-----------------------------------------------------------------
-void D_USERSETTING::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("USERID",data.USERID)
-	("MAXFILESIZE",data.MAXFILESIZE)
-	("FILEEXTENSION",data.FILEEXTENSION)
 
-	;
-}
-
-void D_ADMINSETTING::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("ROOTPATH",data.ROOTPATH)
-	("STATICPATH",data.STATICPATH)
-	("IMAGEPATH",data.IMAGEPATH)
-	("BACKUPPATH",data.BACKUPPATH)
-	("SERVERPORT",data.SERVERPORT)
-	("HOSTNAME",data.HOSTNAME)
-
-	;
-}
 
 void D_IMAGEFILE::Jsonize(JsonIO & json)
 {
