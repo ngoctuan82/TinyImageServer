@@ -52,13 +52,6 @@ D_USERINFO D_USERINFO::Create(Http& http){
 	// check any same email registered
 	D_USERINFO tObj = GetByApiKey(pObj.APIKEY);
 	
-//	Cout()<<"\npObj"<<pObj<<"\n";
-//	Cout()<<"tObj"<<tObj<<"\n";	
-//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
-
-	
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( USERINFO )
@@ -246,7 +239,7 @@ D_USERINFO D_USERINFO::GetById(int id){
 		SqlBool where;
 		where = ID == id;// condition
 		
-		SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where);
+		SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).Limit(1);;
 	
 		
 		while ( SQL.Fetch ( x ) ){
@@ -265,66 +258,9 @@ D_USERINFO D_USERINFO::GetById(int id){
 //-----------------------------------------------------------------
 
 
-void D_IMAGEFILE::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("USERID",data.USERID)
-	("FILENAME",data.FILENAME)
-	("MODIFIEDDATE",data.MODIFIEDDATE)
-	("FILETYPE",data.FILETYPE)
-	("FILESIZE",data.FILESIZE)
-	("REALFILEPATH",data.REALFILEPATH)
-	("WIDTH",data.WIDTH)
-	("HEIGHT",data.HEIGHT)
-	("TAG",data.TAG)
-	("DESCRIPTION",data.DESCRIPTION)
 
-	;
-}
 
-void D_DAILYSUMMARY::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("USERID",data.USERID)
-	("LOGDATE",data.LOGDATE)
-	("NOOFUPLOADFILE",data.NOOFUPLOADFILE)
-	("NOOFDOWNLOADFILE",data.NOOFDOWNLOADFILE)
-	("TOTALUPLOADSIZE",data.TOTALUPLOADSIZE)
-	("TOTALDOWNLOADSIZE",data.TOTALDOWNLOADSIZE)
 
-	;
-}
-
-void D_BACKUPRESTORETASK::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("USERID",data.USERID)
-	("ISBACKUPTASK",data.ISBACKUPTASK)
-	("CREATEDDATE",data.CREATEDDATE)
-	("FINISHDATE",data.FINISHDATE)
-	("SOURCEFOLDERPATH",data.SOURCEFOLDERPATH)
-	("TARGETFOLDERPATH",data.TARGETFOLDERPATH)
-	("PROCCESED",data.PROCCESED)
-	("TOTALFILES",data.TOTALFILES)
-	("STATUS",data.STATUS)
-
-	;
-}
-
-void D_TRANSFORMATIONSETTING::Jsonize(JsonIO & json)
-{
-	json
-	("ID",data.ID )
-	("USERID",data.USERID)
-	("TRANSFORMTYPE",data.TRANSFORMTYPE)
-	("DELETEDORIGINALFILE",data.DELETEDORIGINALFILE)
-	("PROCCESSORDER",data.PROCCESSORDER)
-
-	;
-}
 
 void D_TRANSFORMATIONTASK::Jsonize(JsonIO & json)
 {

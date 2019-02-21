@@ -1,5 +1,5 @@
 #include "util.h"
-#include"poco.h"
+#include "poco.h"
 
 void D_USERSETTING::Jsonize(JsonIO & json)
 {
@@ -27,7 +27,7 @@ D_USERSETTING D_USERSETTING::Create(Http& http){
 		Cout() << "Error D_USERSETTING::Create";
 	}
 	// check any same email registered
-	D_USERSETTING tObj = GetByApiKey(pObj.APIKEY);
+	D_USERSETTING tObj = GetById(pObj.ID);
 	
 		//	Cout()<<"\npObj"<<pObj<<"\n";
 		//	Cout()<<"tObj"<<tObj<<"\n";	
@@ -47,7 +47,7 @@ D_USERSETTING D_USERSETTING::Create(Http& http){
 	}
 	else
 	{
-		Cout()<<"\nUser Setting existed:"<<tObj.data.EMAIL<<"\n";
+		Cout()<<"\nUser Setting existed:"<<tObj.data.USERID<<"\n";
 	}
 	return tObj;
 }
@@ -73,10 +73,10 @@ D_USERSETTING D_USERSETTING::Edit(Http& http){
 	// check any same email registered
 	D_USERSETTING tObj = GetById(pObj.ID);
 	
-	Cout()<<"\npObj"<<pObj<<"\n";
-	Cout()<<"tObj"<<tObj<<"\n";	
-	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
+//	Cout()<<"\npObj"<<pObj<<"\n";
+//	Cout()<<"tObj"<<tObj<<"\n";	
+//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
+//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
 
 	if(tObj.data.ID > 0)
 	{
@@ -86,7 +86,7 @@ D_USERSETTING D_USERSETTING::Edit(Http& http){
 				(FILEEXTENSION,pObj.FILEEXTENSION)
 				.Where( ID == pObj.ID);
 		//----------------------------------------
-		tObj = GetByApiKey(pObj.APIKEY);
+		tObj = GetById(pObj.ID);
 		Cout()<<"\nUpdated User Setting:"<<tObj<<"\n";
 	}
 	else
@@ -134,7 +134,7 @@ Vector<D_USERSETTING> D_USERSETTING::Retrieve(Http& http){
 	while ( SQL.Fetch ( x ) ){
 		vector.Add ( D_USERSETTING(x) );
 		row++;
-		if(row >= size) break;
+		if(row >= pager.SIZE) break;
 	}
 	//--------------------------------------------------------
 	return vector;
@@ -156,7 +156,7 @@ D_USERSETTING D_USERSETTING::GetById(int id){
 		SqlBool where;
 		where = ID == id;// condition
 		
-		SQL *  Select ( SqlAll() ).From ( USERSETTING ).Where(where);
+		SQL *  Select ( SqlAll() ).From ( USERSETTING ).Where(where).Limit(1);;
 	
 		while ( SQL.Fetch ( x ) ){
 			rs = D_USERSETTING(x);

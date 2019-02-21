@@ -3,6 +3,7 @@
 
 void D_ADMINSETTING::Jsonize(JsonIO & json)
 {
+	
 	json
 	("ID",data.ID )
 	("ROOTPATH",data.ROOTPATH)
@@ -33,7 +34,7 @@ D_ADMINSETTING D_ADMINSETTING::Create(Http& http){
 	{
 		Cout() << "Error D_ADMINSETTING::Create";
 	}
-
+	D_ADMINSETTING tObj = GetById(pObj.ID);
 	//	Cout()<<"\npObj"<<pObj<<"\n";
 	//	Cout()<<"tObj"<<tObj<<"\n";	
 	//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
@@ -55,7 +56,7 @@ D_ADMINSETTING D_ADMINSETTING::Create(Http& http){
 	}
 	else
 	{
-		Cout()<<"\nUser Setting existed:"<<tObj.data.<<"\n";
+		Cout()<<"\nUser Setting existed:"<<tObj.data.HOSTNAME<<"\n";
 	}
 	return tObj;
 }
@@ -159,7 +160,7 @@ Vector<D_ADMINSETTING> D_ADMINSETTING::Retrieve(Http& http){
 	while ( SQL.Fetch ( x ) ){
 		vector.Add ( D_ADMINSETTING(x) );
 		row++;
-		if(row >= size) break;
+		if(row >= pager.SIZE) break;
 	}
 	//--------------------------------------------------------
 	return vector;
@@ -174,14 +175,14 @@ String D_ADMINSETTING::RetrieveAsJson(Http& http){
 */
 D_ADMINSETTING D_ADMINSETTING::GetById(int id){
 	
-	D_ADMINSETTING  rs;
+	D_ADMINSETTING rs;
 	S_ADMINSETTING x;
 	
 	try{
 		SqlBool where;
 		where = ID == id;// condition
 		
-		SQL *  Select ( SqlAll() ).From ( ADMINSETTING ).Where(where);
+		SQL *  Select ( SqlAll() ).From ( ADMINSETTING ).Where(where).Limit(1);;
 	
 		while ( SQL.Fetch ( x ) ){
 			rs = D_ADMINSETTING(x);
