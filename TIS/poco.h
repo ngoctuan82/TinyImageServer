@@ -6,12 +6,25 @@
 
 using namespace Upp;
 
+template <typename T>
 struct DataPacket
 {
 	String Status;
 	bool IsError;
-	VectorMap<String, String> Data;
-	void Jsonize ( JsonIO & json );
+	Vector<T> Data;
+	void Jsonize ( JsonIO & json ){
+		
+		json
+		("Status",Status)
+		("IsError",IsError)
+		("Data", Data)
+		;
+	}
+	void SetError(String error)
+	{
+		this->IsError = true;
+		this->Status = error;
+	}
 };
 
 
@@ -26,6 +39,7 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	D_USERINFO()
 	{
 		data.ID = -1;
+		
 	};
 
 	D_USERINFO ( S_USERINFO & obj ) : data ( obj ) {}
@@ -248,7 +262,7 @@ struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
 
 	D_BACKUPRESTORETASK ( S_BACKUPRESTORETASK & obj ) : data ( obj ) {}
 
-	D_BACKUPRESTORETASK ( int id ) : data ( GetById ( id ) ) {}
+	D_BACKUPRESTORETASK ( int id ) : data ( GetById ( id ).data ) {}
 
 	String ToString() const
 	{

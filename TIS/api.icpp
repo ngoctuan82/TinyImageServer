@@ -4,21 +4,97 @@
 #include "TISDB.h"
 #include <Core/Core.h>
 
-
 using namespace Upp;
 
+/*
+	print params on http
+*/
+String PrintParams(Http& http)
+{
+	int count = http.GetParamCount();
+	Vector<String> v;
+	for ( int i = 0; i < http.GetParamCount(); i++ ) v.Add(http[i]);
+	String json = StoreAsJson(v, true);
+	//---------------------------------
+	Cout()<< json;
+	//http<<json;
+	return json;
+}
+
+/*
+	Api test
+*/
 SKYLARK ( ApiTest, "api/**" )
 {
-	DataPacket data;
+	DataPacket< String > data;
 	data.Status = "Ready";
 	data.IsError = true;
 
 	for ( int i = 0; i < http.GetParamCount(); i++ )
-		data.Data.Add ( "param" + i, http[i] );
-
-
+		data.Data.Add (  http[i] );
+	
 	http << StoreAsJson ( data, true );
 }
+
+/*
+	template Create
+*/
+template <typename T>
+String tCreate(Http &http)
+{
+	PrintParams(http); // params
+		
+	T obj;
+	obj = obj.Create(http);
+	//------------------------------------------
+	Vector<T>  vector;
+	if(obj.data.ID > 0) vector.Add(obj);
+	http << StoreAsJson(vector);
+}
+
+/*
+	template Update
+*/
+template <typename T>
+String tUpdate(Http &http)
+{
+	PrintParams(http); // params
+	
+	T obj;
+	
+	obj = obj.Edit(http);
+	//------------------------------------------
+	DataPacket<T> packet;
+	
+	if(obj.data.ID > 0) 
+	{
+		packet.Data.Add(obj);
+	}
+	else
+	{
+		packet.SetError("Can not update ");
+	}
+	
+	http << StoreAsJson(packet);
+}
+
+/*
+	template Get
+*/
+template <typename T>
+String tGet(Http &http)
+{
+	PrintParams(http); // params
+		
+	T obj;
+	//------------------------------------------
+	DataPacket<T> packet;
+	
+	packet.Data = obj.Retrieve(http);
+	
+	http << StoreAsJson(packet);
+}
+
 
 /*
 	create a user
@@ -26,13 +102,15 @@ SKYLARK ( ApiTest, "api/**" )
 */
 SKYLARK ( usercreate, "api/user/create" )
 {
-	D_USERINFO user;
-	
-	user = user.Create(http);
-	//------------------------------------------
-	Vector<D_USERINFO>  vector;
-	if(user.data.ID > 0) vector.Add(user);
-	http << StoreAsJson(vector);
+	tCreate<D_USERINFO>(http);
+	/*
+		D_USERINFO user;
+		user = user.Create(http);
+		//------------------------------------------
+		Vector<D_USERINFO>  vector;
+		if(user.data.ID > 0) vector.Add(user);
+		http << StoreAsJson(vector);
+	*/	
 }
 
 /*
@@ -41,6 +119,8 @@ SKYLARK ( usercreate, "api/user/create" )
 */
 SKYLARK ( userupdate, "api/user/update/*" )
 {
+	tUpdate<D_USERINFO>(http);
+	/*
 	D_USERINFO user;
 	
 	user = user.Edit(http);
@@ -48,6 +128,7 @@ SKYLARK ( userupdate, "api/user/update/*" )
 	Vector<D_USERINFO>  vector;
 	if(user.data.ID > 0) vector.Add(user);
 	http << StoreAsJson(vector);
+	*/
 }
 /*
 	get a list of user based on the condition
@@ -56,10 +137,14 @@ SKYLARK ( userupdate, "api/user/update/*" )
 */
 SKYLARK ( userget, "api/user/get/*" )
 {
-	Cout()<< " param " << http[0] ;
+	PrintParams(http);
 	
+	tGet<D_USERINFO>(http);
+	/*
 	D_USERINFO user;
+	
 	http<< user.RetrieveAsJson(http);
+	*/
 /*	Cout()<<"here";
 	for ( int i = 0; i < http.GetParamCount(); i++ )
 		Cout()<< "param"<< http[i] ;
@@ -103,5 +188,239 @@ SKYLARK ( userlogin, "api/user/login" )
 	http << StoreAsJson(vector, true);
 }
 
+/*
 
+*/
+SKYLARK ( usersettingcreate, "api/usersetting/create" )
+{
+	tCreate<D_USERSETTING>(http);
+	/*
+	D_USERSETTING obj;
+	
+	obj = obj.Create(http);
+	//------------------------------------------
+	DataPacket<D_USERSETTING> packet;
+	
+	if(obj.data.ID > 0) 
+	{
+		packet.Data.Add(obj);
+	}
+	else
+	{
+		packet.SetError("Can not create UserSetting");
+	}
+	
+	http << StoreAsJson(packet);
+	*/
+}
 
+/*
+	update a user
+	http://127.0.0.1:8001/tis/api/usersetting/update/09876?EMAIL=user@simaget.com&PASSWORD=1234&APIKEY=&FULLNAME=TISUSER&PHONE=123456789&DATEOFBIRTH=2018/01/01&STATUS=1&ISADMIN=0
+*/
+SKYLARK ( usersettingupdate, "api/usersetting/update/*" )
+{
+	tUpdate<D_USERSETTING>(http);
+	/*
+	D_USERSETTING obj;
+	
+	obj = obj.Edit(http);
+	//------------------------------------------
+	DataPacket<D_USERSETTING> packet;
+	
+	if(obj.data.ID > 0) 
+	{
+		packet.Data.Add(obj);
+	}
+	else
+	{
+		packet.SetError("Can not update UserSetting");
+	}
+	
+	http << StoreAsJson(packet);
+	*/
+}
+
+/*
+
+*/
+SKYLARK ( usersettingget, "api/usersetting/get/*" )
+{
+	PrintParams(http);
+	tGet<D_USERSETTING>(http);
+	/*
+		D_USERSETTING obj;
+		//------------------------------------------
+		DataPacket<D_USERSETTING> packet;
+		
+		packet.Data = obj.Retrieve(http);
+		
+		http << StoreAsJson(packet);
+	*/
+}
+
+/*
+
+*/
+SKYLARK ( adminsettingcreate, "api/adminsetting/create" )
+{
+	PrintParams(http);
+	tCreate<D_ADMINSETTING>(http);
+}
+
+/*
+	update a admin
+	http://127.0.0.1:8001/tis/api/adminsetting/update/09876?EMAIL=user@simaget.com&PASSWORD=1234&APIKEY=&FULLNAME=TISUSER&PHONE=123456789&DATEOFBIRTH=2018/01/01&STATUS=1&ISADMIN=0
+*/
+SKYLARK ( adminsettingupdate, "api/adminsetting/update/*" )
+{
+	PrintParams(http);
+	tUpdate<D_ADMINSETTING>(http);
+}
+
+/*
+
+*/
+SKYLARK ( adminsettingget, "api/adminsetting/get/*" )
+{
+	tGet<D_ADMINSETTING>(http);
+}
+
+//-----------------------------------------------------------------
+
+/*
+	image file
+*/
+SKYLARK ( imagefilecreate, "api/imagefile/create" )
+{
+	PrintParams(http);
+	tCreate<D_IMAGEFILE>(http);
+}
+
+/*
+	update a image file
+*/
+SKYLARK ( imagefileupdate, "api/imagefile/update/*" )
+{
+	PrintParams(http);
+	tUpdate<D_IMAGEFILE>(http);
+}
+
+/*
+	get image file
+*/
+SKYLARK ( imagefileget, "api/imagefile/get/*" )
+{
+	PrintParams(http);
+	tGet<D_IMAGEFILE>(http);
+}
+//-----------------------------------------------------------------
+/*
+	Daily Summary
+*/
+SKYLARK ( dailysummarycreate, "api/dailysummary/create" )
+{
+	PrintParams(http);
+	tCreate<D_DAILYSUMMARY>(http);
+}
+
+/*
+	update a Daily Summary
+*/
+SKYLARK ( dailysummaryupdate, "api/dailysummary/update/*" )
+{
+	PrintParams(http);
+	tUpdate<D_DAILYSUMMARY>(http);
+}
+
+/*
+	get Daily Summary
+*/
+SKYLARK ( dailysummaryget, "api/dailysummary/get/*" )
+{
+	PrintParams(http);
+	tGet<D_DAILYSUMMARY>(http);
+}
+//---------------------------------------------------------------
+/*
+	Backup Restore Task
+*/
+SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create" )
+{
+	PrintParams(http);
+	tCreate<D_BACKUPRESTORETASK>(http);
+}
+
+/*
+	update a Backup Restore Task
+*/
+SKYLARK ( backuprestoretaskupdate, "api/backuprestoretask/update/*" )
+{
+	PrintParams(http);
+	tUpdate<D_BACKUPRESTORETASK>(http);
+}
+
+/*
+	get Backup Restore Task
+*/
+SKYLARK ( backuprestoretaskget, "api/backuprestoretask/get/*" )
+{
+	PrintParams(http);
+	tGet<D_BACKUPRESTORETASK>(http);
+}
+
+//---------------------------------------------------------------------
+/*
+	Transformation Setting
+*/
+SKYLARK ( transfomationsettingcreate, "api/transfomationsetting/create" )
+{
+	PrintParams(http);
+	tCreate<D_TRANSFORMATIONSETTING>(http);
+}
+
+/*
+	update a Transformation Setting
+*/
+SKYLARK ( transfomationsettingupdate, "api/transfomationsetting/update/*" )
+{
+	PrintParams(http);
+	tUpdate<D_TRANSFORMATIONSETTING>(http);
+}
+
+/*
+	get Transformation Setting
+*/
+SKYLARK ( transfomationsettingget, "api/transfomationsetting/get/*" )
+{
+	PrintParams(http);
+	tGet<D_TRANSFORMATIONSETTING>(http);
+}
+
+//------------------------------------------------------------------------
+/*
+	Transformation Task
+*/
+SKYLARK ( transformationtaskcreate, "api/transformationtask/create" )
+{
+	PrintParams(http);
+//	tCreate<D_TRANSFORMATIONTASK>(http);
+}
+
+/*
+	update a Transformation Task
+*/
+SKYLARK ( transformationtaskupdate, "api/transformationtask/update/*" )
+{
+	PrintParams(http);
+//	tUpdate<D_TRANSFORMATIONTASK>(http);
+}
+
+/*
+	get Transformation Task
+*/
+SKYLARK ( transformationtaskget, "api/transformationtask/get/*" )
+{
+	PrintParams(http);
+//	tGet<D_TRANSFORMATIONTASK>(http);
+}
