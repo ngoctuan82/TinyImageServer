@@ -239,6 +239,27 @@ D_USERINFO D_USERINFO::GetById(int id){
 	return  rs;
 	
 }
+/*
+	validate the user api key from http params
+*/
+bool D_USERINFO::ValidateUserApiKey(Http &http, bool isAdmin){
+	String userId = http[0];// api key always on first param
+	bool rs = false;
+	
+	try
+	{
+		int apikey = atoi(userId);
+		D_USERINFO user= GetByApiKey(apikey);
+		
+		if(user.data.ID >0) rs =true;
+	}
+	catch(...)
+	{
+		rs =false;
+	}
+	
+	return rs;
+}
 
 //-----------------------------------------------------------------
 

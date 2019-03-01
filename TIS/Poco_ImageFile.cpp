@@ -220,3 +220,32 @@ D_IMAGEFILE D_IMAGEFILE::GetById(int id){
 	return  rs;
 	
 }
+
+
+/*
+	get image by file name
+	NOte: this gets only one image file obj. 
+	if we want to get more results, let's using filter Retrieve function
+*/
+D_IMAGEFILE D_IMAGEFILE::GetByFileName( String filename){
+	
+	D_IMAGEFILE  rs;
+	S_IMAGEFILE x;
+	
+	try{
+		SqlBool where;
+		where =  Like(FILENAME, Wild("*"+ filename + "*"));
+		
+		SQL *  Select ( SqlAll() ).From ( IMAGEFILE ).Where(where).Limit(1);
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_IMAGEFILE(x);
+			break;
+		}
+	}
+	catch(...){
+		Cout() << "Error D_IMAGEFILE::GetByFileName " << filename;
+	}
+	return  rs;
+	
+}

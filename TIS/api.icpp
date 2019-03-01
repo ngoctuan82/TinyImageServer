@@ -14,6 +14,10 @@ String PrintParams(Http& http)
 	int count = http.GetParamCount();
 	Vector<String> v;
 	for ( int i = 0; i < http.GetParamCount(); i++ ) v.Add(http[i]);
+	
+	// get current path
+	v.Add(SkylarkApp::Config().path);
+	
 	String json = StoreAsJson(v, true);
 	//---------------------------------
 	Cout()<< json;
@@ -424,3 +428,64 @@ SKYLARK ( transformationtaskget, "api/transformationtask/get/*" )
 	PrintParams(http);
 //	tGet<D_TRANSFORMATIONTASK>(http);
 }
+
+/*
+	Upload file
+*/
+SKYLARK ( upload, "api/upload" )
+{
+	PrintParams(http);
+//	tGet<D_TRANSFORMATIONTASK>(http);
+}
+
+/*
+	Download file
+*/
+SKYLARK ( share, "api/share/**" )
+{
+	String json = PrintParams(http);
+//	tGet<D_TRANSFORMATIONTASK>(http);
+	bool isError= true;	
+	
+	// get User ID and check
+	try
+	{
+		// check user apikey
+		D_USERINFO user;
+		bool isValidUser = user.ValidateUserApiKey(http);
+		
+		// check image status
+		D_IMAGEFILE image;
+		String filename = http[1]; // filename
+		image= image.GetByFileName(filename);
+		bool isValidImage = image.data.ID > 0;
+		
+		if(isValidUser && isValidImage)
+		{
+			isError=false;
+			http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
+		}
+	}
+	catch(...){
+		Cout()<<"Error: api share";
+	}
+	
+	
+	// if has error send default file
+	if(isError==true)
+	{
+		String filepath = GetFileOnPath("default.png", SkylarkApp::Config().path, false);
+		if(!filepath.GetCount()) {
+			http.Response(404, "Not found");
+			return;
+		}
+		http.Content("image/png", LoadFile(filepath));
+	}
+}
+
+
+
+
+
+
+

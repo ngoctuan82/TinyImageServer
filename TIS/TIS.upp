@@ -6,16 +6,16 @@ uses
 	plugin/sqlite3;
 
 file
-	util.h,
 	Util readonly separator,
+	util.h,
 	SQL readonly separator,
 	TISDB.h,
 	TISDB.cpp,
 	tisdb.sch,
 	Poco_ImageFile.cpp,
 	Poco_Impl.h,
-	Poco.h,
 	Poco_BackupRestoreTask.cpp,
+	Poco.h,
 	Poco_DailySummary.cpp,
 	Poco_UserInfo.cpp,
 	Poco_UserSetting.cpp,
@@ -24,10 +24,13 @@ file
 	Server readonly separator,
 	common.icpp,
 	api.icpp,
+	upload.icpp,
 	htmlserver.icpp,
 	TIS.h,
 	TIS.cpp,
 	html readonly separator,
+	upload.witz,
+	static\js\upload.js,
 	html/index.html,
 	html/user/index.html,
 	html/admin/index.html;

@@ -12,6 +12,7 @@ struct DataPacket
 	String Status;
 	bool IsError;
 	Vector<T> Data;
+	DataPacket(){ this->IsError= false; this->Status=""; this->Data.Clear(); }
 	void Jsonize ( JsonIO & json ){
 		
 		json
@@ -66,6 +67,9 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	D_USERINFO GetByApiKey ( int apikey );
 	D_USERINFO GetByEmail ( String email );
 	D_USERINFO GetById ( int id );
+	
+	bool ValidateUserApiKey ( Http & http, bool isAdmin = false);
+	
 	//
 	int GetHashValue ( String email ) const
 	{
@@ -161,6 +165,7 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 	String RetrieveAsJson ( Http& http );			// API
 	//------------------------------------------------
 	D_IMAGEFILE GetById ( int id );
+	D_IMAGEFILE GetByFileName ( String filename  );
 	//------------------------------------------------
 };
 
