@@ -23,14 +23,15 @@
 	
 	SKYLARK(HomePage, "")
 	{
-		http.Redirect(Params);
+		//http.Redirect(Params);
+		http.RenderResult("witz/index");
 	}
-	/*
+	
 	SKYLARK(CatchAll, "**")
 	{
 		http.Redirect(HomePage);
 	}
-	*/
+	
 	SKYLARK(Favicon, "/favicon.ico")
 	{
 		http.ContentType("image/png") << LoadFile(GetDataFile("favicon.png"));

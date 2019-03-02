@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>File Upload Progress Bar</title>
+		<!-- <inner-tag/> is specified on external file -->
+		<script src="static/assets/js/tis/tis.js" type="riot/tag"></script>
+		
+		<!-- include riot.js and the compiler -->
+		<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
+
+	</head>
+<body>
+
+	<!--
+		these fields are used to build an unique identifier of this upload job
+				in order to allow progress handler to identify correctly its related upload job
+				(we need it because we can have more upload jobs calls on server
+	-->
+	<input type='hidden' id='session' value='$@__skylark_session_cookie__'>
+	
+
+
+  <h1>TIS test components</h1>
+
+  <uploadform></uploadform>
+
+  <script>riot.mount('*')</script>
+</body>
+</html>

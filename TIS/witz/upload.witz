@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>File Upload Progress Bar</title>
-		<link rel='stylesheet' type='text/css' href='static/assests/css/upload.css'>
+		<link rel='stylesheet' type='text/css' href='static/upload.css'>
 
 		<!-- this script does all the upload magics -->
 		<script type='text/javascript' src='static/static/js/upload.js'></script>

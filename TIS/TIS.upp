@@ -29,11 +29,14 @@ file
 	TIS.h,
 	TIS.cpp,
 	html readonly separator,
-	upload.witz,
-	static\js\upload.js,
+	witz\index.witz,
+	witz\upload.witz,
 	html/index.html,
 	html/user/index.html,
-	html/admin/index.html;
+	html/admin/index.html,
+	js readonly separator,
+	assets\js\tis\tis.js,
+	assets\js\upload.js;
 
 mainconfig
 	"" = "";
