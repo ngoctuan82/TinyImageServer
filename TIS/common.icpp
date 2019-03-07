@@ -1,6 +1,5 @@
 #include "TIS.h"
 
-
 	
 	SKYLARK(Admin, "admin")
 	{
@@ -9,7 +8,7 @@
 	
 	SKYLARK(User, "user")
 	{
-		http.RenderResult("admin/index.html");
+		http.RenderResult("user/index.html");
 	}
 	
 	
@@ -23,6 +22,8 @@
 	
 	SKYLARK(HomePage, "")
 	{
+		if(http["@__skylark_session_cookie__"].IsNull())
+		http.NewSessionId();
 		//http.Redirect(Params);
 		http.RenderResult("witz/index");
 	}

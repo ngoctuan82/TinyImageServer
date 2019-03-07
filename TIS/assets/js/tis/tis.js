@@ -1,30 +1,9 @@
 <uploadform>
+		<input type='hidden' id='uploadurl' value='upload' >
+			
+			<form  draggable="true" ondrop={OnDrop} ondragover={OnDrag} ondragleave={OnDragLeave}  action='' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
 
- 	<input type='hidden' id='uploadurl' value='upload'>
-			
-		<!--
-				progress handler URL -- javascript will use it to make periodic calls on server
-				querying upload progress and showing it in progress bar
-				You MUST insert in 'value' field the progress url (here 'progress')
-			-->
-			<input type='hidden' id='progressurl' value='progress'>
-	
-			<!--
-				POST form
-				action is a dummy value, will be filled by javascript code
-				which sets the POST
-			-->
-			<form action='' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
-			
-				<!--
-					ending [] in filestoupload[] makes a ValueArray of multipart data
-					in Skylark arrays will be :
-						filestoupload[]					a ValueArray with file contents
-						filestoupload.content_type[]	a ValueArray with file content types
-						filestoupload.filename[]		a ValueArray with filenames
-					The 'multiple' field allows select and upload more files at once
-				-->
-				<input type='file' name='filestoupload[]' multiple=''>
+				<input id='uploadform_input' type='file' name='filestoupload[]' multiple=''>
 				<br><br>
 				<input type='submit' value='Start Upload'>
 				<br>
@@ -48,6 +27,26 @@
     h3 {
       font-size: 14px;
     }
+
+	uploadform {
+		border: 1px solid;
+		display: block;
+		padding: 10px;
+		border-radius: 5px;
+		height:300;
+	}
+	uploadform form
+	{
+		width:100%;
+		height:100%;
+	}
+	uploadform form.dragover{
+		 background-color: grey;
+	}
+	iframe{
+		display:none;
+
+	}
   </style>
 
 
@@ -60,6 +59,20 @@
     	submittime:Date.now(),
     }
 	
+	this.UI ={
+		form:null
+	};
+
+    this.on('mount', function(){
+		// on mount
+		this.UI.form = $("form", this.root);
+  	});
+	this.on('upadte', function(){
+		// on update
+		this.UI.form = $("form", this.root);
+	});
+
+	
 
     startUpload(e) {
       console.log("start upload");
@@ -69,12 +82,68 @@
       var input = e.target[0]
       var form = input.parentElement
       
-      form.action +=`upload?uploadid=${ this.data.session + this.data.submittime}`;
+      form.action =`upload?uploadid=${ this.data.session + this.data.submittime}`;
       
- 	 console.log(form.action);
+ 	  console.log(form.action); // debug
+
+		setTimeout(this.progress(),200);
 
       return true;
       
+    }
+
+    progress()
+    {
+    	 console.log("progress ");
+    	var self = this;
+
+    	var url =`progress?uploadid=${ this.data.session + this.data.submittime}`;
+      
+    	 fetch(url, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData<100)
+				setTimeout(self.progress(),200);
+		})
+		.catch(err => {
+
+				console.error(err);
+		});
+    }
+
+	/*Drag and Drop files support*/
+	OnDrag(event)
+	{	
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.UI.form.addClass('dragover');
+
+	}
+	OnLeave(event){
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.UI.form.removeClass('dragover');
+
+	}
+    OnDrop(event)
+    {
+    	event.preventDefault();
+   		event.stopPropagation();
+   		this.UI.form.removeClass('dragover');
+
+		console.log(event);
+    	
+    	var droppedFiles = event.dataTransfer.files;
+
+		var uploadinput = $("#uploadform_input", this.root)[0];
+		if(uploadinput)
+		{
+			uploadinput.files = droppedFiles;
+		}
+		
     }
   </script>
 

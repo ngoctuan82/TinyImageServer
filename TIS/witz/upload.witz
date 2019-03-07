@@ -1,16 +1,16 @@
 <html>
 	<head>
 		<title>File Upload Progress Bar</title>
-		<link rel='stylesheet' type='text/css' href='static/upload.css'>
+		<link rel='stylesheet' type='text/css' href='static/assets/css/upload.css'>
 
 		<!-- this script does all the upload magics -->
-		<script type='text/javascript' src='static/static/js/upload.js'></script>
+		<script type='text/javascript' src='static/assets/js/upload.js'></script>
 	</head>
 	<body>
 		<div id='bodyContainer'>
 		
 			<div id='header'>
-				Skylark file upload demo
+				dsfgsdfgf
 			</div>
 			<br>
 			<br>

@@ -12,7 +12,8 @@
 		Vector<String> params;
  		for(int i = 0; i < http.GetParamCount(); i++) params.Add(http[i]);
 		if( http.GetParamCount() >0) file = Join(params,"/",true);
-	
+		Cout()<<params;
+		Cout()<<file;
 		// check caching
 		if(SkylarkApp::Config().caching == 2 && file.StartsWith("ver")) {
 			int q = file.Find('/');
@@ -20,7 +21,12 @@
 				file = file.Mid(q + 1);
 		}
 	
-		String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+	
+		String folder= "C:/upp/MyApps/TinyImageServer/TIS/html";
+	
+		//String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+		String path = GetFileOnPath(file, folder, false);
+	
 		if(!path.GetCount()) {
 			http.Response(404, "Not found");
 			return;

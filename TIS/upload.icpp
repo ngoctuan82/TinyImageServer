@@ -1,3 +1,9 @@
+/*
+	This section of code get from U++ library
+	https://www.ultimatepp.org/examples$SkylarkUpload$en-us.html
+	modified by Ngoc Tuan Nguyen
+*/
+
 #include "TIS.h"
 #include "poco.h"
 #include "poco_impl.h"
@@ -5,9 +11,6 @@
 #include <Core/Core.h>
 
 using namespace Upp;
-/*
-	This code get from U++ library
-*/
 
 int ProgressHandler(int reason, Http &http, int size)
 {
@@ -16,6 +19,8 @@ int ProgressHandler(int reason, Http &http, int size)
 	String currentId = "." + id + ".currentSize";
 	String totalId = "." + id + ".totalSize";
 	
+	
+
 	// must be reentrant
 	INTERLOCKED {
 		switch(reason)
@@ -38,7 +43,7 @@ int ProgressHandler(int reason, Http &http, int size)
 
 				// take care to NOT return 100% up to upload ended really
 				int percent = min(99, (int)(100.0 * size / total));
-
+				
 				// avoid unnnedded session storing
 				if(oldPercent != percent)
 					http.SessionSet(currentId, percent);
@@ -58,6 +63,7 @@ int ProgressHandler(int reason, Http &http, int size)
 			{
 				// check if key is there --> upload started
 				int total = http[totalId];
+				Cout()<<"\nTotal:"<<total << "\n";
 				if(!IsNull(total))
 				{
 					if(total)
@@ -109,10 +115,10 @@ SKYLARK(uploadpage, "uploadfile")
 	String rootPath = GetHomeDirectory();
 	// we need a session variable for upload id
 	if(http["@__skylark_session_cookie__"].IsNull())
-		http.NewSessionId();
+		http.NewSessionId();set 
 	
 	// show rootpath in html page
 	http("UploadFolder", rootPath);
 
-	http.RenderResult("upload");
+	http.RenderResult("witz/upload");
 }

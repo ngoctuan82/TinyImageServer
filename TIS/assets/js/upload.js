@@ -58,6 +58,8 @@ function handleResponse(http) {
 			// hides 'Done' status 
 			setTimeout("closeProgress()", 3000);
 		}
+		
+		console.log("response "+ response);
 	}
 }
 
