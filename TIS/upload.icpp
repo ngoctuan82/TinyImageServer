@@ -115,7 +115,7 @@ SKYLARK(uploadpage, "uploadfile")
 	String rootPath = GetHomeDirectory();
 	// we need a session variable for upload id
 	if(http["@__skylark_session_cookie__"].IsNull())
-		http.NewSessionId();set 
+		http.NewSessionId(); 
 	
 	// show rootpath in html page
 	http("UploadFolder", rootPath);

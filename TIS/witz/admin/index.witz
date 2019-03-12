@@ -2,12 +2,24 @@
 	<head>
 		<title>File Upload Progress Bar</title>
 		<!-- <inner-tag/> is specified on external file -->
+		<script src="static/assets/js/tis/tis.js"></script>
 		<script src="static/assets/js/tis/tisTags.js" type="riot/tag"></script>
+		
 		
 		<!-- include riot.js and the compiler -->
 		<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
 		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+
+
+ 	<!-- others css -->
+    <link rel="stylesheet" href="static/assets/css/typography.css">
+    <link rel="stylesheet" href="static/assets/css/default-css.css">
+    <link rel="stylesheet" href="static/assets/css/styles.css">
+    <link rel="stylesheet" href="static/assets/css/responsive.css">
+    <!-- modernizr css -->
+    <script src="static/assets/js/vendor/modernizr-2.8.3.min.js"></script>
+
 	</head>
 <body>
 
@@ -19,10 +31,8 @@
 	<input type='hidden' id='session' value='$@__skylark_session_cookie__'>
 	
 
-
-  <h1>TIS index page</h1>
-
+  <login><login>
 	
-  <script>riot.mount('*')</script>
+  <script>riot.mount('*', {SESSION:'$@__skylark_session_cookie__' })</script>
 </body>
 </html>

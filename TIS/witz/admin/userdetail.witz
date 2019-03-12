@@ -2,7 +2,7 @@
 	<head>
 		<title>File Upload Progress Bar</title>
 		<!-- <inner-tag/> is specified on external file -->
-		<script src="static/assets/js/tis/tisTags.js" type="riot/tag"></script>
+		<script src="static/assets/js/tis/tis.js" type="riot/tag"></script>
 		
 		<!-- include riot.js and the compiler -->
 		<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
@@ -20,8 +20,9 @@
 	
 
 
-  <h1>TIS index page</h1>
+  <h1>TIS test components</h1>
 
+  <uploadform></uploadform>
 	
   <script>riot.mount('*')</script>
 </body>

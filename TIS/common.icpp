@@ -1,14 +1,28 @@
 #include "TIS.h"
 
 	
+	SKYLARK(Login, "login")
+	{
+		if(http["@__skylark_session_cookie__"].IsNull())
+		http.NewSessionId();
+		
+		http.RenderResult("witz/login");
+	}
+	
 	SKYLARK(Admin, "admin")
 	{
-		http.RenderResult("admin/index.html");
+		//PrintParams(http);
+		
+		http.RenderResult("witz/user");
+	//	http.RenderResult("admin/index.html");
 	}
 	
 	SKYLARK(User, "user")
 	{
-		http.RenderResult("user/index.html");
+	//	PrintParams(http);
+		
+		http.RenderResult("witz/admin");
+		//http.RenderResult("user/index.html");
 	}
 	
 	

@@ -28,14 +28,20 @@ file
 	upload.icpp,
 	TIS.h,
 	TIS.cpp,
-	html readonly separator,
+	witz readonly separator,
+	witz\admin\setting.witz,
+	witz\login.witz,
+	witz\admin\userdetail.witz,
+	witz\admin\usermanagement.witz,
 	witz\index.witz,
 	witz\upload.witz,
+	html readonly separator,
 	html/index.html,
 	html/user/index.html,
 	html/admin/index.html,
 	js readonly separator,
 	assets\js\tis\tis.js,
+	assets\js\tis\tisTags.js,
 	assets\js\upload.js;
 
 mainconfig
