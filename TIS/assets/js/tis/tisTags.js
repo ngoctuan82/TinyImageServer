@@ -1,7 +1,7 @@
 <uploadform>
 		<input type='hidden' id='uploadurl' value='upload' >
 			
-			<form  draggable="true" ondrop={OnDrop} ondragover={OnDrag} ondragleave={OnDragLeave}  action='' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
+			<form  draggable="true" action='' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
 
 				<input id='uploadform_input' type='file' name='filestoupload[]' multiple=''>
 				<br><br>
@@ -188,31 +188,30 @@
     <div class="login-area">
         <div class="container">
             <div class="login-box ptb--100">
-                <form>
+                <form >
                     <div class="login-form-head">
-                        <h4>Sign In</h4>
-                        <p>TIS</p>
+                    	
+                        <h4 class="titleLogin">Sign In</h4>
+                        
                     </div>
                     <div class="login-form-body">
-                        <div class="form-gp">
-                            <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" id="exampleInputEmail1">
+                        <div class="form-gp"> 
+                            <input type="email" id="txtEmail" placeholder="Email address" value="user@simaget.com">
                             <i class="ti-email"></i>
                         </div>
                         <div class="form-gp">
-                            <label for="exampleInputPassword1">Password</label>
-                            <input type="password" id="exampleInputPassword1">
+                            <input type="password" id="txtPassword" placeholder="Password" value="1234">
                             <i class="ti-lock"></i>
                         </div>
                         
                         <div class="submit-btn-area">
-                            <button id="form_submit" type="submit">Submit <i class="ti-arrow-right"></i></button>
+                            <button id="btnSubmit" type="button" onclick = {OnClick}>Submit <i class="ti-arrow-right"></i></button>
                         </div>
                         <div class="form-footer text-center mt-5">
                             <p class="text-muted">Don't have an account? <a href="register.html">Sign up</a></p>
                         </div>
                     </div>
-                </form>
+               <form>
             </div>
         </div>
     </div>
@@ -221,27 +220,83 @@
 
 	<script>
 		
-	
-	
+		this.UI={
+			username:"",
+			password:"",
+			submit:null
+		};
+		
+		InitUI()
+		{
+			this.UI.username = $("#txtEmail", this.root);
+			this.UI.password = $("#txtPassword", this.root);
+			this.UI.submit = $("#btnSubmit", this.root);
+
+			this.UI.submit.off();
+			this.UI.submit.on("click", this.OnClick);
+		}
 	  this.on('mount', function() {
 	    // right after the tag is mounted on the page
 	    console.log("mount");
 	   
+		this.InitUI();
 
 	  })
 	
 	  this.on('update', function() {
 	    // allows recalculation of context data before the update
 	    console.log("update");
+
+	    this.InitUI();
 	  })
 	
 	  this.on('updated', function() {
 	    // right after the tag template is updated after an update call
-	    console.log("update");
+	    console.log("updated");
 	  })
 	  
+	  OnClick()
+	  {
+	      console.log("click");
+	      var username = this.UI.username.val();
+	      var password = this.UI.password.val();
+	      
+	      var url =`api/user/login?EMAIL=${username}&PASSWORD=${password}`;
+      
+    	 fetch(url, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData.IsError==false)
+				window.location.replace(jsonData.Status);
+			else
+				alert(jsonData.Status);
+		})
+		.catch(err => {
+				console.error(err);
+		});
+	      
+	  }
 	  
 	    // the mixin object bind
     	this.mixin(OptsMixin);
 	</script>
 </loginform>
+
+<preloader>
+	<!-- preloader area start -->
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+    <!-- preloader area end -->
+
+
+    <script>
+    this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    var preloader = $("#preloader", this.root);
+	 	preloader.fadeOut(3000);
+
+	 });
+    </script>
+</preloader>

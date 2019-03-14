@@ -3,8 +3,7 @@
 	
 	SKYLARK(Login, "login")
 	{
-		if(http["@__skylark_session_cookie__"].IsNull())
-		http.NewSessionId();
+		if(http["@__skylark_session_cookie__"].IsNull())		http.NewSessionId();
 		
 		http.RenderResult("witz/login");
 	}
@@ -13,15 +12,41 @@
 	{
 		//PrintParams(http);
 		
-		http.RenderResult("witz/user");
+		http.RenderResult("witz/admin/index");
 	//	http.RenderResult("admin/index.html");
 	}
+	
+	SKYLARK(AdminUserManagement, "adminusermanagement")
+	{
+		//PrintParams(http);
+		
+		http.RenderResult("witz/admin/usermanagement");
+	
+	}
+	
+	SKYLARK(AdminUserDetail, "adminuserdetail")
+	{
+		//PrintParams(http);
+		
+		http.RenderResult("witz/admin/userdetail");
+	
+	}
+	
+	SKYLARK(AdminSetting, "adminsetting")
+	{
+		//PrintParams(http);
+		
+		http.RenderResult("witz/admin/setting");
+	//	http.RenderResult("admin/index.html");
+	}
+	
+
 	
 	SKYLARK(User, "user")
 	{
 	//	PrintParams(http);
 		
-		http.RenderResult("witz/admin");
+		http.RenderResult("witz/user/index");
 		//http.RenderResult("user/index.html");
 	}
 	

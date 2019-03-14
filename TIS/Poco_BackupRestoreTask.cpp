@@ -13,7 +13,7 @@ void D_BACKUPRESTORETASK::Jsonize(JsonIO & json)
 	("TARGETFOLDERPATH",data.TARGETFOLDERPATH)
 	("PROCCESED",data.PROCCESED)
 	("TOTALFILES",data.TOTALFILES)
-	("STATUS",data.STATUS)
+//	("STATUS",data.STATUS) // when we have finishdate means it done
 
 	;
 }
@@ -32,7 +32,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 		pObj.TARGETFOLDERPATH=((String)http["TARGETFOLDERPATH"]);
 		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
 		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-		pObj.STATUS=atoi((String)http["STATUS"]);
+	//	pObj.STATUS=atoi((String)http["STATUS"]);
 	}
 	catch(...)
 	{
@@ -58,7 +58,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
 				(PROCCESED,pObj.PROCCESED)
 				(TOTALFILES,pObj.TOTALFILES)
-				(STATUS,pObj.STATUS)
+			//	(STATUS,pObj.STATUS)
 
 				;
 		//----------------------------------------
@@ -89,7 +89,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(Http& http){
 		pObj.TARGETFOLDERPATH=((String)http["TARGETFOLDERPATH"]);
 		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
 		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-		pObj.STATUS=atoi((String)http["STATUS"]);
+	//	pObj.STATUS=atoi((String)http["STATUS"]);
 	}
 	catch(...)
 	{
@@ -115,7 +115,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(Http& http){
 				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
 				(PROCCESED,pObj.PROCCESED)
 				(TOTALFILES,pObj.TOTALFILES)
-				(STATUS,pObj.STATUS)
+			//	(STATUS,pObj.STATUS)
 				
 				.Where( ID == pObj.ID);
 		//----------------------------------------
@@ -150,7 +150,7 @@ Vector<D_BACKUPRESTORETASK> D_BACKUPRESTORETASK::Retrieve(Http& http){
 		
 		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
 		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-		pObj.STATUS=atoi((String)http["STATUS"]);
+	//	pObj.STATUS=atoi((String)http["STATUS"]);
 	}
 	catch(...)
 	{
@@ -172,7 +172,7 @@ Vector<D_BACKUPRESTORETASK> D_BACKUPRESTORETASK::Retrieve(Http& http){
 	
 	if(pObj.PROCCESED>0) where =where &&  PROCCESED == pObj.PROCCESED;
 	if(pObj.TOTALFILES>0) where =where &&  TOTALFILES == pObj.TOTALFILES;
-	if(pObj.STATUS>0) where =where &&  STATUS == pObj.STATUS;
+	//if(pObj.STATUS>0) where =where &&  STATUS == pObj.STATUS;
 	
 	//------------------------
 	Cout()<<pObj<<"\n";
@@ -216,6 +216,32 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::GetById(int id){
 	}
 	catch(...){
 		Cout() << "Error D_BACKUPRESTORETASK::Get(String id)";
+	}
+	return  rs;
+	
+}
+
+// get total users in system
+int D_BACKUPRESTORETASK::GetSummary(){
+	
+	int  rs;
+	S_BACKUPRESTORETASK x;
+	
+	try{
+		SqlBool where;
+		where = ISBACKUPTASK == 1;// condition 0 means blocked
+		where = where && FINISHDATE >0;
+		
+		SQL *  Select ( Count(ID) ).From ( BACKUPRESTORETASK ).Where(where);;
+		
+		while ( SQL.Fetch () ){
+			rs = SQL[0];
+			break;
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_BACKUPRESTORETASK::GetSummary()";
 	}
 	return  rs;
 	

@@ -2,6 +2,8 @@
 #include "poco.h"
 #include "poco_impl.h"
 #include "TISDB.h"
+#include "util.h"
+
 #include <Core/Core.h>
 
 using namespace Upp;
@@ -24,6 +26,9 @@ String PrintParams(Http& http)
 	//http<<json;
 	return json;
 }
+
+
+
 
 /*
 	Api test
@@ -187,9 +192,27 @@ SKYLARK ( userlogin, "api/user/login" )
 	D_USERINFO user;
 	user = user.Login(http);
 	//------------------------------------------
-	Vector<D_USERINFO>  vector;
-	if(user.data.ID > 0) vector.Add(user);
-	http << StoreAsJson(vector, true);
+	//Vector<D_USERINFO>  vector;
+	//if(user.data.ID > 0) vector.Add(user);
+	//http << StoreAsJson(vector, true);
+	DataPacket<D_USERINFO> packet;
+	
+	if(user.data.ID > 0)
+	{
+		packet.Data.Add(user);
+		if(user.data.ISADMIN==true)
+			packet.Status ="admin";
+		else
+			packet.Status ="user";
+		// set session for apikey
+		http.SessionSet(".APIKEY", user.data.APIKEY);
+	}
+	else
+	{
+		packet.SetError("Can not login. Try again!!");
+		packet.Status = "login";
+	}
+	http << StoreAsJson(packet, true);
 }
 
 /*
@@ -462,6 +485,11 @@ SKYLARK ( share, "api/share/**" )
 		
 		if(isValidUser && isValidImage)
 		{
+			//----------------------------------------
+			//get daily summary
+			D_DAILYSUMMARY daily;
+			
+			//----------------------------------------
 			isError=false;
 			http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
 		}
@@ -483,9 +511,77 @@ SKYLARK ( share, "api/share/**" )
 	}
 }
 
+/*
+	get backups, downloads, total files, total users
+*/
+SKYLARK ( adminsummary, "api/summary/*" )
+{
+	PrintParams(http);
+	
+	DataPacket< ValueMap > packet;
+
+	try
+	{
+		// get total files
+		D_IMAGEFILE image;
+		int totalfiles = image.GetSummary();
+		// get users
+		D_USERINFO user;
+		int totalusers = user.GetSummary();
+		// get download
+		D_DAILYSUMMARY daily;
+		int totaldownloads = daily.GetDailyDownload();
+		// get backup
+		D_BACKUPRESTORETASK backup;
+		int totalbackups = backup.GetSummary();
+	
+		ValueMap vm;
+		vm 
+		("Backups",AsString(totalbackups) )
+		("Downloads",AsString(totaldownloads))
+		("Users",AsString(totalusers))
+		("Files",AsString(totalfiles))
+		;
+		
+		packet.Data.Add(vm);
+		
+	}
+	catch(...)
+	{
+		packet.IsError = true;
+	}
+	
+	http << StoreAsJson(packet, true);
+}
+
+/*
+	get download statistics
+*/
+SKYLARK ( admindownloadstatictis, "api/download/*" )
+{
+	PrintParams(http);
+	
+	DataPacket< D_DAILYSUMMARY > packet;
+	D_DAILYSUMMARY summary;
+	packet.Data = summary.GetMonthlyDownload();
+	http << StoreAsJson(packet);
+}
 
 
-
+/*
+	admin disk usage
+*/
+SKYLARK ( admindiskusage, "api/diskusage/*" )
+{
+	PrintParams(http);
+	
+	Vector<ValueMap> vector = GetDrivesInfo();
+	DataPacket< ValueMap > packet;
+	for(int i =0;i < vector.GetCount(); i++)
+		packet.Data.Add( vector[i] );
+	
+	http<< StoreAsJson(packet);
+}
 
 
 

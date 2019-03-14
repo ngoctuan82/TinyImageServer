@@ -95,12 +95,52 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 	
 	String fileName = AppendFileName(rootPath, (String)http["filename"]);
 
+
+
 	Value const &contents = http["filestoupload[]"];
 	Value const &filenames = http["filestoupload.filename[]"];
+	int const apikey = http[".APIKEY"];
+	
 	if(contents.IsNull() || filenames.IsNull())
 		return;
+	// check who upload these files
+	D_USERINFO user;
+	user = user.GetByApiKey(apikey);
+	
+	if(user.data.ID < 0) {
+		Cout()<<"This APIKEY not allow to upload "<< apikey;
+		return; // dont allow anonym upload
+	}
+	
+	// start saving
 	for(int i = 0; i < contents.GetCount(); i++)
-		SaveFile(AppendFileName(rootPath, (String)filenames[i]), contents[i]);
+	{
+		String FilePath = AppendFileName(rootPath, (String)filenames[i]);
+		String FileName =(String)filenames[i];
+		String FileExt = GetFileExt(file);
+		String Size = contents[i].GetLength();
+		
+		if(SaveFile(FilePath, contents[i]))
+		{
+			
+			// create ImageFile
+			S_IMAGEFILE simage;
+				simage.USERID = user.data.ID;	// test only
+				simage.FILENAME = (String)filenames[i];
+				simage.MODIFIEDDATE = Date().Get(); // get date scalar
+				simage.FILETYPE = FileExt;
+				simage.FILESIZE = Size;
+				simage.REALFILEPATH = FilePath;
+				simage.TAG = simage.FILENAME;
+				simage.DESCRIPTION =  simage.FILENAME;
+			//----------------------
+			D_IMAGEFILE image;
+			image.Create(simage);
+			//----------------------
+			Cout()<<" Saved File "<< simage.FILENAME<<"\n";
+		}
+	
+	}
 }
 
 SKYLARK(Progress,"progress")

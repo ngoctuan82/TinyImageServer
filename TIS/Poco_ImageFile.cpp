@@ -15,6 +15,7 @@ void D_IMAGEFILE::Jsonize(JsonIO & json)
 	("HEIGHT",data.HEIGHT)
 	("TAG",data.TAG)
 	("DESCRIPTION",data.DESCRIPTION)
+	("STATUS",data.STATUS)
 	;
 }
 
@@ -40,15 +41,17 @@ D_IMAGEFILE D_IMAGEFILE::Create(Http& http){
 	{
 		Cout() << "Error D_IMAGEFILE::Create";
 	}
-	// check any same email registered
-	D_IMAGEFILE tObj = GetById(pObj.ID);
-	
-		//	Cout()<<"\npObj"<<pObj<<"\n";
-		//	Cout()<<"tObj"<<tObj<<"\n";	
-		//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-		//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
 
-	if(tObj.data.ID < 0)
+	
+	return Create(pObj);
+}
+
+
+
+D_IMAGEFILE D_IMAGEFILE::Create(S_IMAGEFILE & pObj){
+	
+	D_IMAGEFILE tObj;
+	if(pObj.ID < 0)
 	{
 		SQL *  Insert( IMAGEFILE )
 				//(ID,pObj.ID)
@@ -66,6 +69,7 @@ D_IMAGEFILE D_IMAGEFILE::Create(Http& http){
 				;
 		//----------------------------------------
 		Cout()<<"\nCreated Image file:"<<tObj<<"\n";
+		tObj=GetByFileName(pObj.FILENAME);
 	}
 	else
 	{
@@ -245,6 +249,31 @@ D_IMAGEFILE D_IMAGEFILE::GetByFileName( String filename){
 	}
 	catch(...){
 		Cout() << "Error D_IMAGEFILE::GetByFileName " << filename;
+	}
+	return  rs;
+	
+}
+
+// get total users in system
+int D_IMAGEFILE::GetSummary(){
+	
+	int  rs;
+	S_IMAGEFILE x;
+	
+	try{
+		SqlBool where;
+		where = STATUS >= 1;// condition 0 means blocked
+		
+		SQL *  Select ( Count(ID) ).From ( IMAGEFILE ).Where(where);;
+		
+		while ( SQL.Fetch (  ) ){
+			rs = SQL[0];
+			break;
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_IMAGEFILE::GetSummary()";
 	}
 	return  rs;
 	

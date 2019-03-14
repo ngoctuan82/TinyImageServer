@@ -6,6 +6,8 @@
 
 using namespace Upp;
 
+
+
 template <typename T>
 struct DataPacket
 {
@@ -40,7 +42,7 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	D_USERINFO()
 	{
 		data.ID = -1;
-		
+		data.STATUS =1;
 	};
 
 	D_USERINFO ( S_USERINFO & obj ) : data ( obj ) {}
@@ -76,6 +78,8 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 		int hash = CombineHash ( email, 10 + email.GetCount() );
 		return abs ( hash );
 	};				// get hash value for apikey
+	
+	int GetSummary();
 };
 
 
@@ -144,7 +148,7 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 {
 	S_IMAGEFILE  data;
 
-	D_IMAGEFILE() {data.ID =-1; }
+	D_IMAGEFILE() {data.ID =-1;data.STATUS = 1; }
 
 	D_IMAGEFILE ( S_IMAGEFILE & obj ) : data ( obj ) {}
 
@@ -158,6 +162,7 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 	void Jsonize ( JsonIO & json );
 	// CRUD
 	D_IMAGEFILE Create ( Http& http );				// API
+	D_IMAGEFILE Create ( S_IMAGEFILE & obj);				// API
 	D_IMAGEFILE Edit ( Http& http );					// API
 	void Delete ( Http& http );					// API
 
@@ -167,6 +172,8 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 	D_IMAGEFILE GetById ( int id );
 	D_IMAGEFILE GetByFileName ( String filename  );
 	//------------------------------------------------
+	
+	int GetSummary();
 };
 
 struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
@@ -189,13 +196,21 @@ struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
 	// CRUD
 	D_DAILYSUMMARY Create ( Http& http );				// API
 	D_DAILYSUMMARY Edit ( Http& http );					// API
+	
+	D_DAILYSUMMARY Create ( S_DAILYSUMMARY& http );				// API
+	D_DAILYSUMMARY Edit ( S_DAILYSUMMARY& http );					// API
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_DAILYSUMMARY> Retrieve ( Http& http );	// API
 	String RetrieveAsJson ( Http& http );			// API
 	//------------------------------------------------
 	D_DAILYSUMMARY GetById ( int id );
+	D_DAILYSUMMARY GetByLogDate ( int logdate );
 	//------------------------------------------------
+	
+	int GetDailyDownload(); // total download today
+	Vector<D_DAILYSUMMARY> GetMonthlyDownload();
 };
 
 struct D_TRANSFORMATIONSETTING:  Moveable<D_TRANSFORMATIONSETTING>
@@ -286,6 +301,8 @@ struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
 	//------------------------------------------------
 	D_BACKUPRESTORETASK GetById ( int id );
 	//------------------------------------------------
+	
+	int GetSummary();
 };
 
 

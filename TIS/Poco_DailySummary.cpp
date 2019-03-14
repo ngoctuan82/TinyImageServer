@@ -32,14 +32,18 @@ D_DAILYSUMMARY D_DAILYSUMMARY::Create(Http& http){
 	{
 		Cout() << "Error D_DAILYSUMMARY::Create";
 	}
+	
+	return Create(pObj);
+}
+
+
+
+D_DAILYSUMMARY D_DAILYSUMMARY::Create(S_DAILYSUMMARY& pObj){
+	
 	// check any same email registered
 	D_DAILYSUMMARY tObj = GetById(pObj.ID);
+	pObj.LOGDATE = Date().Get();
 	
-		//	Cout()<<"\npObj"<<pObj<<"\n";
-		//	Cout()<<"tObj"<<tObj<<"\n";	
-		//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-		//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( DAILYSUMMARY )
@@ -106,6 +110,41 @@ D_DAILYSUMMARY D_DAILYSUMMARY::Edit(Http& http){
 	else
 	{
 		Cout()<<"\n Daily Summary did not exist:"<<tObj.data.ID<<"\n";
+	}
+	return tObj;
+}
+
+
+/*
+	update user information based on ID
+	ex:
+		http://127.0.0.1:8001/tis/api/user/update?ID=3&EMAIL=user23@simaget.com&PASSWORD=12345&FULLNAME=user2%20simaget&PHONE=987654321&DATEOFBIRTH=2000/03/01
+*/
+D_DAILYSUMMARY D_DAILYSUMMARY::Edit(S_DAILYSUMMARY& pObj){
+	S_DAILYSUMMARY pObj; // params container
+	
+	// check any same email registered
+	D_DAILYSUMMARY tObj = GetById(pObj.ID);
+	
+
+	if(tObj.data.ID > 0)
+	{
+		SQL *  Update( DAILYSUMMARY )
+				(USERID,pObj.USERID)
+				(LOGDATE,pObj.LOGDATE)
+				(NOOFUPLOADFILE,pObj.NOOFUPLOADFILE)
+				(NOOFDOWNLOADFILE,pObj.NOOFDOWNLOADFILE)
+				(TOTALUPLOADSIZE,pObj.TOTALUPLOADSIZE)
+				(TOTALDOWNLOADSIZE,pObj.TOTALDOWNLOADSIZE)
+				.Where( ID == pObj.ID);
+		//----------------------------------------
+		tObj = GetById(pObj.ID);
+		Cout()<<"\n Daily Summary Update:"<<tObj<<"\n";
+	}
+	else
+	{
+		Cout()<<"\n Daily Summary did not exist:"<<tObj.data.ID<<"\n";
+		tObj=Create(pObj);//create it
 	}
 	return tObj;
 }
@@ -188,5 +227,89 @@ D_DAILYSUMMARY D_DAILYSUMMARY::GetById(int id){
 		Cout() << "Error D_DAILYSUMMARY::Get(String id)";
 	}
 	return  rs;
+	
+}
+
+/*
+	get user setting by id
+*/
+D_DAILYSUMMARY D_DAILYSUMMARY::GetByLogDate(int logdate){
+	
+	D_DAILYSUMMARY  rs;
+	S_DAILYSUMMARY x;
+	
+	try{
+		SqlBool where;
+		where = LOGDATE == logdate;// condition
+		
+		SQL *  Select ( SqlAll() ).From ( DAILYSUMMARY ).Where(where).Limit(1);
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_DAILYSUMMARY(x);
+			break;
+		}
+	}
+	catch(...){
+		Cout() << "Error D_DAILYSUMMARY::Get(String id)";
+	}
+	return  rs;
+	
+}
+
+// get total download in system
+int D_DAILYSUMMARY::GetDailyDownload(){
+	
+	int  rs;
+	D_DAILYSUMMARY d;
+	S_DAILYSUMMARY x;
+	
+	try{
+		Date today = GetSysDate();
+		
+		SqlBool where;
+		where = LOGDATE == today.Get();// 
+		
+		SQL *  Select ( SqlSum(NOOFDOWNLOADFILE) ).From ( DAILYSUMMARY ).Where(where).GroupBy(LOGDATE);
+		
+		while ( SQL.Fetch ( x ) ){
+			d = x;
+			break;
+		}
+		rs = d.data.NOOFDOWNLOADFILE;  // total download today
+	}
+	catch(...){
+		Cout() << "Error D_USERINFO::GetSummary()";
+	}
+	return  rs;
+	
+}
+
+
+// get total download in system
+Vector<D_DAILYSUMMARY> D_DAILYSUMMARY::GetMonthlyDownload(){
+	
+	
+	Vector<D_DAILYSUMMARY> d;
+	S_DAILYSUMMARY x;
+	
+	try{
+		Date today = GetSysDate();
+		Date last30 = AddMonths(today, -30);
+		
+		SqlBool where;
+		where = LOGDATE >= last30.Get();// 
+		
+		SQL *  Select ( SqlSum(NOOFDOWNLOADFILE) ).From ( DAILYSUMMARY ).Where(where).GroupBy(LOGDATE);
+		
+		while ( SQL.Fetch ( x ) ){
+			d.Add(x);
+			break;
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_USERINFO::GetMonthlySummary()";
+	}
+	return  d;
 	
 }

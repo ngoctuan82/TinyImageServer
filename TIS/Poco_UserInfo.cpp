@@ -129,7 +129,7 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	try{
 		pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =(String)http["EMAIL"];
-	//	pObj.PASSWORD =(String)http["PASSWORD"];
+		pObj.PASSWORD =((String)http["PASSWORD"]);
 		pObj.APIKEY=atoi((String)http["APIKEY"]);
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];
@@ -147,6 +147,7 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	SqlBool where;
 	if(pObj.ID>0) where = ID == pObj.ID;
 	if(pObj.EMAIL.IsEmpty()==false) where =where &&  EMAIL == pObj.EMAIL;
+	if(pObj.PASSWORD.IsEmpty()==false) where =where &&  PASSWORD == pObj.PASSWORD;
 	if(pObj.FULLNAME.IsEmpty()==false) where =where &&  Like(FULLNAME, Wild("*"+pObj.FULLNAME + "*"));
 	if(pObj.APIKEY>0) where =where &&  APIKEY == pObj.APIKEY;
 //	if(pObj.ISADMIN>=0) where =where && ISADMIN == pObj.ISADMIN;
@@ -279,4 +280,29 @@ void D_TRANSFORMATIONTASK::Jsonize(JsonIO & json)
 	("FULLTARGETFILDEPATH",data.FULLTARGETFILDEPATH)
 	("STATUS",data.STATUS)
 	;
+}
+
+// get total users in system
+int D_USERINFO::GetSummary(){
+	
+	int  rs;
+	S_USERINFO x;
+	
+	try{
+		SqlBool where;
+		where = STATUS >= 1;// condition 0 means blocked
+		
+		SQL *  Select ( Count(USERID) ).From ( USERINFO ).Where(where);;
+		
+		while ( SQL.Fetch (  ) ){
+			rs = SQL[0];
+			break;
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_USERINFO::GetSummary()";
+	}
+	return  rs;
+	
 }

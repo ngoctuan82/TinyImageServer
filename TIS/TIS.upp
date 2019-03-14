@@ -3,11 +3,13 @@ description "Tiny Image Server\377";
 uses
 	Core,
 	Skylark,
-	plugin/sqlite3;
+	plugin/sqlite3,
+	SysInfo;
 
 file
 	Util readonly separator,
 	util.h,
+	util.cpp,
 	SQL readonly separator,
 	TISDB.h,
 	TISDB.cpp,
@@ -24,8 +26,8 @@ file
 	Server readonly separator,
 	common.icpp,
 	htmlserver.icpp,
-	api.icpp,
 	upload.icpp,
+	api.icpp,
 	TIS.h,
 	TIS.cpp,
 	witz readonly separator,
