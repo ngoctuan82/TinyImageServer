@@ -4,7 +4,24 @@
 
 using namespace Upp;
 
-Vector<ValueMap> GetDrivesSummaryInfo();
-Vector<ValueMap> GetDrivesInfo();
+/*
+	implement for json which can be jsonized
+*/
+struct Jsonew:Moveable<Jsonew>, public Json
+{
+	Jsonew(){}
+
+	void Jsonize(JsonIO & json)
+	{
+		ValueMap vm  = ParseJSON(ToString());
+		
+		json.Set(vm);
+	}
+};
+
+
+
+Vector<Jsonew> GetDrivesSummaryInfo();
+Vector<Jsonew> GetDrivesInfo();
 
 #endif

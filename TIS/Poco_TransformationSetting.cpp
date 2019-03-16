@@ -28,14 +28,17 @@ D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Create(Http& http){
 	{
 		Cout() << "Error D_TRANSFORMATIONSETTING::Create";
 	}
-	// check any same email registered
+
+	return Create(pObj);
+}
+
+
+
+D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Create(S_TRANSFORMATIONSETTING& pObj){
+	
+	
 	D_TRANSFORMATIONSETTING tObj = GetById(pObj.ID);
 	
-	//	Cout()<<"\npObj"<<pObj<<"\n";
-	//	Cout()<<"tObj"<<tObj<<"\n";	
-	//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-	//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( TRANSFORMATIONSETTING )
@@ -64,7 +67,7 @@ D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Edit(Http& http){
 	S_TRANSFORMATIONSETTING pObj; // params container
 	
 	try{
-	pObj.ID=atoi((String)http["ID"]);
+		pObj.ID=atoi((String)http["ID"]);
 		pObj.USERID=atoi((String)http["USERID"]);
 		pObj.TRANSFORMTYPE=atoi((String)http["TRANSFORMTYPE"]);
 		pObj.DELETEDORIGINALFILE=atoi((String)http["DELETEDORIGINALFILE"]);
@@ -74,13 +77,13 @@ D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Edit(Http& http){
 	{
 		Cout() << "Error D_TRANSFORMATIONSETTING::Update";
 	}
-	// check any same email registered
-	D_TRANSFORMATIONSETTING tObj = GetById(pObj.ID);
 	
-//	Cout()<<"\npObj"<<pObj<<"\n";
-//	Cout()<<"tObj"<<tObj<<"\n";	
-//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
+	return Edit(pObj);
+}
+
+D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Edit(S_TRANSFORMATIONSETTING& pObj){
+	
+	D_TRANSFORMATIONSETTING tObj = GetById(pObj.ID);
 
 	if(tObj.data.ID > 0)
 	{
@@ -97,6 +100,7 @@ D_TRANSFORMATIONSETTING D_TRANSFORMATIONSETTING::Edit(Http& http){
 	else
 	{
 		Cout()<<"\n Daily Summary did not exist:"<<tObj.data.ID<<"\n";
+		tObj = Create(pObj);
 	}
 	return tObj;
 }

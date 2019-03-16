@@ -204,8 +204,16 @@ SKYLARK ( userlogin, "api/user/login" )
 			packet.Status ="admin";
 		else
 			packet.Status ="user";
+		//
+		int session = 0;
+		if(http["@__skylark_session_cookie__"].IsNull()) 	http.NewSessionId();	
+		session = atoi(AsString(http["@__skylark_session_cookie__"]));
 		// set session for apikey
 		http.SessionSet(".APIKEY", user.data.APIKEY);
+		
+		// update session for this user
+		user.data.SESSION = session;
+		user.Edit(user.data);
 	}
 	else
 	{
@@ -467,7 +475,7 @@ SKYLARK ( upload, "api/upload" )
 SKYLARK ( share, "api/share/**" )
 {
 	String json = PrintParams(http);
-//	tGet<D_TRANSFORMATIONTASK>(http);
+
 	bool isError= true;	
 	
 	// get User ID and check
@@ -475,20 +483,23 @@ SKYLARK ( share, "api/share/**" )
 	{
 		// check user apikey
 		D_USERINFO user;
-		bool isValidUser = user.ValidateUserApiKey(http);
+		user = user.GetByApiKey(http);
 		
 		// check image status
 		D_IMAGEFILE image;
 		String filename = http[1]; // filename
 		image= image.GetByFileName(filename);
+		
 		bool isValidImage = image.data.ID > 0;
+		bool isValidUser = user.data.ID > 0;
 		
 		if(isValidUser && isValidImage)
 		{
 			//----------------------------------------
-			//get daily summary
+			//update daily summary
 			D_DAILYSUMMARY daily;
-			
+			daily.UpdateDownload(user.data.ID, image.data.FILESIZE);
+			 
 			//----------------------------------------
 			isError=false;
 			http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
@@ -509,6 +520,11 @@ SKYLARK ( share, "api/share/**" )
 		}
 		http.Content("image/png", LoadFile(filepath));
 	}
+	else
+	{
+		http.Response(404, "Not found");
+		return;
+	}
 }
 
 /*
@@ -518,7 +534,7 @@ SKYLARK ( adminsummary, "api/summary/*" )
 {
 	PrintParams(http);
 	
-	DataPacket< ValueMap > packet;
+	DataPacket< Jsonew > packet;
 
 	try
 	{
@@ -535,7 +551,7 @@ SKYLARK ( adminsummary, "api/summary/*" )
 		D_BACKUPRESTORETASK backup;
 		int totalbackups = backup.GetSummary();
 	
-		ValueMap vm;
+		Jsonew vm;
 		vm 
 		("Backups",AsString(totalbackups) )
 		("Downloads",AsString(totaldownloads))
@@ -574,13 +590,11 @@ SKYLARK ( admindownloadstatictis, "api/download/*" )
 SKYLARK ( admindiskusage, "api/diskusage/*" )
 {
 	PrintParams(http);
-	
-	Vector<ValueMap> vector = GetDrivesInfo();
-	DataPacket< ValueMap > packet;
-	for(int i =0;i < vector.GetCount(); i++)
-		packet.Data.Add( vector[i] );
-	
-	http<< StoreAsJson(packet);
+
+	Vector<Jsonew> vector = GetDrivesInfo();
+	DataPacket< Jsonew > packet;
+	packet.Data=GetDrivesInfo();
+	http<< StoreAsJson(packet, true);
 }
 
 

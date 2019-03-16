@@ -34,6 +34,13 @@ D_USERINFO D_USERINFO::Create(Http& http){
 	{
 		Cout() << "Error D_USERINFO::Create";
 	}
+	
+	return Create(pObj);
+}
+
+
+D_USERINFO D_USERINFO::Create(S_USERINFO& pObj){
+
 	// check any same email registered
 	D_USERINFO tObj = GetByApiKey(pObj.APIKEY);
 	
@@ -72,7 +79,7 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 		pObj.ID =atoi((String)http["ID"]);    // most important
 		pObj.EMAIL =((String)http["EMAIL"]);
 		pObj.PASSWORD =(String)http["PASSWORD"];	
-			pObj.PASSWORD =AsString(GetHashValue(pObj.PASSWORD));
+		pObj.PASSWORD =AsString(GetHashValue(pObj.PASSWORD));
 		pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];
@@ -84,14 +91,13 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 	{
 		Cout() << "Error D_USERINFO::Update";
 	}
+	
+	return Edit(pObj);
+}
+
+D_USERINFO D_USERINFO::Edit(S_USERINFO& pObj){
 	// check any same email registered
 	D_USERINFO tObj = GetById(pObj.ID);
-	
-	Cout()<<"\npObj"<<pObj<<"\n";
-	Cout()<<"tObj"<<tObj<<"\n";	
-	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
 	
 	if(tObj.data.ID > 0)
 	{
@@ -100,6 +106,7 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 				(EMAIL,pObj.EMAIL)
 				(PASSWORD,pObj.PASSWORD)
 				(APIKEY,pObj.APIKEY)
+				(SESSION,pObj.SESSION)
 				(FULLNAME,pObj.FULLNAME)
 				(PHONE,pObj.PHONE)
 				(DATEOFBIRTH,pObj.DATEOFBIRTH)
@@ -113,9 +120,12 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 	else
 	{
 		Cout()<<"\nUser did not exist:"<<tObj.data.EMAIL<<"\n";
+		tObj = Create(pObj);
 	}
 	return tObj;
 }
+
+
 void D_USERINFO::Delete(Http& http){
 	
 }
@@ -183,6 +193,8 @@ D_USERINFO D_USERINFO::Login(Http& http){
 	if(count>0)
 	{
 		rs = vector[0];
+		// generate session id
+		
 	}
 	return rs;
 }
@@ -208,6 +220,26 @@ D_USERINFO D_USERINFO::GetByApiKey(int apikey){
 	}
 	return  rs;
 	
+}
+
+
+D_USERINFO D_USERINFO::GetByApiKey(Http & http){
+	
+	String userId = http[0];// api key always on first param
+	D_USERINFO user;
+	
+	try
+	{
+		int apikey = atoi(userId);
+		user= GetByApiKey(apikey);
+		
+	}
+	catch(...)
+	{
+		
+	}
+	
+	return user;
 }
 
 D_USERINFO D_USERINFO::GetByEmail(String email){
@@ -236,6 +268,30 @@ D_USERINFO D_USERINFO::GetById(int id){
 	}
 	catch(...){
 		Cout() << "Error D_USERINFO::Get(String apikey)";
+	}
+	return  rs;
+	
+}
+
+D_USERINFO D_USERINFO::GetBySession(int session){
+	
+	D_USERINFO  rs;
+	S_USERINFO x;
+	
+	try{
+		SqlBool where;
+		where = SESSION == session;// condition
+		
+		SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).Limit(1);;
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_USERINFO(x);
+			break;
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_USERINFO::Get(int session)";
 	}
 	return  rs;
 	
@@ -269,18 +325,7 @@ bool D_USERINFO::ValidateUserApiKey(Http &http, bool isAdmin){
 
 
 
-void D_TRANSFORMATIONTASK::Jsonize(JsonIO & json)
-{
-	json
-	("ID ",data.ID )
-	("TRANSFORMATIONSETTINGID",data.TRANSFORMATIONSETTINGID)
-	("CREATEDDATE",data.CREATEDDATE)
-	("FINISHDATE",data.FINISHDATE)
-	("FULLSOURCEFILEPATH",data.FULLSOURCEFILEPATH)
-	("FULLTARGETFILDEPATH",data.FULLTARGETFILDEPATH)
-	("STATUS",data.STATUS)
-	;
-}
+
 
 // get total users in system
 int D_USERINFO::GetSummary(){

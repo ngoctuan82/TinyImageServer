@@ -22,6 +22,7 @@ file
 	Poco_UserInfo.cpp,
 	Poco_UserSetting.cpp,
 	Poco_AdminSetting.cpp,
+	Poco_TransformationTask.cpp,
 	Poco_TransformationSetting.cpp,
 	Server readonly separator,
 	common.icpp,

@@ -42,7 +42,7 @@ D_DAILYSUMMARY D_DAILYSUMMARY::Create(S_DAILYSUMMARY& pObj){
 	
 	// check any same email registered
 	D_DAILYSUMMARY tObj = GetById(pObj.ID);
-	pObj.LOGDATE = Date().Get();
+	pObj.LOGDATE =GetSysDate().Get();
 	
 	if(tObj.data.ID < 0)
 	{
@@ -121,7 +121,7 @@ D_DAILYSUMMARY D_DAILYSUMMARY::Edit(Http& http){
 		http://127.0.0.1:8001/tis/api/user/update?ID=3&EMAIL=user23@simaget.com&PASSWORD=12345&FULLNAME=user2%20simaget&PHONE=987654321&DATEOFBIRTH=2000/03/01
 */
 D_DAILYSUMMARY D_DAILYSUMMARY::Edit(S_DAILYSUMMARY& pObj){
-	S_DAILYSUMMARY pObj; // params container
+	
 	
 	// check any same email registered
 	D_DAILYSUMMARY tObj = GetById(pObj.ID);
@@ -256,6 +256,67 @@ D_DAILYSUMMARY D_DAILYSUMMARY::GetByLogDate(int logdate){
 	
 }
 
+/*
+	update share image info
+*/
+void D_DAILYSUMMARY::UpdateDownload(int userid, int size){
+	
+	//update daily summary
+	int today = GetSysDate().Get();
+	
+	D_DAILYSUMMARY daily;
+	daily = daily.GetByUserIDLogDate(userid, today);
+	daily.data.USERID = userid;
+	daily.data.LOGDATE = today;
+	daily.data.NOOFDOWNLOADFILE +=1;
+	daily.data.TOTALDOWNLOADSIZE += size;
+	daily.Edit(daily.data);
+}
+
+/*
+	update when upload file
+*/
+void D_DAILYSUMMARY::UpdateUpload(int userid, int size){
+	
+	//update daily summary
+	int today = Date().Get();
+	
+	D_DAILYSUMMARY daily;
+	daily = daily.GetByUserIDLogDate(userid, today);
+	daily.data.USERID = userid;
+	daily.data.LOGDATE = today;
+	daily.data.NOOFUPLOADFILE += 1;
+	daily.data.TOTALUPLOADSIZE += size;
+	daily.Edit(daily.data);
+}
+
+/*
+	get user setting by user id and logdate
+*/
+D_DAILYSUMMARY D_DAILYSUMMARY::GetByUserIDLogDate(int userid, int logdate){
+	
+	D_DAILYSUMMARY  rs;
+	S_DAILYSUMMARY x;
+	
+	try{
+		SqlBool where;
+		where = LOGDATE == logdate;// condition
+		where = where && USERID == userid;// condition
+		
+		SQL *  Select ( SqlAll() ).From ( DAILYSUMMARY ).Where(where).Limit(1);
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_DAILYSUMMARY(x);
+			break;
+		}
+	}
+	catch(...){
+		Cout() << "Error D_DAILYSUMMARY::Get(userid, logdate)";
+	}
+	return  rs;
+	
+}
+
 // get total download in system
 int D_DAILYSUMMARY::GetDailyDownload(){
 	
@@ -271,11 +332,11 @@ int D_DAILYSUMMARY::GetDailyDownload(){
 		
 		SQL *  Select ( SqlSum(NOOFDOWNLOADFILE) ).From ( DAILYSUMMARY ).Where(where).GroupBy(LOGDATE);
 		
-		while ( SQL.Fetch ( x ) ){
-			d = x;
+		while ( SQL.Fetch () ){
+			rs = SQL[0];
 			break;
 		}
-		rs = d.data.NOOFDOWNLOADFILE;  // total download today
+		
 	}
 	catch(...){
 		Cout() << "Error D_USERINFO::GetSummary()";

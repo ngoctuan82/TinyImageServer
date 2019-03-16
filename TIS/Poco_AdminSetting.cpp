@@ -34,11 +34,14 @@ D_ADMINSETTING D_ADMINSETTING::Create(Http& http){
 	{
 		Cout() << "Error D_ADMINSETTING::Create";
 	}
+
+	return Create(pObj);
+}
+
+
+D_ADMINSETTING D_ADMINSETTING::Create(S_ADMINSETTING& pObj){
+	
 	D_ADMINSETTING tObj = GetById(pObj.ID);
-	//	Cout()<<"\npObj"<<pObj<<"\n";
-	//	Cout()<<"tObj"<<tObj<<"\n";	
-	//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-	//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
 
 	if(tObj.data.ID < 0)
 	{
@@ -60,7 +63,6 @@ D_ADMINSETTING D_ADMINSETTING::Create(Http& http){
 	}
 	return tObj;
 }
-
 /*
 	update user information based on ID
 	ex:
@@ -82,14 +84,15 @@ D_ADMINSETTING D_ADMINSETTING::Edit(Http& http){
 	{
 		Cout() << "Error D_ADMINSETTING::Update";
 	}
+	
+	return Edit(pObj);
+}
+
+D_ADMINSETTING D_ADMINSETTING::Edit(S_ADMINSETTING& pObj){
+
 	// check any same email registered
 	D_ADMINSETTING tObj = GetById(pObj.ID);
-	/*
-		Cout()<<"\npObj"<<pObj<<"\n";
-		Cout()<<"tObj"<<tObj<<"\n";	
-		Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-		Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-	*/
+	
 	if(tObj.data.ID > 0)
 	{
 		SQL *  Update( ADMINSETTING )
@@ -107,9 +110,11 @@ D_ADMINSETTING D_ADMINSETTING::Edit(Http& http){
 	else
 	{
 		Cout()<<"\nAdmin Setting did not exist:"<<tObj.data.ID<<"\n";
+		tObj = Create(pObj);
 	}
 	return tObj;
 }
+
 
 void D_ADMINSETTING::Delete(Http& http){
 	// do not delete setting?

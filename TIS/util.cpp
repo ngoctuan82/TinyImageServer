@@ -7,8 +7,8 @@ using namespace Upp;
 /*
 	Get summary info of drive: total free, total used
 */
-Vector<ValueMap> GetDrivesSummaryInfo(){
-	Vector<ValueMap> rs;
+Vector<Jsonew> GetDrivesSummaryInfo(){
+	Vector<Jsonew> rs;
 	
 	Vector<String> drives;
 	
@@ -33,7 +33,7 @@ Vector<ValueMap> GetDrivesSummaryInfo(){
 	}
 	
 	
-	ValueMap vm;
+	Jsonew vm;
 	vm
 		("Drives",drivesStr )
 		("Total", BytesToString(sumTotalBytesUser)  )
@@ -47,9 +47,9 @@ Vector<ValueMap> GetDrivesSummaryInfo(){
 /*
 	Get all drives info 
 */
-Vector<ValueMap> GetDrivesInfo(){
+Vector<Jsonew> GetDrivesInfo(){
 
-	Vector< ValueMap > rs;
+	Vector< Jsonew > rs;
 	
 	Vector<String> drives;
 	drives = GetDriveList();
@@ -61,7 +61,7 @@ Vector<ValueMap> GetDrivesInfo(){
 			uint64 freeBytesUser, totalBytesUser, totalFreeBytes;
 			if(GetDriveSpace(drives[i], freeBytesUser, totalBytesUser, totalFreeBytes))
 			{
-				ValueMap vm;
+				Jsonew vm;
 				vm
 					("Drive", drives[i] )
 					("Total", BytesToString(totalBytesUser) )

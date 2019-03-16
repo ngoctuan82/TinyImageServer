@@ -26,14 +26,17 @@ D_USERSETTING D_USERSETTING::Create(Http& http){
 	{
 		Cout() << "Error D_USERSETTING::Create";
 	}
+
+	return Create(pObj);
+}
+
+
+D_USERSETTING D_USERSETTING::Create(S_USERSETTING& pObj){
+	
+	
 	// check any same email registered
 	D_USERSETTING tObj = GetById(pObj.ID);
 	
-		//	Cout()<<"\npObj"<<pObj<<"\n";
-		//	Cout()<<"tObj"<<tObj<<"\n";	
-		//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-		//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( USERSETTING )
@@ -70,13 +73,13 @@ D_USERSETTING D_USERSETTING::Edit(Http& http){
 	{
 		Cout() << "Error D_USERSETTING::Update";
 	}
+	return Edit(pObj);
+}
+
+D_USERSETTING D_USERSETTING::Edit(S_USERSETTING& pObj){
+	
 	// check any same email registered
 	D_USERSETTING tObj = GetById(pObj.ID);
-	
-//	Cout()<<"\npObj"<<pObj<<"\n";
-//	Cout()<<"tObj"<<tObj<<"\n";	
-//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
 
 	if(tObj.data.ID > 0)
 	{
@@ -92,9 +95,11 @@ D_USERSETTING D_USERSETTING::Edit(Http& http){
 	else
 	{
 		Cout()<<"\nUser Setting did not exist:"<<tObj.data.ID<<"\n";
+		tObj=Create(pObj);
 	}
 	return tObj;
 }
+
 
 void D_USERSETTING::Delete(Http& http){
 	// do not delete setting?

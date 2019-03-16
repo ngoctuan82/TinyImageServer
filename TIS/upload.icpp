@@ -95,11 +95,9 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 	
 	String fileName = AppendFileName(rootPath, (String)http["filename"]);
 
-
-
 	Value const &contents = http["filestoupload[]"];
 	Value const &filenames = http["filestoupload.filename[]"];
-	int const apikey = http[".APIKEY"];
+	int const apikey = http["APIKEY"];
 	
 	if(contents.IsNull() || filenames.IsNull())
 		return;
@@ -111,15 +109,26 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 		Cout()<<"This APIKEY not allow to upload "<< apikey;
 		return; // dont allow anonym upload
 	}
+	else
+	{
+		int session =atoi( AsString( http["@__skylark_session_cookie__"] ));
+		if(session != user.data.SESSION)
+		{
+			Cout()<<"This SESSION not allow to upload "<< apikey;
+			return; // dont allow expire session upload
+		}
+	}
+	//--------------------------------------------------------------------------
 	
 	// start saving
 	for(int i = 0; i < contents.GetCount(); i++)
 	{
 		String FilePath = AppendFileName(rootPath, (String)filenames[i]);
 		String FileName =(String)filenames[i];
-		String FileExt = GetFileExt(file);
-		String Size = contents[i].GetLength();
-		
+		String FileExt = GetFileExt(FileName);
+		int Size = contents[i].GetCount();
+	
+
 		if(SaveFile(FilePath, contents[i]))
 		{
 			
@@ -156,9 +165,10 @@ SKYLARK(uploadpage, "uploadfile")
 	// we need a session variable for upload id
 	if(http["@__skylark_session_cookie__"].IsNull())
 		http.NewSessionId(); 
+	//-----------------------------------------------
+	Value session =  http["@__skylark_session_cookie__"];
+	int apikey = atoi(AsString(http["APIKEY"]));
 	
-	// show rootpath in html page
-	http("UploadFolder", rootPath);
-
-	http.RenderResult("witz/upload");
+	//-------------------------------------------------
+	http("APIKEY",apikey).RenderResult("witz/upload");
 }

@@ -65,6 +65,7 @@ D_IMAGEFILE D_IMAGEFILE::Create(S_IMAGEFILE & pObj){
 				(HEIGHT,pObj.HEIGHT)
 				(TAG,pObj.TAG)
 				(DESCRIPTION,pObj.DESCRIPTION)
+				(STATUS,pObj.STATUS)
 
 				;
 		//----------------------------------------
@@ -103,13 +104,14 @@ D_IMAGEFILE D_IMAGEFILE::Edit(Http& http){
 	{
 		Cout() << "Error D_IMAGEFILE::Update";
 	}
-	// check any same email registered
-	D_IMAGEFILE tObj = GetById(pObj.ID);
 	
-//	Cout()<<"\npObj"<<pObj<<"\n";
-//	Cout()<<"tObj"<<tObj<<"\n";	
-//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
+	return Edit(pObj);
+}
+
+D_IMAGEFILE D_IMAGEFILE::Edit(S_IMAGEFILE& pObj){
+
+	// check any existed
+	D_IMAGEFILE tObj = GetById(pObj.ID);
 
 	if(tObj.data.ID > 0)
 	{
@@ -125,6 +127,7 @@ D_IMAGEFILE D_IMAGEFILE::Edit(Http& http){
 				(HEIGHT,pObj.HEIGHT)
 				(TAG,pObj.TAG)
 				(DESCRIPTION,pObj.DESCRIPTION)
+				(STATUS,pObj.STATUS)
 				.Where( ID == pObj.ID);
 		//----------------------------------------
 		tObj = GetById(pObj.ID);
@@ -133,6 +136,7 @@ D_IMAGEFILE D_IMAGEFILE::Edit(Http& http){
 	else
 	{
 		Cout()<<"\nImage File did not exist:"<<tObj.data.ID<<"\n";
+		tObj = Create(pObj);
 	}
 	return tObj;
 }

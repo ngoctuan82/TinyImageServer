@@ -2,6 +2,7 @@
 	<head>
 		<title>File Upload Progress Bar</title>
 		<!-- <inner-tag/> is specified on external file -->
+		<script src="static/assets/js/tis/tis.js" ></script>
 		<script src="static/assets/js/tis/tisTags.js" type="riot/tag"></script>
 		
 		<!-- include riot.js and the compiler -->
@@ -17,6 +18,7 @@
 				(we need it because we can have more upload jobs calls on server
 	-->
 	<input type='hidden' id='session' value='$@__skylark_session_cookie__'>
+	<input type='hidden' id='APIKEY' value='$APIKEY'>
 	
 
 

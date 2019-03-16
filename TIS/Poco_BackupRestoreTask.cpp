@@ -38,14 +38,17 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 	{
 		Cout() << "Error D_BACKUPRESTORETASK::Create";
 	}
-	// check any same email registered
+	
+	return Create(pObj);
+}
+
+
+D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(S_BACKUPRESTORETASK& pObj){
+	
+	
+	// check any 
 	D_BACKUPRESTORETASK tObj = GetById(pObj.ID);
 	
-	//	Cout()<<"\npObj"<<pObj<<"\n";
-	//	Cout()<<"tObj"<<tObj<<"\n";	
-	//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-	//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( BACKUPRESTORETASK )
@@ -62,7 +65,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 
 				;
 		//----------------------------------------
-		Cout()<<"\nCreated Transformation Setting:"<<tObj<<"\n";
+		Cout()<<"\nCreated Transformation Setting:"<<tObj<<"\n"; 
 	}
 	else
 	{
@@ -125,6 +128,38 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(Http& http){
 	else
 	{
 		Cout()<<"\n Backup Restore did not exist:"<<tObj.data.ID<<"\n";
+	}
+	return tObj;
+}
+
+D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(S_BACKUPRESTORETASK& pObj){
+	
+	// check any same email registered
+	D_BACKUPRESTORETASK tObj = GetById(pObj.ID);
+	
+	if(tObj.data.ID > 0)
+	{
+		SQL *  Update( BACKUPRESTORETASK )
+				
+				(USERID,pObj.USERID)
+				(ISBACKUPTASK,pObj.ISBACKUPTASK)
+				(CREATEDDATE,pObj.CREATEDDATE)
+				(FINISHDATE,pObj.FINISHDATE)
+				(SOURCEFOLDERPATH,pObj.SOURCEFOLDERPATH)
+				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
+				(PROCCESED,pObj.PROCCESED)
+				(TOTALFILES,pObj.TOTALFILES)
+			//	(STATUS,pObj.STATUS)
+				
+				.Where( ID == pObj.ID);
+		//----------------------------------------
+		tObj = GetById(pObj.ID);
+		Cout()<<"\n Backup Restore Update:"<<tObj<<"\n";
+	}
+	else
+	{
+		Cout()<<"\n Backup Restore did not exist:"<<tObj.data.ID<<"\n";
+		tObj = Create(pObj);
 	}
 	return tObj;
 }

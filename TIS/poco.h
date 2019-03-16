@@ -43,6 +43,7 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	{
 		data.ID = -1;
 		data.STATUS =1;
+		data.SESSION =-1;
 	};
 
 	D_USERINFO ( S_USERINFO & obj ) : data ( obj ) {}
@@ -58,17 +59,24 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 
 	// CRUD
 	D_USERINFO Create ( Http& http );				// API
+	D_USERINFO Create ( S_USERINFO& http );			// API
 	D_USERINFO Edit ( Http& http );					// API
-	void Delete ( Http& http );					// API
+	D_USERINFO Edit ( S_USERINFO& http );			// API
+	
+	
+	
+	void Delete ( Http& http );						// API
 
-	Vector<D_USERINFO> Retrieve ( Http& http );	// API
+	Vector<D_USERINFO> Retrieve ( Http& http );		// API
 	String RetrieveAsJson ( Http& http );			// API
 
 	D_USERINFO Login ( Http& http );				// API
 	//------------------------------------------------
 	D_USERINFO GetByApiKey ( int apikey );
+	D_USERINFO GetByApiKey ( Http& http );
 	D_USERINFO GetByEmail ( String email );
 	D_USERINFO GetById ( int id );
+	D_USERINFO GetBySession ( int session );
 	
 	bool ValidateUserApiKey ( Http & http, bool isAdmin = false);
 	
@@ -103,7 +111,11 @@ struct D_USERSETTING:  Moveable<D_USERSETTING>
 
 	// CRUD
 	D_USERSETTING Create ( Http& http );				// API
+	D_USERSETTING Create ( S_USERSETTING& http );				// API
 	D_USERSETTING Edit ( Http& http );					// API
+	D_USERSETTING Edit ( S_USERSETTING& http );					// API
+	
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_USERSETTING> Retrieve ( Http& http );	// API
@@ -134,7 +146,10 @@ struct D_ADMINSETTING:  Moveable<D_ADMINSETTING>
 
 	// CRUD
 	D_ADMINSETTING Create ( Http& http );				// API
+	D_ADMINSETTING Create ( S_ADMINSETTING& http );				// API
 	D_ADMINSETTING Edit ( Http& http );					// API
+	D_ADMINSETTING Edit ( S_ADMINSETTING& http );					// API
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_ADMINSETTING> Retrieve ( Http& http );	// API
@@ -164,6 +179,8 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 	D_IMAGEFILE Create ( Http& http );				// API
 	D_IMAGEFILE Create ( S_IMAGEFILE & obj);				// API
 	D_IMAGEFILE Edit ( Http& http );					// API
+	D_IMAGEFILE Edit ( S_IMAGEFILE& http );					// API
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_IMAGEFILE> Retrieve ( Http& http );	// API
@@ -181,7 +198,7 @@ struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
 	S_DAILYSUMMARY  data;
 
 
-	D_DAILYSUMMARY() {data.ID =-1; }
+	D_DAILYSUMMARY() {data.ID =-1;data.NOOFDOWNLOADFILE=0; data.NOOFUPLOADFILE=0; data.TOTALDOWNLOADSIZE=0; data.TOTALUPLOADSIZE=0; }
 
 	D_DAILYSUMMARY ( S_DAILYSUMMARY & obj ) : data ( obj ) {}
 
@@ -205,8 +222,12 @@ struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
 	Vector<D_DAILYSUMMARY> Retrieve ( Http& http );	// API
 	String RetrieveAsJson ( Http& http );			// API
 	//------------------------------------------------
+	void UpdateUpload(int userid, int size);
+	void UpdateDownload(int userid, int size);
+	//------------------------------------------------
 	D_DAILYSUMMARY GetById ( int id );
 	D_DAILYSUMMARY GetByLogDate ( int logdate );
+	D_DAILYSUMMARY GetByUserIDLogDate (int userid, int logdate );
 	//------------------------------------------------
 	
 	int GetDailyDownload(); // total download today
@@ -233,7 +254,11 @@ struct D_TRANSFORMATIONSETTING:  Moveable<D_TRANSFORMATIONSETTING>
 
 	// CRUD
 	D_TRANSFORMATIONSETTING Create ( Http& http );				// API
+	D_TRANSFORMATIONSETTING Create ( S_TRANSFORMATIONSETTING& http );				// API
 	D_TRANSFORMATIONSETTING Edit ( Http& http );					// API
+	D_TRANSFORMATIONSETTING Edit ( S_TRANSFORMATIONSETTING& http );					// API
+	
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_TRANSFORMATIONSETTING> Retrieve ( Http& http );	// API
@@ -263,7 +288,10 @@ struct D_TRANSFORMATIONTASK:  Moveable<D_TRANSFORMATIONTASK>
 
 	// CRUD
 	D_TRANSFORMATIONTASK Create ( Http& http );				// API
+	D_TRANSFORMATIONTASK Create ( S_TRANSFORMATIONTASK& http );				// API
 	D_TRANSFORMATIONTASK Edit ( Http& http );					// API
+	D_TRANSFORMATIONTASK Edit ( S_TRANSFORMATIONTASK& http );					// API
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_TRANSFORMATIONTASK> Retrieve ( Http& http );	// API
@@ -293,7 +321,10 @@ struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
 
 	// CRUD
 	D_BACKUPRESTORETASK Create ( Http& http );				// API
+	D_BACKUPRESTORETASK Create ( S_BACKUPRESTORETASK& http );				// API
 	D_BACKUPRESTORETASK Edit ( Http& http );					// API
+	D_BACKUPRESTORETASK Edit ( S_BACKUPRESTORETASK& http );					// API
+	
 	void Delete ( Http& http );					// API
 
 	Vector<D_BACKUPRESTORETASK> Retrieve ( Http& http );	// API

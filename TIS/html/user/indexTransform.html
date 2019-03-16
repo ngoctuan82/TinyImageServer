@@ -76,7 +76,7 @@
                         <div class="horizontal-menu">
                             <nav>
                                 <ul id="nav_menu">
-                                    <li class="active">
+                                    <li>
                                         <a href="index.html"><i class="ti-dashboard"></i><span>Dashboard</span></a>
                                        
                                     </li>
@@ -84,7 +84,7 @@
                                         <a href="indexFileMgmt.html"><i class="ti-layout-sidebar-left"></i><span>File management</span></a>
                                         
                                     </li>
-                                    <li>
+                                    <li  class="active">
                                         <a href="indexTransform.html"><i class="ti-settings"></i><span>Transformation</span></a>
                                         
                                     </li>
@@ -109,200 +109,46 @@
         <!-- page title area end -->
         <div class="main-content-inner">
             <div class="container">
-                <div class="row">
-                    <!-- seo fact area start -->
-                    <div class="col-lg-8">
-                        <div class="row">
-                           <div class="search-box pull-left">
-                            <form action="#">
-                                <input type="text" name="search" placeholder="Search..." required>
-                                <i class="ti-search"></i>
-                                    </form>
-                           
-                        </div>
-                         <button type="button" class="upload-button">Add Image</button>
-                        
-                        </div>
-                    </div>
-                    <!-- seo fact ar.ea end -->
-                     <div class="col-lg-8">
-                        
-                  <div class=" clearfix">
-                        <ul class="notification-area pull-right">
-                            <li id="full-view"><i class="ti-fullscreen"></i></li>
-                            <li id="full-view-exit"><i class="ti-zoom-out"></i></li>
-                            <li class="dropdown">
-                                <i class="ti-bell dropdown-toggle" data-toggle="dropdown">
-                                    <span>2</span>
-                                </i>
-                                <div class="dropdown-menu bell-notify-box notify-box">
-                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                    <div class="nofity-list">
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                            <div class="notify-text">
-                                                <p>You have Changed Your Password</p>
-                                                <span>Just Now</span>
+             
+
+                 <div class="col-12 mt-5">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="header-title">Watermark</h4>
+
+                                        <div class="media">
+
+                                            <img class="img-fluid mr-4" src="assets/images/media/media2.jpg" alt="">
+                                            <input type="file" class="custom-file-input" id="inputGroupFile02">
+                                            <div class="media-body">
+
+                                                                                    
                                             </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                            <div class="notify-text">
-                                                <p>New Commetns On Post</p>
-                                                <span>30 Seconds ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                            <div class="notify-text">
-                                                <p>Some special like you</p>
-                                                <span>Just Now</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-comments-smiley btn-info"></i></div>
-                                            <div class="notify-text">
-                                                <p>New Commetns On Post</p>
-                                                <span>30 Seconds ago</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-primary"></i></div>
-                                            <div class="notify-text">
-                                                <p>Some special like you</p>
-                                                <span>Just Now</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                            <div class="notify-text">
-                                                <p>You have Changed Your Password</p>
-                                                <span>Just Now</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb"><i class="ti-key btn-danger"></i></div>
-                                            <div class="notify-text">
-                                                <p>You have Changed Your Password</p>
-                                                <span>Just Now</span>
-                                            </div>
-                                        </a>
+                                        </div>
+                                    
+                                        <h4 class="header-title mt-5">Transformation</h4>
+                                        <form>
+                                            <fieldset >
+                                                <div class="form-group">
+                                                    <label for="">Max file size (MB)</label>
+                                                    <input type="number" id="" class="form-control" placeholder="0 MB">
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck">
+                                                    <label class="form-check-label" for="disabledFieldsetCheck">
+                                                        Auto scale down
+                                                    </label>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Extensions</label>
+                                                   <input type="text" id="" class="form-control" placeholder="png jpg bmp jpeg">
+                                                </div>
+                                            </fieldset>
+                                        </form>
                                     </div>
                                 </div>
-                            </li>
-                            <li class="dropdown">
-                                <i class="fa fa-envelope-o dropdown-toggle" data-toggle="dropdown"><span>3</span></i>
-                                <div class="dropdown-menu notify-box nt-enveloper-box">
-                                    <span class="notify-title">You have 3 new notifications <a href="#">view all</a></span>
-                                    <div class="nofity-list">
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img1.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img2.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">When you can connect with me...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img3.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">I missed you so much...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img4.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Your product is completely Ready...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img2.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img1.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                        <a href="#" class="notify-item">
-                                            <div class="notify-thumb">
-                                                <img src="assets/images/author/author-img3.jpg" alt="image">
-                                            </div>
-                                            <div class="notify-text">
-                                                <p>Aglae Mayer</p>
-                                                <span class="msg">Hey I am waiting for you...</span>
-                                                <span>3:15 PM</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </li>
-                            
-                        </ul>
-                    </div>
-                    <div class="row" style="border-right: 1px solid;">
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                    <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                     <div class="col-lg-4">
-                     <img src="assets\images\icon\logo.png" width="200" height="200" alt="no image"/>
-                     </div>
-                    </div>
-                    
-   </div>
-    <div class="col-lg-4">
-    <p>Preview</p>
-    <img src="assets\images\icon\logo.png" width="300" height="300" alt="no image"/>
-                     
-    
-                        </div>
-                </div>
+                            </div>
+           
             </div>
             
         </div>
