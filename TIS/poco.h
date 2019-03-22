@@ -3,6 +3,7 @@
 #include <Skylark/Skylark.h>
 #include <Core/Core.h>
 #include "TISDB.h"
+#include "util.h"
 
 using namespace Upp;
 
@@ -231,7 +232,7 @@ struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
 	//------------------------------------------------
 	
 	int GetDailyDownload(); // total download today
-	Vector<D_DAILYSUMMARY> GetMonthlyDownload();
+	Vector<Jsonew> GetMonthlyDownload();
 };
 
 struct D_TRANSFORMATIONSETTING:  Moveable<D_TRANSFORMATIONSETTING>

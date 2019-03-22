@@ -347,24 +347,48 @@ int D_DAILYSUMMARY::GetDailyDownload(){
 
 
 // get total download in system
-Vector<D_DAILYSUMMARY> D_DAILYSUMMARY::GetMonthlyDownload(){
+Vector<Jsonew> D_DAILYSUMMARY::GetMonthlyDownload(){
 	
 	
-	Vector<D_DAILYSUMMARY> d;
+	Vector<Jsonew> d;
 	S_DAILYSUMMARY x;
 	
 	try{
 		Date today = GetSysDate();
-		Date last30 = AddMonths(today, -30);
-		
+		Date last30 = AddMonths(today, -1);
+		//Cout()<<" last 30:"<< last30.Get() << " today: "<< today.Get();
 		SqlBool where;
-		where = LOGDATE >= last30.Get();// 
+		where = LOGDATE > last30.Get() && LOGDATE <= today.Get();// 
 		
-		SQL *  Select ( SqlSum(NOOFDOWNLOADFILE) ).From ( DAILYSUMMARY ).Where(where).GroupBy(LOGDATE);
+		SQL *  Select (LOGDATE, SqlSum(NOOFUPLOADFILE),SqlSum(NOOFDOWNLOADFILE), SqlSum(TOTALUPLOADSIZE),SqlSum(TOTALDOWNLOADSIZE))
+			.From ( DAILYSUMMARY )
+			.Where(where)
+			.GroupBy(LOGDATE).OrderBy(LOGDATE);
 		
-		while ( SQL.Fetch ( x ) ){
-			d.Add(x);
-			break;
+		where = LOGDATE == today.Get();// 
+		
+		/*
+			INT_	(LOGDATE)
+			INT_	(NOOFUPLOADFILE)
+			INT_	(NOOFDOWNLOADFILE)
+			INT_	(TOTALUPLOADSIZE)
+			INT_	(TOTALDOWNLOADSIZE)
+		*/
+	
+		
+		while ( SQL.Fetch() ){
+			Jsonew k;
+			Date date;
+			date.Set(SQL[0]);
+			
+			k
+			("LOGDATE", AsString(date) )
+			("NOOFUPLOADFILE", SQL[1] )
+			("NOOFDOWNLOADFILE", SQL[2] )
+			("TOTALUPLOADSIZE", SQL[3] )
+			("TOTALDOWNLOADSIZE", SQL[4] );
+						
+			d.Add(k);
 		}
 		
 	}

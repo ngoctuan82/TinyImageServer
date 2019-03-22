@@ -300,3 +300,362 @@
 	 });
     </script>
 </preloader>
+
+
+<DiskUsagePieChart>
+
+<div class="card">
+	<div class="card-body" ref="container" >
+		<h4 class="header-title">{data.Drive}</h4>
+		<canvas ref="piechart" height="233" style="margin:auto"></canvas>
+	</div>
+</div>
+	
+<style>
+	canvas{ margin:auto}
+	diskusagepiechart{display:block}
+</style>
+
+     <script>
+     //{ "Drive": "A:\\", "Total": "230.9 Gb", "Free": "59.4 Gb", "Usage": "171.5 Gb" }
+     	this.data = 
+				{ "Drive": "DEMO:\\", "Total": "230.9 Gb", "Free": "59.4 Gb", "Usage": "171.5 Gb" };
+
+     	this.data = opts.data || this.data;
+		//-----------------------------------------------
+		InitUI()
+		{	
+			var container = this.refs.container;
+			var ctx = this.refs.piechart;
+			
+			var labels =["Free:" + this.data.Free, "Usage:"+this.data.Usage];
+			var values =[this.data.FreeVal, this.data.UsageVal];
+			
+
+				var chart = new Chart(ctx, {
+				// The type of chart we want to create
+				type: 'doughnut',
+				// The data for our dataset
+				data: {
+					labels: labels,
+					datasets: [{
+						backgroundColor: [
+							"#8919FE",
+							"#12C498",
+							"#F8CB3F"
+						],
+						borderColor: '#fff',
+						data: values,
+					}]
+				},
+				// Configuration options go here
+				options: {
+					legend: {
+						display: true
+					},
+					animation: {
+						easing: "easeInOutBack"
+					},
+					responsive: false,
+					maintainAspectRatio:true
+					
+				}
+			});
+			chart.update();
+		
+			
+		}
+
+	  	this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+		this.InitUI();
+
+	  })
+	
+	  this.on('update', function() {
+	    // allows recalculation of context data before the update
+	    console.log("update");
+
+	    this.InitUI();
+	  })
+	
+	  this.on('updated', function() {
+	    // right after the tag template is updated after an update call
+	    console.log("updated");
+	  })
+	  
+	 
+
+
+     </script>
+
+</DiskUsagePieChart>
+
+
+<DiskUsagePieCharts>
+
+	
+		<DiskUsagePieChart   each={item, i in items}    data = {item} class={i>0?"mt-5":""}></DiskUsagePieChart>
+		
+
+
+	<script>
+		var self = this;
+		this.apikey = '123';  // should get from session
+		this.API = `api/diskusage/${this.apikey}`;
+
+
+		this.items = [];
+
+		//-----------------------------------------
+		this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+    	 fetch(this.API, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData.IsError==false)
+			{
+				self.items = jsonData.Data;
+				self.update();
+			}
+			else
+				console.error(jsonData.Status);
+				
+		})
+		.catch(err => {
+
+				console.error(err);
+		});
+
+
+	  });
+
+	</script>
+
+</DiskUsagePieCharts>
+
+
+
+<AdminSummary>
+
+	<div class="row">
+                            
+		<div class="col-md-6 mt-5 mb-3">
+			<div class="card">
+				<div class="seo-fact sbg1">
+					<div class="p-4 d-flex justify-content-between align-items-center">
+						<div class="seofct-icon"><i class="ti-thumb-up"></i>Backups</div>
+						<h2>{item.Backups}</h2>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 mt-md-5 mb-3">
+			<div class="card">
+				<div class="seo-fact sbg2">
+					<div class="p-4 d-flex justify-content-between align-items-center">
+						<div class="seofct-icon"><i class="ti-share"></i>Downloads</div>
+						<h2>{item.Downloads}</h2>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 mb-3 mb-lg-0">
+			<div class="card">
+				<div class="seo-fact sbg3">
+					<div class="p-4 d-flex justify-content-between align-items-center">
+						<div class="seofct-icon">Total Files</div>
+						 <h2>{item.Files}</h2>
+															  </div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card">
+				<div class="seo-fact sbg4">
+					<div class="p-4 d-flex justify-content-between align-items-center">
+						<div class="seofct-icon">Total Users</div>
+						 <h2>{item.Users}</h2>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+			
+
+	<script>
+		var self = this;
+		this.apikey = '123';  // should get from session
+		this.API = `api/summary/${this.apikey}`;
+
+		//{ "Status": "", "IsError": false, "Data": [ { "Backups": "0", "Downloads": "3", "Users": "3", "Files": "4" } ] }
+		this.item = [];
+
+		//-----------------------------------------
+		this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+    	 fetch(this.API, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData.IsError==false)
+			{
+				self.item= jsonData.Data[0];
+				self.update();
+			}
+			else
+				console.error(jsonData.Status);
+				
+		})
+		.catch(err => {
+
+				console.error(err);
+		});
+
+
+	  });
+
+	</script>
+
+</AdminSummary>
+
+<DownloadStatistic>
+
+	<!-- Statistics area start -->
+	
+		<div class="card">
+			<div class="card-body">
+				<h4 class="header-title">Download Statistics</h4>
+				<div id="user-statistics" ref ="downloadstatistic"></div>
+			</div>
+		</div>
+	
+	<!-- Statistics area end -->
+
+<script>
+		var self = this;
+		this.apikey = '123';  // should get from session
+		this.API = `api/download/${this.apikey}`;
+
+		//[{"ID":-1,"USERID":null,"LOGDATE":737503,"NOOFUPLOADFILE":0,"NOOFDOWNLOADFILE":1,"TOTALUPLOADSIZE":0,"TOTALDOWNLOADSIZE":1234567},{"ID":-1,"USERID":null,"LOGDATE":737504,"NOOFUPLOADFILE":0,"NOOFDOWNLOADFILE":4,"TOTALUPLOADSIZE":0,"TOTALDOWNLOADSIZE":4938268}]
+		this.items=null;
+
+		this.UI={
+			chart:null
+		};
+
+		InitUI(items)
+		{
+			   var downloadstatistic = this.refs.downloadstatistic;
+
+			   this.UI.chart = AmCharts.makeChart(downloadstatistic, {
+				"type": "serial",
+				"theme": "light",
+				"marginRight": 0,
+				"marginLeft": 40,
+				"autoMarginOffset": 20,
+				"dataDateFormat": "MM-DD-YYYY",
+				"valueAxes": [{
+					"id": "v1",
+					"axisAlpha": 0,
+					"position": "left",
+					"ignoreAxisWidth": true
+				}],
+				"balloon": {
+					"borderThickness": 1,
+					"shadowAlpha": 0
+				},
+				"graphs": [{
+					"id": "g1",
+					"balloon": {
+						"drop": true,
+						"adjustBorderColor": false,
+						"color": "#ffffff",
+						"type": "smoothedLine"
+					},
+					"fillAlphas": 0.2,
+					"bullet": "round",
+					"bulletBorderAlpha": 1,
+					"bulletColor": "#FFFFFF",
+					"bulletSize": 5,
+					"hideBulletsCount": 50,
+					"lineThickness": 2,
+					"title": "red line",
+					"useLineColorForBulletBorder": true,
+					"valueField": "value",
+					"balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+				}],
+				"chartCursor": {
+					"valueLineEnabled": true,
+					"valueLineBalloonEnabled": true,
+					"cursorAlpha": 0,
+					"zoomable": false,
+					"valueZoomable": true,
+					"valueLineAlpha": 0.5
+				},
+				"valueScrollbar": {
+					"autoGridCount": true,
+					"color": "#5E72F3",
+					"scrollbarHeight": 30
+				},
+				"categoryField": "date",
+				"categoryAxis": {
+					"parseDates": true,
+					"dashLength": 1,
+					"minorGridEnabled": true
+				},
+				"export": {
+					"enabled": false
+				},
+				"dataProvider": items
+
+				
+		});
+		}
+		//-----------------------------------------
+		this.on('mount', function() {
+			// right after the tag is mounted on the page
+			console.log("mount");
+
+			 fetch(this.API, {method:'get'})
+			.then(response => response.json())
+			.then(jsonData => { 
+				console.log(jsonData); 
+				if(jsonData.IsError==false)
+				{
+					self.items= jsonData.Data.map(obj => ( {"date":obj.LOGDATE, "value":obj.NOOFDOWNLOADFILE} ));
+					self.InitUI(self.items);
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+
+
+	 	 });
+
+	 	 
+	  this.on('update', function() {
+	    // allows recalculation of context data before the update
+	    console.log("update");
+
+	    //self.InitUI(self.items);
+	  })
+
+	</script>
+</DownloadStatistic>

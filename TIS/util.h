@@ -15,6 +15,8 @@ struct Jsonew:Moveable<Jsonew>, public Json
 	{
 		ValueMap vm  = ParseJSON(ToString());
 		
+		LOG(vm);
+		
 		json.Set(vm);
 	}
 };

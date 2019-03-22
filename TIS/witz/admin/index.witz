@@ -3,7 +3,7 @@
 	
 	    <meta charset="utf-8">
 	    <meta http-equiv="x-ua-compatible" content="ie=edge">
-	    <title>Login - TIS</title>
+	    <title>Dashboard - TIS</title>
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <link rel="shortcut icon" type="image/png" href="static/assets/images/icon/favicon.ico">
 
@@ -128,76 +128,22 @@
                 <div class="row">
                     <!-- seo fact area start -->
                     <div class="col-lg-8">
-                        <div class="row">
-                            
-                            <div class="col-md-6 mt-5 mb-3">
-                                <div class="card">
-                                    <div class="seo-fact sbg1">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon"><i class="ti-thumb-up"></i>Backups</div>
-                                            <h2>5</h2>
-                                        </div>
-                                      
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mt-md-5 mb-3">
-                                <div class="card">
-                                    <div class="seo-fact sbg2">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon"><i class="ti-share"></i>Downloads</div>
-                                            <h2>3,984</h2>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3 mb-lg-0">
-                                <div class="card">
-                                    <div class="seo-fact sbg3">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon">Total Files</div>
-                                             <h2>3,984</h2>
-                                                                                  </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="seo-fact sbg4">
-                                        <div class="p-4 d-flex justify-content-between align-items-center">
-                                            <div class="seofct-icon">Total Users</div>
-                                             <h2>10</h2>
-                                       
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <AdminSummary></AdminSummary>
                     </div>
                     <!-- seo fact area end -->
                    
                     <!-- Statistics area start -->
                     <div class="col-lg-8 mt-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="header-title">Download Statistics</h4>
-                                <div id="user-statistics"></div>
-                            </div>
-                        </div>
+                        <DownloadStatistic></DownloadStatistic>
+                         <div id="user-statistics"></div>
+
                     </div>
                     <!-- Statistics area end -->
-                    <!-- Advertising area start -->
-                    <div class="col-lg-4 mt-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="header-title">Disk Usage</h4>
-                                <canvas id="seolinechart8" height="233"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Advertising area end -->
-               
+                    
+					<div class="col-lg-4 mt-5">
+
+                    	<DiskUsagePieCharts max-height='300px'></DiskUsagePieCharts>
+                     </div>
                    
        
                 </div>
@@ -207,13 +153,38 @@
         <!-- footer area start-->
         <footer>
             <div class="footer-area">
-                <p> TIS - <a href="http://simaget.com:8001/tis/html/index.html">Simaget</a>.</p>
+                <p> TIS - <a href="login">Simaget.com</a></p>
             </div>
         </footer>
         <!-- footer area end-->
     </div>
     <!-- main wrapper start -->
 
+
+
+
+ <!-- bootstrap 4 js -->
+    <script src="static/assets/js/popper.min.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/owl.carousel.min.js"></script>
+    <script src="static/assets/js/metisMenu.min.js"></script>
+    <script src="static/assets/js/jquery.slimscroll.min.js"></script>
+    <script src="static/assets/js/jquery.slicknav.min.js"></script>
+
+    <!-- start chart js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!-- start highcharts js -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <!-- start amcharts -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+    <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+      
 
 
 
