@@ -17,8 +17,8 @@ CONSOLE_APP_MAIN
 #endif
 
 
-	//DeleteFile(ConfigFile(DBFILE)); // for this example, always create a new DB
-	//InitTISDB();
+	DeleteFile(ConfigFile(DBFILE)); // for this example, always create a new DB
+	InitTISDB();
 
 	TISApp().Run();	
 }

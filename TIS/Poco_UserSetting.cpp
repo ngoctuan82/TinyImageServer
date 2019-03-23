@@ -1,5 +1,5 @@
 #include "util.h"
-#include "poco.h"
+#include "Poco.h"
 
 void D_USERSETTING::Jsonize(JsonIO & json)
 {

@@ -5,8 +5,8 @@
 */
 
 #include "TIS.h"
-#include "poco.h"
-#include "poco_impl.h"
+#include "Poco.h"
+#include "Poco_Impl.h"
 #include "TISDB.h"
 #include <Core/Core.h>
 

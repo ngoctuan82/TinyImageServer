@@ -23,7 +23,8 @@ struct TISApp : SkylarkApp {
 		path <<";" << "/home/tony/MyApps/TinyImageServer/TIS/html/"; 	// development path
 		path << ";"<<"/html";
 		path << ";"<<".";
-		path << ";C:/upp/MyApps/TinyImageServer/TIS"; 											// deployment path for current folder
+		path << ";C:/upp/MyApps/TinyImageServer/TIS";
+		path << ";/home/tony/MyApps/TinyImageServer/TIS"		; 											// deployment path for current folder
 		
 	//	threads= 1; // because sqlite3 does not work correct with multiple threads
 		
