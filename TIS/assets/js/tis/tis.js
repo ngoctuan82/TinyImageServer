@@ -20,3 +20,14 @@ var OptsMixin = {
     return this
   }
 }
+
+function  QueryStr(obj)
+  {
+  	if(obj)
+  	{
+		let query = Object.keys(obj)
+             .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])).join('&');
+        return query;
+  	}
+  	return null;
+  }

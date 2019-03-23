@@ -764,10 +764,10 @@
 	  	{
 	  		console.log("On click");
 
-	  		 fetch(this.API.UPDATE, {
-	  		 	method:'get',
-	  		 	body:JSON.stringify(self.item)
-	  		 })
+			var url = `${this.API.UPDATE}?${QueryStr(this.item)}`;
+			console.log(url);
+			
+	  		fetch(url, {method:'get'})
 			.then(response => response.json())
 			.then(jsonData => { 
 				console.log(jsonData); 
