@@ -659,3 +659,134 @@
 
 	</script>
 </DownloadStatistic>
+
+
+
+<adminform>
+
+	
+<div class="card">
+	<div class="card-body">
+		<h4 class="header-title">Admin</h4>
+
+	   <div class="row">
+	   		<div class="col-12 form-gp">
+				<input type="email" ref="EMAIL" placeholder="Email" value={item.EMAIL}>
+				<i class="ti-email"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<input type="password" ref="PASSWORD" placeholder="Password"  value={item.PASSWORD}>
+				<i class="ti-shield"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<input type="text" ref="FULLNAME" placeholder="Full Name" value={item.FULLNAME} >
+				<i class="ti-user"></i>
+			</div>
+			<div class="col-12 form-gp">	
+				<input type="phone" ref="PHONE" placeholder="Phone"  value={item.PHONE}>
+				<i class="ti-mobile"></i>
+			</div>
+		</div>
+
+		<div class="row">
+			
+			<div class="col-4">
+				<button onclick={OnSaveClick} type="button" ref="btnSave" class="btn btn-primary mt-4 pr-4 pl-4">Save</button>
+			</div>
+
+		</div>
+
+
+	</div>
+</div>
+
+		
+
+
+	<script>
+		var self = this;
+		this.APIKEY = '123';  // should get from session
+		this.API={
+			GET:`api/user/get/${this.APIKEY}`,
+			UPDATE:`api/user/update/${this.APIKEY}`
+		};
+		//--------
+
+		this.item={
+			EMAIL:"",
+			PASSWORD:"",
+			FULLNAME:"",
+			PHONE:"",
+		};
+		
+		InitUI()
+		{
+			
+		}
+
+		this.on('mount', function() {
+			console.log("mount");
+			this.LoadData();
+			
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		 fetch(this.API.GET, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.item = jsonData.Data[0] || self.item;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+	  	OnSaveClick(e)
+	  	{
+	  		console.log("On click");
+
+	  		 fetch(this.API.UPDATE, {
+	  		 	method:'get',
+	  		 	body:JSON.stringify(self.item)
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => { 
+				console.log(jsonData); 
+				if(jsonData.IsError==false)
+				{
+					console.log("DONE updated");
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+
+	  	}
+
+
+	</script>
+
+</adminform>
