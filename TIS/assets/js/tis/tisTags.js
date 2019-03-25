@@ -671,19 +671,19 @@
 
 	   <div class="row">
 	   		<div class="col-12 form-gp">
-				<input type="email" ref="EMAIL" placeholder="Email" value={item.EMAIL}>
+				<input type="email" ref="EMAIL" placeholder="Email" value={item.EMAIL} onchange={OnChange}>
 				<i class="ti-email"></i>
 			</div>
 			<div class="col-12 form-gp">
-				<input type="password" ref="PASSWORD" placeholder="Password"  value={item.PASSWORD}>
+				<input type="password" ref="PASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
 				<i class="ti-shield"></i>
 			</div>
 			<div class="col-12 form-gp">
-				<input type="text" ref="FULLNAME" placeholder="Full Name" value={item.FULLNAME} >
+				<input type="text" ref="FULLNAME" placeholder="Full Name" value={item.FULLNAME}  onchange={OnChange} >
 				<i class="ti-user"></i>
 			</div>
 			<div class="col-12 form-gp">	
-				<input type="phone" ref="PHONE" placeholder="Phone"  value={item.PHONE}>
+				<input type="phone" ref="PHONE" placeholder="Phone"  value={item.PHONE}  onchange={OnChange}>
 				<i class="ti-mobile"></i>
 			</div>
 		</div>
@@ -722,6 +722,7 @@
 		InitUI()
 		{
 			
+
 		}
 
 		this.on('mount', function() {
@@ -760,6 +761,12 @@
 			});
 	  	}
 
+		OnChange(e)
+		{
+			var ctrl= e.target;
+			this.item[ctrl.attributes.ref.value] = ctrl.value;
+		}
+
 	  	OnSaveClick(e)
 	  	{
 	  		console.log("On click");
@@ -790,3 +797,126 @@
 	</script>
 
 </adminform>
+
+
+
+<serverform>
+
+	
+<div class="card">
+	<div class="card-body">
+		<h4 class="header-title">Server Info</h4>
+
+	   <div class="row">
+	   		<div class="col-12 form-gp">
+	   			<label>Root Path</label>
+				<input type="text" ref="ROOTPATH" value={item.ROOTPATH} onchange={OnChange}>
+				<i class="ti-email"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<label>Static Path</label>
+				<input type="text" ref="STATICPATH"  value={item.STATICPATH}  onchange={OnChange}>
+				<i class="ti-shield"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<label>Image Path</label>
+				<input type="text" ref="IMAGEPATH" value={item.IMAGEPATH}  onchange={OnChange} >
+				<i class="ti-user"></i>
+			</div>
+			<div class="col-12 form-gp">	
+				<label>Backup Path</label>
+				<input type="text" ref="BACKUPPATH"   value={item.BACKUPPATH}  onchange={OnChange}>
+				<i class="ti-mobile"></i>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+		<style>
+serverform label{
+	position: inherit !important;
+	color: none !important
+}
+
+
+
+
+
+
+	color:none  !important
+
+}
+		</style>
+
+
+	<script>
+		var self = this;
+		this.APIKEY = '123';  // should get from session
+		this.API={
+			GET:`api/adminsetting/get/${this.APIKEY}`,
+		//	UPDATE:`api/adminsetting/update/${this.APIKEY}`
+		};
+		//--------
+
+		this.item={
+			ROOTPATH:"",
+			STATICPATH:"",
+			IMAGEPATH:"",
+			BACKUPPATH:"",
+		};
+		
+		InitUI()
+		{
+			
+
+		}
+
+		this.on('mount', function() {
+			console.log("mount");
+			this.LoadData();
+			
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		 fetch(this.API.GET, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.item = jsonData.Data[0] || self.item;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		OnChange(e)
+		{
+			var ctrl= e.target;
+			this.item[ctrl.attributes.ref.value] = ctrl.value;
+		}
+
+	  	
+
+	</script>
+
+</serverform>

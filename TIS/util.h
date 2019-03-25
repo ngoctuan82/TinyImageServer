@@ -25,5 +25,6 @@ struct Jsonew:Moveable<Jsonew>, public Json
 
 Vector<Jsonew> GetDrivesSummaryInfo();
 Vector<Jsonew> GetDrivesInfo();
+Vector<Jsonew> GetServerInfo();
 
 #endif

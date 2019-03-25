@@ -80,3 +80,38 @@ Vector<Jsonew> GetDrivesInfo(){
 	}
 	return rs;
 }
+
+
+/*
+	Get all drives info 
+*/
+Vector<Jsonew> GetServerInfo(){
+
+	Vector< Jsonew > rs;
+	Vector<String> cpus;
+	
+	String manufacturer, productName, version, mbSerial;
+	Date releaseDate;
+	int numberOfProcessors;
+	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
+	
+	String vendor, identifier, architecture; 
+	int speed;
+	for (int i = 0; i < numberOfProcessors; ++i) {
+		GetProcessorInfo(i, vendor, identifier, architecture, speed);		
+		cpus.Add(Format("Processor #%d: '%s', '%s', '%s', %d MHz", i, vendor, identifier, architecture, speed));	
+	}
+		
+	int memoryLoad;
+	uint64 totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual;
+	if (!GetMemoryInfo(memoryLoad, totalPhys, freePhys, totalPageFile, freePageFile, totalVirtual, freeVirtual))		
+		LOG("Cannot get memory info.");
+	String memory = Format("Memory: In use:%d%c,  Total: '%s'",memoryLoad, BytesToString(totalPhys) );
+	Jsonew vm;
+	vm
+		("CPU", cpus[i] )
+		("MEMORY", memory )
+		;
+
+	return rs;
+}
