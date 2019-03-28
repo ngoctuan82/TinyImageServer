@@ -356,7 +356,7 @@
 					animation: {
 						easing: "easeInOutBack"
 					},
-					responsive: false,
+					responsive: true,
 					maintainAspectRatio:true
 					
 				}
@@ -805,28 +805,28 @@
 	
 <div class="card">
 	<div class="card-body">
-		<h4 class="header-title">Server Info</h4>
+		<h4 class="header-title">Configuration</h4>
 
 	   <div class="row">
 	   		<div class="col-12 form-gp">
 	   			<label>Root Path</label>
-				<input type="text" ref="ROOTPATH" value={item.ROOTPATH} onchange={OnChange}>
-				<i class="ti-email"></i>
+				<input readonly type="text" ref="ROOTPATH" value={item.ROOTPATH} onchange={OnChange}>
+				<i class="ti-home"></i>
 			</div>
 			<div class="col-12 form-gp">
 				<label>Static Path</label>
-				<input type="text" ref="STATICPATH"  value={item.STATICPATH}  onchange={OnChange}>
-				<i class="ti-shield"></i>
+				<input readonly type="text" ref="STATICPATH"  value={item.STATICPATH}  onchange={OnChange}>
+				<i class="ti-folder"></i>
 			</div>
 			<div class="col-12 form-gp">
 				<label>Image Path</label>
-				<input type="text" ref="IMAGEPATH" value={item.IMAGEPATH}  onchange={OnChange} >
-				<i class="ti-user"></i>
+				<input readonly type="text" ref="IMAGEPATH" value={item.IMAGEPATH}  onchange={OnChange} >
+				<i class="ti-image"></i>
 			</div>
 			<div class="col-12 form-gp">	
 				<label>Backup Path</label>
-				<input type="text" ref="BACKUPPATH"   value={item.BACKUPPATH}  onchange={OnChange}>
-				<i class="ti-mobile"></i>
+				<input readonly type="text" ref="BACKUPPATH"   value={item.BACKUPPATH}  onchange={OnChange}>
+				<i class="ti-server"></i>
 			</div>
 		</div>
 
@@ -835,19 +835,10 @@
 </div>
 
 		<style>
-serverform label{
-	position: inherit !important;
-	color: none !important
-}
-
-
-
-
-
-
-	color:none  !important
-
-}
+			serverform label{
+				position: inherit !important;
+				color: none !important
+			}
 		</style>
 
 
@@ -920,3 +911,549 @@ serverform label{
 	</script>
 
 </serverform>
+
+
+<backupform>
+
+ <!-- Backup form start -->
+                  <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="header-title">
+                                    
+                                         <h4>
+                                            Full Backup & Restore
+                                         </h4>
+                                          <div class="row">
+                                            <div class="col-4">
+                                                <button onclick={OnClickBackup} type="button" class="btn btn-warning mt-4 pr-4 pl-4">Backup Now</button>
+                                            </div>
+                                           
+                                          
+                                        </div>
+                                   
+                                </div>
+
+                                
+
+                                <div class="single-table mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table text-center">
+                                            <thead class="text-uppercase bg-primary">
+                                                <tr class="text-white">
+                                                    <th scope="col">Date</th>
+                                                    <th scope="col">PATH</th>
+                                                    <th scope="col">Type</th>
+                                                    <th scope="col">Status</th>                                              
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr each={item in items}>
+                                                    
+                                                    <td>{item.CREATEDDATE}</td>
+                                                    <td>{item.FOLDERPATH}</td>
+                                                    <td>{item.ISBACKUPTASK?"Backup":"Restore"}</td>
+                                                    <td><span class="status-p bg-primary">{item.STATUS==0?"Proccessing":"Ready"}</span></td>
+                                                    <td> <button onclick={OnClickRestore(item)} if={item.STATUS==1 && item.ISBACKUPTASK==true} type="button" class="btn btn-warning mt-4 pr-4 pl-4">Restore</button> </td>
+                                                   
+                         
+                                                </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                  <!-- Backup form end -->
+
+
+
+<script>
+	var self = this;
+		this.APIKEY = '123';  // should get from session
+		this.API={
+			GET:`api/backuprestoretask/get/${this.APIKEY}`,
+			CREATE:`api/backuprestoretask/create/${this.APIKEY}`
+		};
+
+		this.items =[];
+
+		this.on('mount', function() {
+			console.log("mount");
+			this.LoadData();
+			
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		 fetch(this.API.GET, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.items = jsonData.Data || self.items;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		OnClickBackup()
+		{
+			console.log("click backup");
+			var params = {ISBACKUPTASK:1};
+			this.DoCreate(params);
+			
+		}
+
+		OnClickRestore(e, item)
+		{
+			console.log("Click Restore");
+			var params = {ISBACKUPTASK:0};
+			this.DoCreate(params);
+		}
+
+		DoCreate(params)
+		{
+			 
+			 var url = `${this.API.CREATE}?${QueryStr(params)}`;
+
+			 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					
+					if(jsonData.Data.length>0)
+					{
+						self.items.unshift(jsonData.Data[0]);
+						self.update();
+					}
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+	
+</script>
+</backupform>
+
+
+<UsersPieChart>
+
+<div class="card">
+	<div class="card-body" ref="container" >
+		<h4 class="header-title">Total Users</h4>
+		<canvas ref="piechart" height="233" style="margin:auto"></canvas>
+	</div>
+</div>
+	
+<style>
+	canvas{ margin:auto}
+	diskusagepiechart{display:block}
+</style>
+
+     <script>
+   
+   		var self = this;
+		this.apikey = '123';  // should get from session
+		this.API = `api/userstotal/${this.apikey}`;
+		
+     	this.data = {Active: 60, Deleted: 1};
+		//-----------------------------------------------
+		InitUI()
+		{	
+			var container = this.refs.container;
+			var ctx = this.refs.piechart;
+			
+			var labels =[ "Deleted:","Active:"];
+			var values =this.data;
+			
+
+				var chart = new Chart(ctx, {
+				// The type of chart we want to create
+				type: 'doughnut',
+				// The data for our dataset
+				data: {
+					labels: labels,
+					datasets: [{
+						backgroundColor: [
+							"#8919FE",
+							"#12C498",
+							"#F8CB3F"
+						],
+						borderColor: '#fff',
+						data: values,
+					}]
+				},
+				// Configuration options go here
+				options: {
+					legend: {
+						display: true
+					},
+					animation: {
+						easing: "easeInOutBack"
+					},
+					responsive: true,
+					maintainAspectRatio:true
+
+				}
+			});
+			chart.update();
+			
+		}
+
+	  	this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+		
+
+
+
+
+	  })
+	
+	  this.on('update', function() {
+	    // allows recalculation of context data before the update
+	    console.log("update");
+
+	    this.InitUI();
+	  })
+	
+	  this.on('updated', function() {
+	    // right after the tag template is updated after an update call
+	    console.log("updated");
+	  })
+	  	
+
+		//-----------------------------------------
+		this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+    	 fetch(this.API, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData.IsError==false)
+			{
+				self.data = jsonData.Data.map(e=> e.USERS);
+				
+				self.update();
+			}
+			else
+				console.error(jsonData.Status);
+				
+		})
+		.catch(err => {
+
+				console.error(err);
+		});
+
+
+	  });
+	 
+
+
+     </script>
+
+</UsersPieChart>
+
+
+<usermanagement>
+
+
+<!-- user management form start -->
+                  <div class="card">
+                            <div class="card-body">
+                                
+                                <div class="header-title">               
+                                        <!-- search row start -->
+										<div class="row">
+											<div class="col-12">
+												<div class="search-box pull-left">
+													<form action="#">
+														<input ref="txtSearch" type="text" name="search" placeholder="Search by name..." required>
+														<i onclick={OnClickSearch} class="ti-search"></i>
+													</form>
+												</div>
+											</div>
+										</div>
+										<!-- search row end -->
+                                   
+                                </div>
+
+                                
+
+                                <div class="single-table mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover progress-table text-center">
+                                            <thead class="text-uppercase bg-primary">
+                                                <tr class="text-white">
+                                                	<th scope="col">ID<i  onclick={OnClickOrderID}  class="ti-exchange-vertical ml-2"></i></th>
+                                                    <th scope="col">Name <i  onclick={OnClickOrderName}  class="ti-exchange-vertical  ml-2"></i></th>
+                                                    <th scope="col">DOB <i  onclick={OnClickOrderDOB}  class="ti-exchange-vertical ml-2"></i></th>
+                                                    <th scope="col">Email<i  onclick={OnClickOrderEmail}  class="ti-exchange-vertical ml-2"></i></th>
+                                                    <th scope="col">Status<i  onclick={OnClickOrderStatus}  class="ti-exchange-vertical ml-2"></i></th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr each={item, i in items}>
+                                                    <td>{item.ID}</td>
+                                                    <td>{item.FULLNAME}</td>
+                                                    <td>{item.DATEOFBIRTH}</td>
+                                                     <td>{item.EMAIL}</td>
+                                                    <td> <span class="status-p {item.STATUS?'bg-warning':'bg-primary'}">{item.STATUS?"Active":"Deleted"}</span>  </td>
+                                                    <td  onclick={parent.OnClickDeleteRestore} > <i  class="{item.STATUS?'ti-trash':'ti-back-right'}"></i>  </td>
+                                                  
+                                                </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                        <!-- Pagination start -->
+										 <nav aria-label="Page navigation example">
+											<ul class="pagination">
+												<li class="page-item">
+													<a onclick={OnClickPrevPage} class="page-link" href="#" aria-label="Previous">
+														<span aria-hidden="true">&laquo;</span>
+														<span class="sr-only">Previous</span>
+													</a>
+												</li>
+
+												<li  each={page in pages}  class="page-item {this.SEARCH.PAGE==page-1?'disabled':''}">
+													<a href="#" class="page-link" onclick={OnClickPage}>{page}</a>
+												</li>
+
+
+
+												<li class="page-item">
+													<a onclick={OnClickNextPage} class="page-link" href="#" aria-label="Next">
+														<span aria-hidden="true">&raquo;</span>
+														<span class="sr-only">Next</span>
+													</a>
+												</li>
+											</ul>
+										</nav>
+											
+										
+										<!-- Pagination end -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<!-- user management form end -->
+<script>
+	var self = this;
+		this.APIKEY = '123';  // should get from session
+		this.API={
+			SEARCH:`api/user/get/${this.APIKEY}`,
+			UPDATE:`api/user/update/${this.APIKEY}`,
+			TOTALUSERS:`api/userstotal/${this.apikey}`
+		};
+
+		this.SEARCH={
+			PAGE:0,
+			SIZE:10,
+			FULLNAME:"",
+			ORDERBY:"",
+			DESC:0
+		};
+		
+		this.pages =[];
+		this.items =[];
+
+		this.on('mount', function() {
+			console.log("mount");
+			
+			this.LoadTotalUsers(this.LoadData);
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+		
+		LoadTotalUsers(fn)
+		{
+			fetch(this.API.TOTALUSERS, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					var data = jsonData.Data;
+					var totals = data.reduce((a,b)=>a.USERS+b.USERS);
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					// generation 
+					self.pages = [];
+					for(i=0;i<pages;i++) self.pages.push(i+1);
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.then(r=>
+			{
+				if(fn) fn();// callback
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+		
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		var url = `${this.API.SEARCH}?${QueryStr(this.SEARCH)}`;
+
+	  		 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.items = jsonData.Data || self.items;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		
+		OnClickDeleteRestore(event)
+		{
+			console.log("Click Delete Restore");
+			console.log(event.item);
+			var item = event.item.item;
+			var index = event.item.i;
+			var obj={ID:item.ID, STATUS: item.STATUS};
+			item.STATUS=item.STATUS?0:1;
+			
+			this.DoUpdate(item, index);
+		}
+
+		DoUpdate(params, index)
+		{
+			 
+			 var url = `${this.API.UPDATE}?${QueryStr(params)}`;
+
+			 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					
+					if(jsonData.Data.length>0)
+					{
+						self.items[index] = jsonData.Data[0];
+						self.update();
+					}
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+
+		OnClickOrderID()
+		{
+			this.SEARCH.ORDERBY = "ID";
+			this.SEARCH.DESC=this.SEARCH.DESC?0:1;
+			this.LoadData();
+		}
+		OnClickOrderName()
+		{
+			this.SEARCH.ORDERBY = "FULLNAME";
+			this.SEARCH.DESC=this.SEARCH.DESC?0:1;
+			this.LoadData();
+		}
+		OnClickOrderDOB()
+		{
+			this.SEARCH.ORDERBY = "DATEOFBIRTH";
+			this.SEARCH.DESC=this.SEARCH.DESC?0:1;
+			this.LoadData();
+		}
+		OnClickOrderEmail()
+		{
+			this.SEARCH.ORDERBY = "EMAIL";
+			this.SEARCH.DESC=this.SEARCH.DESC?0:1;
+			this.LoadData();
+		}
+		OnClickOrderStatus()
+		{
+			this.SEARCH.ORDERBY = "STATUS";
+			this.SEARCH.DESC=this.SEARCH.DESC?0:1;
+			this.LoadData();
+		}
+		
+
+		OnClickSearch()
+		{
+			var txtSearch = this.refs.txtSearch;
+			this.SEARCH.FULLNAME= txtSearch.value;
+
+			this.LoadData();
+		}
+
+		
+		//--------- pagination
+		OnClickPage(event)
+		{
+			var item = event.item;
+			this.SEARCH.PAGE = item.page-1;
+			this.LoadData();
+		}
+	
+</script>
+</usermanagement>

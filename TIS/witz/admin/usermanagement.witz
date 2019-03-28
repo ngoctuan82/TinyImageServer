@@ -122,30 +122,26 @@
             </div>
         </div>
         <!-- header area end -->
-        <!-- page title area end -->
-        <div class="main-content-inner">
+        <!--  main content area start -->
+          <div class="main-content-inner" style="min-height: 897px;">
             <div class="container">
+                      
                 <div class="row">
-                    <!-- seo fact area start -->
-                    <div class="col-lg-8">
-                        <AdminSummary></AdminSummary>
-                    </div>
-                    <!-- seo fact area end -->
-                   
-                    <!-- Statistics area start -->
-                    <div class="col-lg-8 mt-5">
-                        <DownloadStatistic></DownloadStatistic>
-                         <div id="user-statistics"></div>
 
+                     <!-- statistic start -->
+                    <div class="col-3 mt-5">
+                        <!-- Advertising area start -->
+						<UsersPieChart></UsersPieChart>
+                        <!-- Advertising area end -->
                     </div>
-                    <!-- Statistics area end -->
-                    
-					<div class="col-lg-4 mt-5">
+                     <!-- statistic end -->
 
-                    	<DiskUsagePieCharts max-height='300px'></DiskUsagePieCharts>
-                     </div>
-                   
-       
+               		<!-- Progress Table start -->
+                    <div class="col-9 mt-5">
+                       <usermanagement></usermanagement>
+                    </div>
+                    <!-- Progress Table end --> 
+                          
                 </div>
             </div>
         </div>

@@ -13,6 +13,9 @@ using namespace Upp;
 */
 String PrintParams(Http& http)
 {
+	LOG(GetSysTime());
+	LOG(GetSysTime().Get());
+	
 	int count = http.GetParamCount();
 	Vector<String> v;
 	for ( int i = 0; i < http.GetParamCount(); i++ ) v.Add(http[i]);
@@ -55,10 +58,18 @@ String tCreate(Http &http)
 		
 	T obj;
 	obj = obj.Create(http);
-	//------------------------------------------
-	Vector<T>  vector;
-	if(obj.data.ID > 0) vector.Add(obj);
-	http << StoreAsJson(vector);
+	//-----------------------------------------
+	DataPacket<T> packet;
+	
+	if(obj.data.ID > 0) 
+	{
+		packet.Data.Add(obj);
+	}
+	else
+	{
+		packet.SetError("Can not Create ");
+	}
+	http << StoreAsJson(packet);
 }
 
 /*
@@ -349,9 +360,10 @@ SKYLARK ( dailysummaryget, "api/dailysummary/get/*" )
 /*
 	Backup Restore Task
 */
-SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create" )
+SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create/*" )
 {
 	PrintParams(http);
+
 	tCreate<D_BACKUPRESTORETASK>(http);
 }
 
@@ -362,6 +374,7 @@ SKYLARK ( backuprestoretaskupdate, "api/backuprestoretask/update/*" )
 {
 	PrintParams(http);
 	tUpdate<D_BACKUPRESTORETASK>(http);
+	
 }
 
 /*
@@ -559,12 +572,22 @@ SKYLARK ( admindownloadstatictis, "api/download/*" )
 SKYLARK ( admindiskusage, "api/diskusage/*" )
 {
 	PrintParams(http);
-
-	Vector<Jsonew> vector = GetDrivesInfo();
+	
 	DataPacket< Jsonew > packet;
 	packet.Data = GetDrivesInfo();
 	http<< StoreAsJson(packet, true);
 }
 
-
+/*
+	admin total users usage
+*/
+SKYLARK ( adminuserstotal, "api/userstotal/*" )
+{
+	PrintParams(http);
+	
+	D_USERINFO user;
+	DataPacket< Jsonew > packet;
+	packet.Data = user.GetUsersTotal();
+	http<< StoreAsJson(packet, true);
+}
 

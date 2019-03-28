@@ -109,7 +109,7 @@ Vector<Jsonew> GetServerInfo(){
 	String memory = Format("Memory: In use:%d%c,  Total: '%s'",memoryLoad, BytesToString(totalPhys) );
 	Jsonew vm;
 	vm
-		("CPU", cpus[i] )
+		("CPU", cpus )
 		("MEMORY", memory )
 		;
 

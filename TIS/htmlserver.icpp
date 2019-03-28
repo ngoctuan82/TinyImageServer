@@ -22,10 +22,10 @@
 		}
 	
 	
-		String folder= "C:/upp/MyApps/TinyImageServer/TIS/html";
+		//String folder= "C:/upp/MyApps/TinyImageServer/TIS/html";
 	
-		//String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
-		String path = GetFileOnPath(file, folder, false);
+		String path = GetFileOnPath(file, SkylarkApp::Config().path, false);
+		//String path = GetFileOnPath(file, folder, false);
 	
 		if(!path.GetCount()) {
 			http.Response(404, "Not found");

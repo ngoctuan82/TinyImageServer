@@ -79,6 +79,8 @@ struct D_USERINFO:  Moveable<D_USERINFO>
 	D_USERINFO GetById ( int id );
 	D_USERINFO GetBySession ( int session );
 	
+	Vector<Jsonew> GetUsersTotal ( );// count the active and deleted users
+	
 	bool ValidateUserApiKey ( Http & http, bool isAdmin = false);
 	
 	//
@@ -332,6 +334,7 @@ struct D_BACKUPRESTORETASK :  Moveable<D_BACKUPRESTORETASK>
 	String RetrieveAsJson ( Http& http );			// API
 	//------------------------------------------------
 	D_BACKUPRESTORETASK GetById ( int id );
+	D_BACKUPRESTORETASK GetByStatus ( int status );
 	//------------------------------------------------
 	
 	int GetSummary();

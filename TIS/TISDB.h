@@ -34,8 +34,8 @@ struct PAGINATION {
 			String sSize = (String)http["SIZE"];
 			String sPage = (String)http["PAGE"];
 			
-			this->PAGE = sPage.IsEmpty()?0:atoi(sPage);
-			this->SIZE = sSize.IsEmpty()?20:atoi(sSize);
+			this->PAGE = sPage.IsEmpty()?0:abs(atoi(sPage));
+			this->SIZE = sSize.IsEmpty()?20:abs(atoi(sSize));
 			this->OFFSET = this->PAGE * this->SIZE;
 		}
 		catch(...)
@@ -45,7 +45,27 @@ struct PAGINATION {
 	}
 };
 
+struct ORDER {
 
+	String COL = "ID";
+	int DESC = 1;
+	
+	typedef ORDER CLASSNAME;
+
+	ORDER(Http & http) {
+		try{
+			String sCol = (String)http["ORDERBY"];
+			int sDesc = atoi((String)http["DESC"]);
+			
+			this->COL = sCol.IsEmpty()?"ID":sCol;
+			this->DESC = sDesc?1:0;
+		}
+		catch(...)
+		{
+			Cout() << "Error get params ORDER";
+		}
+	}
+};
 
 
 #endif

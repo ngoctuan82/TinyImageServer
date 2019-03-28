@@ -101,20 +101,30 @@ D_USERINFO D_USERINFO::Edit(S_USERINFO& pObj){
 	
 	if(tObj.data.ID > 0)
 	{
+		
+		if(pObj.EMAIL.IsEmpty()==false) tObj.data.EMAIL = pObj.EMAIL;
+		if(pObj.PASSWORD.IsEmpty()==false)tObj.data.PASSWORD = pObj.PASSWORD;
+		if(pObj.FULLNAME.IsEmpty()==false) tObj.data.FULLNAME = pObj.FULLNAME;
+		if(pObj.APIKEY>0) tObj.data.APIKEY = pObj.APIKEY;	
+		if(pObj.PHONE.IsEmpty()==false) tObj.data.PHONE = pObj.PHONE;
+		if(pObj.DATEOFBIRTH.IsEmpty()==false) tObj.data.DATEOFBIRTH = pObj.DATEOFBIRTH;
+		if(pObj.STATUS>=0 && tObj.data.ISADMIN==0) tObj.data.STATUS = pObj.STATUS;
+		if(pObj.SESSION>=0) tObj.data.SESSION = pObj.SESSION;
+		
 		SQL *  Update( USERINFO )
 				//(ID,pObj.ID)
-				(EMAIL,pObj.EMAIL)
-				(PASSWORD,pObj.PASSWORD)
-				(APIKEY,pObj.APIKEY)
-				(SESSION,pObj.SESSION)
-				(FULLNAME,pObj.FULLNAME)
-				(PHONE,pObj.PHONE)
-				(DATEOFBIRTH,pObj.DATEOFBIRTH)
-				(STATUS,pObj.STATUS)
+				(EMAIL,tObj.data.EMAIL)
+				(PASSWORD,tObj.data.PASSWORD)
+				(APIKEY,tObj.data.APIKEY)
+				(SESSION,tObj.data.SESSION)
+				(FULLNAME,tObj.data.FULLNAME)
+				(PHONE,tObj.data.PHONE)
+				(DATEOFBIRTH,tObj.data.DATEOFBIRTH)
+				(STATUS,tObj.data.STATUS)
 			//	(ISADMIN,pObj.ISADMIN) // dont update this 
-				.Where( ID == pObj.ID);
+				.Where( ID == tObj.data.ID);
 		//----------------------------------------
-		tObj = GetByApiKey(pObj.APIKEY);
+		tObj = GetById(pObj.ID);
 		Cout()<<"\nUpdated User:"<<tObj<<"\n";
 	}
 	else
@@ -136,6 +146,8 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	
 	S_USERINFO pObj; // params container
 	PAGINATION pager(http);
+	ORDER order(http);
+
 	try{
 		pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =(String)http["EMAIL"];
@@ -146,6 +158,7 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 	//	pObj.DATEOFBIRTH=(String)http["DATEOFBIRTH"];
 	//	pObj.STATUS=(String)http["STATUS"];
 	//	pObj.ISADMIN= atoi((String)http["ISADMIN"]);
+		
  
 	}
 	catch(...)
@@ -163,9 +176,15 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 //	if(pObj.ISADMIN>=0) where =where && ISADMIN == pObj.ISADMIN;
 
 	Cout()<<pObj<<"\n";
+	SqlSelect select = Select ( SqlAll() ).From ( USERINFO ).Where(where);
+	SqlId col(order.COL);
+	if(order.DESC)
+		select = select.OrderBy(Descending(col));
+	else
+		select = select.OrderBy(col);
 	
-	SQL *  Select ( SqlAll() ).From ( USERINFO ).Where(where).OrderBy ( ID, FULLNAME ).Limit(pager.OFFSET, pager.SIZE);
-	
+	SQL *  select.Limit(pager.OFFSET, pager.SIZE);
+
 	Vector<D_USERINFO>  vector;
 	S_USERINFO x;
 
@@ -296,6 +315,31 @@ D_USERINFO D_USERINFO::GetBySession(int session){
 	return  rs;
 	
 }
+// get count user with status group
+Vector<Jsonew> D_USERINFO::GetUsersTotal(){
+	
+	Vector<Jsonew>  rs;
+	
+	try{
+	
+		SQL *  Select ( Count(ID), STATUS ).From ( USERINFO ).GroupBy(STATUS);
+		Jsonew js;
+		while ( SQL.Fetch ( ) ){
+			js
+			("USERS", SQL[0])
+			("STATUS", SQL[1])
+			;
+			rs.Add(js);
+		}
+		
+	}
+	catch(...){
+		Cout() << "Error D_USERINFO::GetUsersTotal(int session)";
+	}
+	return  rs;
+	
+}
+
 /*
 	validate the user api key from http params
 */

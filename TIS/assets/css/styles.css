@@ -2380,7 +2380,8 @@ table.dataTable thead td {
 
 .form-gp i {
     position: absolute;
-    right: 5px;
+   /* right: 5px;*/
+    right: 15px;
     bottom: 15px;
     color: #7e74ff;
     font-size: 16px;

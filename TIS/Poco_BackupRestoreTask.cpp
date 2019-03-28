@@ -1,19 +1,24 @@
 #include "util.h"
 #include "Poco.h"
+#include <Core/Core.h>
+
+using namespace Upp;
 
 void D_BACKUPRESTORETASK::Jsonize(JsonIO & json)
 {
+	Time time;
+	time.Set(data.CREATEDDATE);
 	json
 	("ID",data.ID )
-	("USERID",data.USERID)
+	///("USERID",data.USERID)
 	("ISBACKUPTASK",data.ISBACKUPTASK)
-	("CREATEDDATE",data.CREATEDDATE)
-	("FINISHDATE",data.FINISHDATE)
-	("SOURCEFOLDERPATH",data.SOURCEFOLDERPATH)
-	("TARGETFOLDERPATH",data.TARGETFOLDERPATH)
-	("PROCCESED",data.PROCCESED)
-	("TOTALFILES",data.TOTALFILES)
-//	("STATUS",data.STATUS) // when we have finishdate means it done
+	("CREATEDDATE",  time )
+//	("FINISHDATE",data.FINISHDATE)
+//	("SOURCEFOLDERPATH",data.SOURCEFOLDERPATH)
+	("FOLDERPATH",data.FOLDERPATH)
+//	("PROCCESED",data.PROCCESED)
+//	("TOTALFILES",data.TOTALFILES)
+	("STATUS",data.STATUS) // when we have finishdate means it done
 
 	;
 }
@@ -21,18 +26,22 @@ void D_BACKUPRESTORETASK::Jsonize(JsonIO & json)
 D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 	
 	S_BACKUPRESTORETASK pObj; // params container
-	
+	D_ADMINSETTING objAS;
+	 
 	try{
 		//pObj.ID=atoi((String)http["ID"]);
-		pObj.USERID=atoi((String)http["USERID"]);
+		Time time=GetSysTime();
+		int64 iTime = time.Get();
+		LOG(iTime);
+		
 		pObj.ISBACKUPTASK=atoi((String)http["ISBACKUPTASK"]);
-		pObj.CREATEDDATE=atoi((String)http["CREATEDDATE"]);
-		pObj.FINISHDATE=atoi((String)http["FINISHDATE"]);
-		pObj.SOURCEFOLDERPATH=((String)http["SOURCEFOLDERPATH"]);
-		pObj.TARGETFOLDERPATH=((String)http["TARGETFOLDERPATH"]);
-		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
-		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-	//	pObj.STATUS=atoi((String)http["STATUS"]);
+		pObj.CREATEDDATE= iTime;
+		pObj.STATUS=0;
+		
+		objAS = objAS.GetById(1);
+		
+		pObj.FOLDERPATH = AppendFileName(objAS.data.BACKUPPATH, AsString(pObj.CREATEDDATE) );
+		
 	}
 	catch(...)
 	{
@@ -46,30 +55,26 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(S_BACKUPRESTORETASK& pObj){
 	
 	
-	// check any 
-	D_BACKUPRESTORETASK tObj = GetById(pObj.ID);
+	// check any proccessing row
+	D_BACKUPRESTORETASK tObj = GetByStatus(0); // get proccesing status
 	
 	if(tObj.data.ID < 0)
 	{
 		SQL *  Insert( BACKUPRESTORETASK )
-				//(ID,pObj.ID)
-				(USERID,pObj.USERID)
 				(ISBACKUPTASK,pObj.ISBACKUPTASK)
 				(CREATEDDATE,pObj.CREATEDDATE)
-				(FINISHDATE,pObj.FINISHDATE)
-				(SOURCEFOLDERPATH,pObj.SOURCEFOLDERPATH)
-				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
-				(PROCCESED,pObj.PROCCESED)
-				(TOTALFILES,pObj.TOTALFILES)
-			//	(STATUS,pObj.STATUS)
-
+				(FOLDERPATH,pObj.FOLDERPATH)	
+				(STATUS,pObj.STATUS)
 				;
+		int id = SQL.GetInsertedId();
+		tObj = GetById(id);
 		//----------------------------------------
-		Cout()<<"\nCreated Transformation Setting:"<<tObj<<"\n"; 
+		LOG("\nCreated D_BACKUPRESTORETASK :"<<tObj); 
 	}
 	else
 	{
-		Cout()<<"\nTransformation Setting existed:"<<tObj.data.ID<<"\n";
+		LOG("\n D_BACKUPRESTORETASK  existed:"<<tObj.data.ID);
+		tObj.data.ID = -1;
 	}
 	return tObj;
 }
@@ -84,52 +89,17 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(Http& http){
 	
 	try{
 		pObj.ID=atoi((String)http["ID"]);
-		pObj.USERID=atoi((String)http["USERID"]);
 		pObj.ISBACKUPTASK=atoi((String)http["ISBACKUPTASK"]);
-		pObj.CREATEDDATE=atoi((String)http["CREATEDDATE"]);
-		pObj.FINISHDATE=atoi((String)http["FINISHDATE"]);
-		pObj.SOURCEFOLDERPATH=((String)http["SOURCEFOLDERPATH"]);
-		pObj.TARGETFOLDERPATH=((String)http["TARGETFOLDERPATH"]);
-		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
-		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-	//	pObj.STATUS=atoi((String)http["STATUS"]);
+		pObj.CREATEDDATE=atoi((String)http["CREATEDDATE"]);	
+		pObj.FOLDERPATH=((String)http["FOLDERPATH"]);	
+		pObj.STATUS=atoi((String)http["STATUS"]);
 	}
 	catch(...)
 	{
 		Cout() << "Error D_BACKUPRESTORETASK::Update";
 	}
-	// check any same email registered
-	D_BACKUPRESTORETASK tObj = GetById(pObj.ID);
 	
-//	Cout()<<"\npObj"<<pObj<<"\n";
-//	Cout()<<"tObj"<<tObj<<"\n";	
-//	Cout()<<"Hash Key"<< GetHashValue(pObj.EMAIL)<<"\n";
-//	Cout()<<"Data ID Key"<< tObj.data.ID <<"\n";
-
-	if(tObj.data.ID > 0)
-	{
-		SQL *  Update( BACKUPRESTORETASK )
-				
-				(USERID,pObj.USERID)
-				(ISBACKUPTASK,pObj.ISBACKUPTASK)
-				(CREATEDDATE,pObj.CREATEDDATE)
-				(FINISHDATE,pObj.FINISHDATE)
-				(SOURCEFOLDERPATH,pObj.SOURCEFOLDERPATH)
-				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
-				(PROCCESED,pObj.PROCCESED)
-				(TOTALFILES,pObj.TOTALFILES)
-			//	(STATUS,pObj.STATUS)
-				
-				.Where( ID == pObj.ID);
-		//----------------------------------------
-		tObj = GetById(pObj.ID);
-		Cout()<<"\n Backup Restore Update:"<<tObj<<"\n";
-	}
-	else
-	{
-		Cout()<<"\n Backup Restore did not exist:"<<tObj.data.ID<<"\n";
-	}
-	return tObj;
+	return Edit(pObj);
 }
 
 D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(S_BACKUPRESTORETASK& pObj){
@@ -140,25 +110,19 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Edit(S_BACKUPRESTORETASK& pObj){
 	if(tObj.data.ID > 0)
 	{
 		SQL *  Update( BACKUPRESTORETASK )
-				
-				(USERID,pObj.USERID)
 				(ISBACKUPTASK,pObj.ISBACKUPTASK)
 				(CREATEDDATE,pObj.CREATEDDATE)
-				(FINISHDATE,pObj.FINISHDATE)
-				(SOURCEFOLDERPATH,pObj.SOURCEFOLDERPATH)
-				(TARGETFOLDERPATH,pObj.TARGETFOLDERPATH)
-				(PROCCESED,pObj.PROCCESED)
-				(TOTALFILES,pObj.TOTALFILES)
-			//	(STATUS,pObj.STATUS)
+					(FOLDERPATH,pObj.FOLDERPATH)
+				(STATUS,pObj.STATUS)
 				
 				.Where( ID == pObj.ID);
 		//----------------------------------------
 		tObj = GetById(pObj.ID);
-		Cout()<<"\n Backup Restore Update:"<<tObj<<"\n";
+		LOG("\n Backup Restore Update:"+tObj.ToString()+"\n");
 	}
 	else
 	{
-		Cout()<<"\n Backup Restore did not exist:"<<tObj.data.ID<<"\n";
+		LOG("\n Backup Restore did not exist:"+AsString(tObj.data.ID)+"\n");
 		tObj = Create(pObj);
 	}
 	return tObj;
@@ -175,17 +139,12 @@ Vector<D_BACKUPRESTORETASK> D_BACKUPRESTORETASK::Retrieve(Http& http){
 	
 	try{
 		pObj.ID=atoi((String)http["ID"]);
-		pObj.USERID=atoi((String)http["USERID"]);
+	
 		pObj.ISBACKUPTASK=atoi((String)http["ISBACKUPTASK"]);
 		pObj.CREATEDDATE=atoi((String)http["CREATEDDATE"]);
-		pObj.FINISHDATE=atoi((String)http["FINISHDATE"]);
-		
-		pObj.SOURCEFOLDERPATH=((String)http["SOURCEFOLDERPATH"]);
-		pObj.TARGETFOLDERPATH=((String)http["TARGETFOLDERPATH"]);
-		
-		pObj.PROCCESED=atoi((String)http["PROCCESED"]);
-		pObj.TOTALFILES=atoi((String)http["TOTALFILES"]);
-	//	pObj.STATUS=atoi((String)http["STATUS"]);
+
+		pObj.FOLDERPATH=((String)http["FOLDERPATH"]);
+		pObj.STATUS=atoi((String)http["STATUS"]);
 	}
 	catch(...)
 	{
@@ -197,22 +156,18 @@ Vector<D_BACKUPRESTORETASK> D_BACKUPRESTORETASK::Retrieve(Http& http){
 	SqlBool where;
 	
 	if(pObj.ID>0) where = ID == pObj.ID;
-	if(pObj.USERID>0) where =where &&  USERID == pObj.USERID;
+
 	if(pObj.ISBACKUPTASK>0) where =where &&  ISBACKUPTASK == pObj.ISBACKUPTASK;
 	if(pObj.CREATEDDATE>0) where =where &&  CREATEDDATE == pObj.CREATEDDATE;
-	if(pObj.FINISHDATE>0) where =where &&  FINISHDATE == pObj.FINISHDATE;
 	
-	if(pObj.SOURCEFOLDERPATH.IsEmpty()==false) where =where &&  Like(SOURCEFOLDERPATH, Wild("*"+pObj.SOURCEFOLDERPATH + "*"));
-	if(pObj.TARGETFOLDERPATH.IsEmpty()==false) where =where &&  Like(TARGETFOLDERPATH, Wild("*"+pObj.TARGETFOLDERPATH + "*"));
+	if(pObj.FOLDERPATH.IsEmpty()==false) where =where &&  Like(FOLDERPATH, Wild("*"+pObj.FOLDERPATH + "*"));
 	
-	if(pObj.PROCCESED>0) where =where &&  PROCCESED == pObj.PROCCESED;
-	if(pObj.TOTALFILES>0) where =where &&  TOTALFILES == pObj.TOTALFILES;
-	//if(pObj.STATUS>0) where =where &&  STATUS == pObj.STATUS;
+	if(pObj.STATUS>0) where =where &&  STATUS == pObj.STATUS;
 	
 	//------------------------
 	Cout()<<pObj<<"\n";
 	
-	SQL *  Select ( SqlAll() ).From ( BACKUPRESTORETASK ).Where(where).OrderBy ( ID ).Limit(pager.OFFSET, pager.SIZE);
+	SQL *  Select ( SqlAll() ).From ( BACKUPRESTORETASK ).Where(where).OrderBy (Descending( ID)).Limit(pager.OFFSET, pager.SIZE);
 	
 	Vector<D_BACKUPRESTORETASK>  vector;
 	S_BACKUPRESTORETASK x;
@@ -256,6 +211,33 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::GetById(int id){
 	
 }
 
+
+/*
+	get D_BACKUPRESTORETASK by proccessing status
+*/
+D_BACKUPRESTORETASK D_BACKUPRESTORETASK::GetByStatus(int status){
+	
+	D_BACKUPRESTORETASK  rs;
+	S_BACKUPRESTORETASK x;
+	
+	try{
+		SqlBool where;
+		where = STATUS == status;// condition
+		
+		SQL *  Select ( SqlAll() ).From ( BACKUPRESTORETASK ).Where(where).OrderBy(Descending(ID)).Limit(1);
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_BACKUPRESTORETASK(x);
+			break;
+		}
+	}
+	catch(...){
+		Cout() << "Error D_BACKUPRESTORETASK::Get(String id)";
+	}
+	return  rs;
+	
+}
+
 // get total users in system
 int D_BACKUPRESTORETASK::GetSummary(){
 	
@@ -265,7 +247,7 @@ int D_BACKUPRESTORETASK::GetSummary(){
 	try{
 		SqlBool where;
 		where = ISBACKUPTASK == 1;// condition 0 means blocked
-		where = where && FINISHDATE >0;
+		where = where && STATUS >0;
 		
 		SQL *  Select ( Count(ID) ).From ( BACKUPRESTORETASK ).Where(where);;
 		
