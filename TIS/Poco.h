@@ -191,7 +191,8 @@ struct D_IMAGEFILE:  Moveable<D_IMAGEFILE>
 	//------------------------------------------------
 	D_IMAGEFILE GetById ( int id );
 	D_IMAGEFILE GetByFileName ( String filename  );
-	//------------------------------------------------
+	Vector<Jsonew> GetFilesTotal(Http& http);
+	//-----------------------------------------------
 	
 	int GetSummary();
 };
@@ -234,7 +235,7 @@ struct D_DAILYSUMMARY:  Moveable<D_DAILYSUMMARY>
 	//------------------------------------------------
 	
 	int GetDailyDownload(); // total download today
-	Vector<Jsonew> GetMonthlyDownload();
+	Vector<Jsonew> GetMonthlyDownload(Http &http);
 };
 
 struct D_TRANSFORMATIONSETTING:  Moveable<D_TRANSFORMATIONSETTING>

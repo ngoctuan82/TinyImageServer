@@ -4,7 +4,7 @@ void D_USERINFO::Jsonize(JsonIO & json)
 	json
 	("ID",data.ID)
 	("EMAIL",data.EMAIL)
-	("PASSWORD",data.PASSWORD) // debug onlly password shouldnt show when return data
+//	("PASSWORD", NULL) // debug onlly password shouldnt show when return data
 	("APIKEY",data.APIKEY)
 	("FULLNAME",data.FULLNAME )
 	("PHONE",data.PHONE )
@@ -21,7 +21,8 @@ D_USERINFO D_USERINFO::Create(Http& http){
 	try{
 	//	pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =((String)http["EMAIL"]);
-		pObj.PASSWORD =(String)http["PASSWORD"];
+		pObj.PASSWORD =TrimBoth(	(String)http["PASSWORD"]);
+		if(!(pObj.PASSWORD.IsEmpty() || pObj.PASSWORD.IsVoid()) )
 			pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
 		pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
 		pObj.FULLNAME =(String)http["FULLNAME"];
@@ -79,8 +80,10 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 		pObj.ID =atoi((String)http["ID"]);    // most important
 		pObj.EMAIL =((String)http["EMAIL"]);
 		pObj.PASSWORD =(String)http["PASSWORD"];	
+		if(!(pObj.PASSWORD.IsEmpty() || pObj.PASSWORD.IsVoid()) )
+			pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
 		pObj.PASSWORD =AsString(GetHashValue(pObj.PASSWORD));
-		pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
+		//pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];
 		pObj.DATEOFBIRTH=(String)http["DATEOFBIRTH"];

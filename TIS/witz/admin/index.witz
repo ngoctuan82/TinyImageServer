@@ -52,12 +52,14 @@
 		these fields are used to build an unique identifier of this upload job
 				in order to allow progress handler to identify correctly its related upload job
 				(we need it because we can have more upload jobs calls on server
-	-->
 	$set()
-	
 	<input type='hidden' id='LOGAPIKEY' value='$.LOGAPIKEY'>
 	<input type='hidden' id='SESSION' value='$@__skylark_session_cookie__'>
+
+	-->
 	
+	
+		
 
   <!-- preloader area start -->
     <preloader></preloader>
@@ -126,7 +128,7 @@
         </div>
         <!-- header area end -->
         <!-- page title area end -->
-        <div class="main-content-inner">
+       <div class="main-content-inner" style="min-height: 897px;">
             <div class="container">
                 <div class="row">
                     <!-- seo fact area start -->

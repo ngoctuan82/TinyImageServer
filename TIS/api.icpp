@@ -172,9 +172,6 @@ SKYLARK ( userlogin, "api/user/login" )
 	D_USERINFO user;
 	user = user.Login(http);
 	//------------------------------------------
-	//Vector<D_USERINFO>  vector;
-	//if(user.data.ID > 0) vector.Add(user);
-	//http << StoreAsJson(vector, true);
 	DataPacket<D_USERINFO> packet;
 	
 	if(user.data.ID > 0)
@@ -189,10 +186,11 @@ SKYLARK ( userlogin, "api/user/login" )
 		http.NewIdentity();
 		//-----------------------------------------------------------
 		int64 session = 0;
-		//session = StrInt64(AsString(http["@__skylark_session_cookie__"]));
-		session = StrInt64(AsString(http[".__identity__"]));
+		session = StrInt64(AsString(http["@__skylark_session_cookie__"]));
+		//session = StrInt64(AsString(http[".__identity__"]));
 		// set session for apikey
 		http.SessionSet(".LOGAPIKEY", user.data.APIKEY);
+		LOG(user.data);
 		
 		// update session for this user
 		user.data.SESSION = session;
@@ -564,7 +562,7 @@ SKYLARK ( admindownloadstatictis, "api/download/*" )
 	
 	DataPacket< Jsonew > packet;
 	D_DAILYSUMMARY summary;
-	packet.Data = summary.GetMonthlyDownload();
+	packet.Data = summary.GetMonthlyDownload(http);
 	http << StoreAsJson(packet);
 }
 
@@ -594,3 +592,15 @@ SKYLARK ( adminuserstotal, "api/userstotal/*" )
 	http<< StoreAsJson(packet, true);
 }
 
+/*
+	user files owned 
+*/
+SKYLARK ( filestotal, "api/filestotal/*" )
+{
+	PrintParams(http);
+	
+	D_IMAGEFILE image;
+	DataPacket< Jsonew > packet;
+	packet.Data = image.GetFilesTotal(http);
+	http<< StoreAsJson(packet, true);
+}

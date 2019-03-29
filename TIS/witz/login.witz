@@ -47,7 +47,6 @@
 				in order to allow progress handler to identify correctly its related upload job
 				(we need it because we can have more upload jobs calls on server
 	-->
-	$set()
 	<input type='hidden' id='LOGAPIKEY' value='$.LOGAPIKEY'>
 	<input type='hidden' id='SESSION' value='$@__skylark_session_cookie__'>
 	

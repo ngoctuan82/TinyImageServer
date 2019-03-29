@@ -347,18 +347,22 @@ int D_DAILYSUMMARY::GetDailyDownload(){
 
 
 // get total download in system
-Vector<Jsonew> D_DAILYSUMMARY::GetMonthlyDownload(){
+Vector<Jsonew> D_DAILYSUMMARY::GetMonthlyDownload(Http & http){
 	
 	
 	Vector<Jsonew> d;
 	S_DAILYSUMMARY x;
 	
 	try{
+		int userid =atoi((String)http["USERID"]);
+		
 		Date today = GetSysDate();
 		Date last30 = AddMonths(today, -1);
 		//Cout()<<" last 30:"<< last30.Get() << " today: "<< today.Get();
 		SqlBool where;
 		where = LOGDATE > last30.Get() && LOGDATE <= today.Get();// 
+		
+		if(userid>0) where = where && USERID == userid;
 		
 		SQL *  Select (LOGDATE, SqlSum(NOOFUPLOADFILE),SqlSum(NOOFDOWNLOADFILE), SqlSum(TOTALUPLOADSIZE),SqlSum(TOTALDOWNLOADSIZE))
 			.From ( DAILYSUMMARY )

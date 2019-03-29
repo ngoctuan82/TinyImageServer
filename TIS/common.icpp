@@ -3,24 +3,27 @@
 	
 	SKYLARK(Login, "login")
 	{
-		//if(http["@__skylark_session_cookie__"].IsNull())		http.NewSessionId();
+		//if(http["@__skylark_session_cookie__"].IsNull())		
+		
 		http.ClearSession();
+		http.NewSessionId();
+		
 		http.RenderResult("witz/login");
 	}
 	
 	SKYLARK(Admin, "admin")
 	{
-		//PrintParams(http);
+	
 		if(http[".LOGAPIKEY"].IsNull()) http.Redirect(Login);
 		else
 		
 		http.RenderResult("witz/admin/index");
-	//	http.RenderResult("admin/index.html");
+	
 	}
 	
 	SKYLARK(AdminUserManagement, "adminusermanagement")
 	{
-		//PrintParams(http);
+		
 		if(http[".LOGAPIKEY"].IsNull()) http.Redirect(Login);
 		else
 		http.RenderResult("witz/admin/usermanagement");
@@ -29,7 +32,7 @@
 	
 	SKYLARK(AdminUserDetail, "adminuserdetail")
 	{
-		//PrintParams(http);
+		
 		if(http[".LOGAPIKEY"].IsNull()) http.Redirect(Login);
 		else
 		http.RenderResult("witz/admin/userdetail");
@@ -38,21 +41,37 @@
 	
 	SKYLARK(AdminSetting, "adminsetting")
 	{
-		//PrintParams(http);
+		
 		if(http[".LOGAPIKEY"].IsNull()) http.Redirect(Login);
 		else
 		http.RenderResult("witz/admin/setting");
-	//	http.RenderResult("admin/index.html");
+	
 	}
 	
 
 	
 	SKYLARK(User, "user")
 	{
-	//	PrintParams(http);
+	
 		
 		http.RenderResult("witz/user/index");
-		//http.RenderResult("user/index.html");
+	
+	}
+	
+	SKYLARK(UserFileManagement, "userfilemanagement")
+	{
+	
+		
+		http.RenderResult("witz/user/filemanagement");
+	
+	}
+	
+	SKYLARK(UserSetting, "usersetting")
+	{
+	
+		
+		http.RenderResult("witz/user/setting");
+	
 	}
 	
 	
