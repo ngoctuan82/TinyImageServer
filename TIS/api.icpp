@@ -185,11 +185,14 @@ SKYLARK ( userlogin, "api/user/login" )
 		else
 			packet.Status ="user";
 		//
-		int session = 0;
-		if(http["@__skylark_session_cookie__"].IsNull()) 	http.NewSessionId();	
-		session = atoi(AsString(http["@__skylark_session_cookie__"]));
+		http.NewSessionId();	
+		http.NewIdentity();
+		//-----------------------------------------------------------
+		int64 session = 0;
+		//session = StrInt64(AsString(http["@__skylark_session_cookie__"]));
+		session = StrInt64(AsString(http[".__identity__"]));
 		// set session for apikey
-		http.SessionSet(".APIKEY", user.data.APIKEY);
+		http.SessionSet(".LOGAPIKEY", user.data.APIKEY);
 		
 		// update session for this user
 		user.data.SESSION = session;

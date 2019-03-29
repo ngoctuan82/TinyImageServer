@@ -190,8 +190,8 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 
 	while ( SQL.Fetch ( x ) ){
 		vector.Add ( D_USERINFO(x) );
-		row++;
-		if(row >= pager.SIZE) break;
+		//row++;
+		//if(row >= pager.SIZE) break;
 	}
 	//--------------------------------------------------------
 	return vector;

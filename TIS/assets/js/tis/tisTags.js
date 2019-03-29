@@ -711,6 +711,10 @@
 			UPDATE:`api/user/update/${this.APIKEY}`
 		};
 		//--------
+		this.SEARCH={
+			APIKEY:this.APIKEY,
+			ISADMIN:1
+		};
 
 		this.item={
 			EMAIL:"",
@@ -738,7 +742,8 @@
 	  	LoadData()
 	  	{
 	  		console.log("Load Data");
-	  		 fetch(this.API.GET, 
+	  		var url=`${this.API.GET}?${QueryStr(this.SEARCH)}`;
+	  		 fetch(url, 
 	  		 {
 	  		 	method:'get'
 	  		 })
@@ -1229,11 +1234,11 @@
                                             </thead>
                                             <tbody>
                                                 <tr each={item, i in items}>
-                                                    <td>{item.ID}</td>
-                                                    <td>{item.FULLNAME}</td>
-                                                    <td>{item.DATEOFBIRTH}</td>
-                                                     <td>{item.EMAIL}</td>
-                                                    <td> <span class="status-p {item.STATUS?'bg-warning':'bg-primary'}">{item.STATUS?"Active":"Deleted"}</span>  </td>
+                                                    <td   onclick={OnClickRowItem} >{item.ID}</td>
+                                                    <td   onclick={OnClickRowItem} >{item.FULLNAME}</td>
+                                                    <td   onclick={OnClickRowItem} >{item.DATEOFBIRTH}</td>
+                                                    <td   onclick={OnClickRowItem} >{item.EMAIL}</td>
+                                                    <td   onclick={OnClickRowItem} > <span class="status-p {item.STATUS?'bg-warning':'bg-primary'}">{item.STATUS?"Active":"Deleted"}</span>  </td>
                                                     <td  onclick={parent.OnClickDeleteRestore} > <i  class="{item.STATUS?'ti-trash':'ti-back-right'}"></i>  </td>
                                                   
                                                 </tr>
@@ -1450,10 +1455,178 @@
 		//--------- pagination
 		OnClickPage(event)
 		{
+			event.preventDefault();
+
 			var item = event.item;
 			this.SEARCH.PAGE = item.page-1;
 			this.LoadData();
 		}
+
+		OnClickRowItem(event)
+		{
+			window.location.href = "adminuserdetail";
+		}
 	
 </script>
 </usermanagement>
+
+
+
+<userform>
+
+	
+<div class="card">
+	<div class="card-body">
+		<h4 class="header-title">User Info</h4>
+
+	   <div class="row">
+	   		<div class="col-12 form-gp">
+				<input type="text" ref="FULLNAME" placeholder="Full Name" value={item.FULLNAME}  onchange={OnChange} >
+				<i class="ti-user"></i>
+			</div>
+	   		<div class="col-12 form-gp">
+				<input type="email" ref="EMAIL" placeholder="Email" value={item.EMAIL} onchange={OnChange}>
+				<i class="ti-email"></i>
+			</div>
+			<div class="col-12 form-gp">	
+				<input type="phone" ref="PHONE" placeholder="Phone"  value={item.PHONE}  onchange={OnChange}>
+				<i class="ti-mobile"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<input type="text" ref="APIKEY" placeholder="Apikey"  value={item.APIKEY}  onchange={OnChange}>
+				<i class="ti-shield"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<input type="password" ref="PASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
+				<i class="ti-shield"></i>
+			</div>
+			<div class="col-12 form-gp">
+				<input type="password" ref="CONFIRMPASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
+				<i class="ti-shield"></i>
+			</div>
+			
+		</div>
+
+		<div class="row">
+			
+			<div class="col-4">
+				<button onclick={OnSaveClick} type="button" ref="btnSave" class="btn btn-primary mt-4 pr-4 pl-4">Save</button>
+			</div>
+			<div class="col-4">
+				<button onclick={OnGenClick} type="button" ref="btnGenAPIKEY" class="btn btn-primary mt-4 pr-4 pl-4">Generate APIKEY</button>
+			</div>
+			<div class="col-4">
+				<button onclick={OnDeleteActiveClick} type="button" ref="btnDeleteActive" class="btn btn-primary mt-4 pr-4 pl-4">{item.STATUS?"Delete":"Active"}</button>
+			</div>
+		</div>
+
+
+	</div>
+</div>
+
+		
+
+
+	<script>
+		var self = this;
+		this.APIKEY = '123';  // should get from session
+		this.API={
+			GET:`api/user/get/${this.APIKEY}`,
+			UPDATE:`api/user/update/${this.APIKEY}`
+		};
+		//--------
+
+		this.item={
+			ID:null,
+			EMAIL:"",
+			APIKEY:"",
+			FULLNAME:"",
+			DATEOFBIRTH:"",
+			STATUS:"",
+			PHONE:"",
+			APIKEY:"",
+			PASSWORD:"",
+			ISADMIN:0
+		};
+		
+		InitUI()
+		{
+			
+
+		}
+
+		this.on('mount', function() {
+			console.log("mount");
+
+			this.LoadData();
+			
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		var param
+	  		var url =`${this.API.GET}?${QueryStr(param)}`;
+	  		 fetch(this.API.GET, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.item = jsonData.Data[0] || self.item;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		OnChange(e)
+		{
+			var ctrl= e.target;
+			this.item[ctrl.attributes.ref.value] = ctrl.value;
+		}
+
+	  	OnSaveClick(e)
+	  	{
+	  		console.log("On click");
+
+			var url = `${this.API.UPDATE}?${QueryStr(this.item)}`;
+			console.log(url);
+			
+	  		fetch(url, {method:'get'})
+			.then(response => response.json())
+			.then(jsonData => { 
+				console.log(jsonData); 
+				if(jsonData.IsError==false)
+				{
+					console.log("DONE updated");
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+
+	  	}
+
+
+	</script>
+
+</userform>

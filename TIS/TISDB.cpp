@@ -50,7 +50,7 @@ void InitTISDB()
 	SQL * Insert(USERINFO)	(FULLNAME,"TIS Admin")
 								(EMAIL,"admin@simaget.com")
 								(PASSWORD,"1234")
-								(APIKEY,"")
+								(APIKEY,"999")
 								(PHONE,"123456789")
 								(DATEOFBIRTH,"2018/01/01")
 								(STATUS, 1) // 0: DEACTIVE, 1: ACTIVE

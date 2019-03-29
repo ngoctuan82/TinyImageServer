@@ -53,7 +53,9 @@
 				in order to allow progress handler to identify correctly its related upload job
 				(we need it because we can have more upload jobs calls on server
 	-->
-	<input type='hidden' id='session' value='$@__skylark_session_cookie__'>
+	$set()
+	<input type='hidden' id='LOGAPIKEY' value='$.LOGAPIKEY'>
+	<input type='hidden' id='SESSION' value='$@__skylark_session_cookie__'>
 	
 
   <!-- preloader area start -->
@@ -190,6 +192,6 @@
 
 
 	
-  <script>riot.mount('*', {SESSION:'$@__skylark_session_cookie__' })</script>
+   <script>riot.mount('*', {SESSION:'$@__skylark_session_cookie__', LOGAPIKEY:'$.LOGAPIKEY'  })</script>
 </body>
 </html>
