@@ -123,14 +123,6 @@ String tGet(Http &http)
 SKYLARK ( usercreate, "api/user/create" )
 {
 	tCreate<D_USERINFO>(http);
-	/*
-		D_USERINFO user;
-		user = user.Create(http);
-		//------------------------------------------
-		Vector<D_USERINFO>  vector;
-		if(user.data.ID > 0) vector.Add(user);
-		http << StoreAsJson(vector);
-	*/	
 }
 
 /*
@@ -263,16 +255,24 @@ SKYLARK ( usersettingupdate, "api/usersetting/update/*" )
 SKYLARK ( usersettingget, "api/usersetting/get/*" )
 {
 	PrintParams(http);
+	D_USERSETTING d;
+	Vector<D_USERSETTING> v=d.Retrieve(http);
+	if(v.GetCount()==0)
+	{
+		int uid= atoi(AsString(http["APIKEY"]));
+		D_USERINFO u;
+		u=u.GetByApiKey(uid);
+		
+		if(u.data.ID>0)
+		{
+			d.data.USERID = u.data.ID;
+			d.data.FILEEXTENSION = "png jpg bmp";
+			d.data.MAXFILESIZE = 10;
+			d.Create(d.data);
+		}
+	}
+	
 	tGet<D_USERSETTING>(http);
-	/*
-		D_USERSETTING obj;
-		//------------------------------------------
-		DataPacket<D_USERSETTING> packet;
-		
-		packet.Data = obj.Retrieve(http);
-		
-		http << StoreAsJson(packet);
-	*/
 }
 
 /*

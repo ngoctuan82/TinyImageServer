@@ -174,3 +174,29 @@ D_USERSETTING D_USERSETTING::GetById(int id){
 	return  rs;
 	
 }
+
+/*
+	get user setting by id
+*/
+D_USERSETTING D_USERSETTING::GetByUserId(int uid){
+	
+	D_USERSETTING  rs;
+	S_USERSETTING x;
+	
+	try{
+		SqlBool where;
+		where = USERID == uid;// condition
+		
+		SQL *  Select ( SqlAll() ).From ( USERSETTING ).Where(where).Limit(1);;
+	
+		while ( SQL.Fetch ( x ) ){
+			rs = D_USERSETTING(x);
+			break;
+		}
+	}
+	catch(...){
+		Cout() << "Error D_USERSETTING::Get(String id)";
+	}
+	return  rs;
+	
+}

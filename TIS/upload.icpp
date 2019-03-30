@@ -166,23 +166,37 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 		{	
 			if(SaveFile(savepath, contents[i]))
 			{
+				// check size 
+				D_USERSETTING us;
+				us = us.GetByUserId(user.data.ID);
+				// get save file size
+				int64 size = GetFileLength(savepath);
+				int mbsize = size/(1024*1024);
+				if(us.data.MAXFILESIZE >= mbsize || us.data.MAXFILESIZE==0)
+				{
+					// create ImageFile
+					S_IMAGEFILE simage;
+						simage.USERID = user.data.ID;	
+						simage.FILENAME = namehash;//(String)filenames[i];
+						simage.MODIFIEDDATE = GetSysDate().Get(); // get date scalar
+						simage.FILETYPE = FileExt;
+						simage.FILESIZE = size;
+						simage.REALFILEPATH = FilePath;
+						simage.TAG = filename;
+						simage.DESCRIPTION =  filename;
+						simage.STATUS =  1;
+					//----------------------
+					D_IMAGEFILE image;
+					image.Create(simage);
+					
+					LOG(" Saved File ");
+				}
+				else
+				{
+					LOG(" File bigger than limitation ");
+					FileDelete(savepath);
+				}
 				
-				// create ImageFile
-				S_IMAGEFILE simage;
-					simage.USERID = user.data.ID;	
-					simage.FILENAME = namehash;//(String)filenames[i];
-					simage.MODIFIEDDATE = GetSysDate().Get(); // get date scalar
-					simage.FILETYPE = FileExt;
-					simage.FILESIZE = Size;
-					simage.REALFILEPATH = FilePath;
-					simage.TAG = filename;
-					simage.DESCRIPTION =  filename;
-					simage.STATUS =  1;
-				//----------------------
-				D_IMAGEFILE image;
-				image.Create(simage);
-				//----------------------
-				Cout()<<" Saved File "<< simage.FILENAME<<"\n";
 			}
 			else
 			{

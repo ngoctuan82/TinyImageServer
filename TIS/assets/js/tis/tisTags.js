@@ -1178,7 +1178,7 @@
                                                     <td>{item.CREATEDDATE}</td>
                                                     <td>{item.FOLDERPATH}</td>
                                                     <td>{item.ISBACKUPTASK?"Backup":"Restore"}</td>
-                                                    <td><span class="status-p bg-primary">{item.STATUS==0?"Proccessing":"Ready"}</span></td>
+                                                    <td><span class="status-p bg-primary">{item.STATUS==0?"Processing":"Ready"}</span></td>
                                                     <td  > <i   onclick={OnClickRestore} if={item.STATUS==1 && item.ISBACKUPTASK==true}  class="ti-back-right"></i>  </td>
                          
                                                 </tr>
@@ -2392,7 +2392,9 @@
 	
 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="header-title">Watermark</h4>
+                                        
+<!--  
+		<h4 class="header-title">Watermark</h4>
 
                                         <div class="media">
 
@@ -2402,25 +2404,33 @@
 
                                                                                     
                                             </div>
+
+
                                         </div>
+  -->
+
                                     
                                         <h4 class="header-title mt-5">Transformation</h4>
                                         <form>
                                             <fieldset >
                                                 <div class="form-group">
                                                     <label for="">Max file size (MB)</label>
-                                                    <input type="number" id="" class="form-control" placeholder="0 MB">
+                                                    <input onchange={OnChange} ref="MAXFILESIZE" type="number" id="" class="form-control" placeholder="0 in MB" value={item.MAXFILESIZE}>
                                                 </div>
+ <!-- 
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck">
+                                                    <input class="form-check-input" type="checkbox" >
                                                     <label class="form-check-label" for="disabledFieldsetCheck">
                                                         Auto scale down
                                                     </label>
                                                 </div>
+
                                                 <div class="form-group">
                                                     <label for="">Extensions</label>
-                                                   <input type="text" id="" class="form-control" placeholder="png jpg bmp jpeg">
+                                                   <input type="text" onchange={OnChange} ref="FILEEXTENSION" class="form-control" placeholder="png jpg bmp jpeg" value={item.FILEEXTENSION}>
                                                 </div>
+-->
+
                                             </fieldset>
                                         </form>
                                     </div>
@@ -2433,20 +2443,18 @@
 		var self = this;
 		this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
 		this.API={
-			GET:`api/user/get/${this.APIKEY}`,
-			UPDATE:`api/user/update/${this.APIKEY}`
+			GET:`api/usersetting/get/${this.APIKEY}`,
+			UPDATE:`api/usersetting/update/${this.APIKEY}`
 		};
 		//--------
 		this.SEARCH={
-			APIKEY: this.opts.ADMINID,
-			ISADMIN:1
+			APIKEY: this.APIKEY,
+			ISADMIN:0
 		};
 
 		this.item={
-			EMAIL:"",
-			PASSWORD:"",
-			FULLNAME:"",
-			PHONE:"",
+			FILEEXTENSION: "",
+			MAXFILESIZE: 0,
 		};
 		
 		InitUI()
@@ -2496,8 +2504,11 @@
 		{
 			var ctrl= e.target;
 			this.item[ctrl.attributes.ref.value] = ctrl.value;
-		}
 
+			this.OnSaveClick();
+
+		}
+		
 	  	OnSaveClick(e)
 	  	{
 	  		console.log("On click");

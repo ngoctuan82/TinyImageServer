@@ -125,6 +125,7 @@ struct D_USERSETTING:  Moveable<D_USERSETTING>
 	String RetrieveAsJson ( Http& http );			// API
 	//------------------------------------------------
 	D_USERSETTING GetById ( int id );
+	D_USERSETTING GetByUserId ( int uid );
 	//------------------------------------------------
 
 };
