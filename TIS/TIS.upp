@@ -4,7 +4,8 @@ uses
 	Core,
 	Skylark,
 	plugin/sqlite3,
-	SysInfo;
+	SysInfo,
+	SysExec;
 
 file
 	Util readonly separator,
@@ -28,6 +29,7 @@ file
 	common.icpp,
 	htmlserver.icpp,
 	upload.icpp,
+	backup.icpp,
 	api.icpp,
 	TIS.h,
 	TIS.cpp,

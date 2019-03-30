@@ -33,15 +33,16 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(Http& http){
 		Time time=GetSysTime();
 		int64 iTime = time.Get();
 		LOG(iTime);
+		int id = atoi((String)http["FROMID"]);
+		D_BACKUPRESTORETASK from;
+		from =from.GetById(id);
 		
 		pObj.ISBACKUPTASK=atoi((String)http["ISBACKUPTASK"]);
 		pObj.CREATEDDATE= iTime;
 		pObj.STATUS=0;
+		pObj.FOLDERPATH = from.data.FOLDERPATH;
 		
-		objAS = objAS.GetById(1);
-		
-		pObj.FOLDERPATH = AppendFileName(objAS.data.BACKUPPATH, AsString(pObj.CREATEDDATE) );
-		
+			
 	}
 	catch(...)
 	{
@@ -74,7 +75,7 @@ D_BACKUPRESTORETASK D_BACKUPRESTORETASK::Create(S_BACKUPRESTORETASK& pObj){
 	else
 	{
 		LOG("\n D_BACKUPRESTORETASK  existed:"<<tObj.data.ID);
-		tObj.data.ID = -1;
+		//tObj.data.ID = -1;
 	}
 	return tObj;
 }

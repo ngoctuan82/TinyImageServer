@@ -78,7 +78,7 @@
                         <div class="clearfix d-md-inline-block d-block">
                             <div class="user-profile m-0">
                                 <img class="avatar user-thumb" src="static/assets/images/author/avatar.png" alt="avatar">
-                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Admin<i class="fa fa-angle-down"></i></h4>
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></h4>
                                 <div class="dropdown-menu">
                                      <a class="dropdown-item" href="usersetting">Settings</a>
                                     <a class="dropdown-item" href="login">Log Out</a>
@@ -99,11 +99,11 @@
                         <div class="horizontal-menu">
                             <nav>
                                  <ul id="nav_menu">
-                                    <li class="active">
+                                    <li>
                                         <a href="user"><i class="ti-dashboard"></i><span>Dashboard</span></a>
                                        
                                     </li>
-                                    <li >
+                                    <li  class="active">
                                         <a href="userfilemanagement"><i class="ti-layout-sidebar-left"></i><span>File management</span></a>
                                         
                                     </li>
@@ -127,23 +127,9 @@
         <!--  main content area start -->
           <div class="main-content-inner" style="min-height: 897px;">
             <div class="container">
-                      
-                <div class="row">
-
-                     <!-- statistic start -->
-                    <div class="col-3 mt-5">
-                        <!-- Advertising area start -->
-						<UsersPieChart></UsersPieChart>
-                        <!-- Advertising area end -->
-                    </div>
-                     <!-- statistic end -->
-
-               		<!-- Progress Table start -->
-                    <div class="col-9 mt-5">
-                       <usermanagement></usermanagement>
-                    </div>
-                    <!-- Progress Table end --> 
-                          
+                 
+                <div class="col-12 mt-5">
+                	<imagefilesmanagement2></imagefilesmanagement2>
                 </div>
             </div>
         </div>

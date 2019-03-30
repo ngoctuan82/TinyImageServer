@@ -3,6 +3,19 @@
 
 void D_IMAGEFILE::Jsonize(JsonIO & json)
 {
+	D_USERINFO user;
+	user = user.GetById(data.USERID);
+	String sharelink="";
+	Vector<String> link;
+	link.Add("");
+	link.Add("tis");
+	link.Add("api");
+	link.Add("share");
+	link.Add(AsString(user.data.APIKEY));
+	link.Add(data.FILENAME);
+	
+	sharelink= Join(link, "/");
+	
 	Date date;
 	date.Set(data.MODIFIEDDATE);
 	json
@@ -18,6 +31,7 @@ void D_IMAGEFILE::Jsonize(JsonIO & json)
 	("TAG",data.TAG)
 	("DESCRIPTION",data.DESCRIPTION)
 	("STATUS",data.STATUS)
+	("SHARELINK",sharelink)
 	;
 }
 

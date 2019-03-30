@@ -78,7 +78,7 @@
                         <div class="clearfix d-md-inline-block d-block">
                             <div class="user-profile m-0">
                                 <img class="avatar user-thumb" src="static/assets/images/author/avatar.png" alt="avatar">
-                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Admin<i class="fa fa-angle-down"></i></h4>
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown"><i class="fa fa-angle-down"></i></h4>
                                 <div class="dropdown-menu">
                                      <a class="dropdown-item" href="userseting">Settings</a>
                                     <a class="dropdown-item" href="login">Log Out</a>
@@ -98,7 +98,7 @@
                         <div class="horizontal-menu">
                             <nav>
                                  <ul id="nav_menu">
-                                    <li class="active">
+                                    <li >
                                         <a href="user"><i class="ti-dashboard"></i><span>Dashboard</span></a>
                                        
                                     </li>
@@ -106,7 +106,7 @@
                                         <a href="userfilemanagement"><i class="ti-layout-sidebar-left"></i><span>File management</span></a>
                                         
                                     </li>
-                                    <li>
+                                    <li  class="active">
                                         <a href="usersetting"><i class="ti-settings"></i><span>Setting</span></a>
                                         
                                     </li>

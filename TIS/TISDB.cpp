@@ -46,26 +46,40 @@ void InitTISDB()
 	SqlPerformScript(sch.Upgrade());
 	SqlPerformScript(sch.Attributes());
 	
-	// insert some data to table
+	
+}
+ 
+void dummydata(){
+	//-----------------------------
+	String mail ="1234";
+	int hash = CombineHash ( mail, 10 + mail.GetCount() );
+	hash = abs(hash);
 	SQL * Insert(USERINFO)	(FULLNAME,"TIS Admin")
 								(EMAIL,"admin@simaget.com")
-								(PASSWORD,"1234")
+								(PASSWORD,AsString(hash))
 								(APIKEY,"999")
 								(PHONE,"123456789")
 								(DATEOFBIRTH,"2018/01/01")
 								(STATUS, 1) // 0: DEACTIVE, 1: ACTIVE
 								(ISADMIN,1)	// 1: ADMIN ACCOUNT	
 								;
-
+	SQL * Insert(ADMINSETTING)	(ROOTPATH,"tis")
+								(STATICPATH,"html")
+								(IMAGEPATH,"IMAGES")
+								(BACKUPPATH,"BACKUP")
+								(SERVERPORT,"8001")
+								(HOSTNAME,"www.simaget.com");
+				
 	SQL * Insert(USERINFO)	(FULLNAME,"TIS USER")
 								(EMAIL,"user@simaget.com")
-								(PASSWORD,"1234")
+								(PASSWORD,AsString(hash))
 								(APIKEY,"123")
 								(PHONE,"123456789")
 								(DATEOFBIRTH,"2018/01/01")
 								(STATUS, 1) // 0: DEACTIVE, 1: ACTIVE
 								(ISADMIN,0)	// 1: ADMIN ACCOUNT	
 								;
+	/*								;
 	SQL * Insert(USERINFO)	(FULLNAME,"TIS USER")
 								(EMAIL,"user2@simaget.com")
 								(PASSWORD,"1234")
@@ -76,12 +90,7 @@ void InitTISDB()
 								(ISADMIN,0)	// 1: ADMIN ACCOUNT	
 								;
 								
-	SQL * Insert(ADMINSETTING)	(ROOTPATH,"tis")
-								(STATICPATH,"html")
-								(IMAGEPATH,"IMAGES")
-								(BACKUPPATH,"BACKUP")
-								(SERVERPORT,"8001")
-								(HOSTNAME,"www.simaget.com")
+	
 								;
 	SQL *  Insert( IMAGEFILE )
 				//(ID,pObj.ID)
@@ -132,7 +141,9 @@ void InitTISDB()
 				(TAG,"b jpg")
 				(DESCRIPTION,"b jpg")
 				(STATUS,1)
-				;					
+				;			
+				
+*/	
 }
 
 //-------------------------------

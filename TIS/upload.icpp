@@ -12,6 +12,26 @@
 
 using namespace Upp;
 
+String TraceParams(Http& http)
+{
+	LOG(GetSysTime());
+	LOG(GetSysTime().Get());
+	
+	int count = http.GetParamCount();
+	Vector<String> v;
+	for ( int i = 0; i < http.GetParamCount(); i++ ) v.Add(http[i]);
+	
+	// get current path
+	v.Add(SkylarkApp::Config().path);
+	
+	String json = StoreAsJson(v, true);
+	//---------------------------------
+	LOG(json);
+	//http<<json;
+	return json;
+}
+
+
 int ProgressHandler(int reason, Http &http, int size)
 {
 	// get the upload unique identifier
@@ -91,17 +111,22 @@ int ProgressHandler(int reason, Http &http, int size)
 
 SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 {
-	String rootPath = AppendFileName(GetHomeDirectory(), "UPLOAD/");
+	TraceParams(http);
 	
-	String fileName = AppendFileName(rootPath, (String)http["filename"]);
+	
+	
+
 
 	Value const &contents = http["filestoupload[]"];
 	Value const &filenames = http["filestoupload.filename[]"];
-	int const apikey = http["APIKEY"];
+	Value const &apikeystr = http["APIKEY"];
+	Value const &sessionstr = http["@__skylark_session_cookie__"];
+	
 	
 	if(contents.IsNull() || filenames.IsNull())
 		return;
 	// check who upload these files
+	int apikey = atoi(AsString(apikeystr));
 	D_USERINFO user;
 	user = user.GetByApiKey(apikey);
 	
@@ -111,44 +136,59 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 	}
 	else
 	{
-		int session =atoi( AsString( http["@__skylark_session_cookie__"] ));
+		int session = ScanInt( AsString( sessionstr ),NULL, 16);
 		if(session != user.data.SESSION)
 		{
-			Cout()<<"This SESSION not allow to upload "<< apikey;
-			return; // dont allow expire session upload
+	//		Cout()<<"This SESSION not allow to upload "<< apikey;
+	//		return; // dont allow expire session upload
 		}
 	}
 	//--------------------------------------------------------------------------
+	String userpath = AppendFileName("USERS", AsString(user.data.ID));
+	Time time = GetSysTime();
 	
 	// start saving
 	for(int i = 0; i < contents.GetCount(); i++)
 	{
-		String FilePath = AppendFileName(rootPath, (String)filenames[i]);
-		String FileName =(String)filenames[i];
-		String FileExt = GetFileExt(FileName);
+		String filename=(String)filenames[i];
+		unsigned int hash=CombineHash ( filename, time.second );
+		String namehash = AsString(hash);
+		
+		String FileExt = GetFileExt(filename);
 		int Size = contents[i].GetCount();
-	
-
-		if(SaveFile(FilePath, contents[i]))
-		{
-			
-			// create ImageFile
-			S_IMAGEFILE simage;
-				simage.USERID = user.data.ID;	// test only
-				simage.FILENAME = (String)filenames[i];
-				simage.MODIFIEDDATE = Date().Get(); // get date scalar
-				simage.FILETYPE = FileExt;
-				simage.FILESIZE = Size;
-				simage.REALFILEPATH = FilePath;
-				simage.TAG = simage.FILENAME;
-				simage.DESCRIPTION =  simage.FILENAME;
-			//----------------------
-			D_IMAGEFILE image;
-			image.Create(simage);
-			//----------------------
-			Cout()<<" Saved File "<< simage.FILENAME<<"\n";
+		
+		String FileName = namehash + FileExt;
+		String FilePath = AppendFileName(userpath, FileName);
+		
+		String savepath = AppendFileName(GetCurrentDirectory(), userpath);
+		savepath = AppendFileName(savepath, FileName);
+		if(RealizePath(savepath))
+		{	
+			if(SaveFile(savepath, contents[i]))
+			{
+				
+				// create ImageFile
+				S_IMAGEFILE simage;
+					simage.USERID = user.data.ID;	
+					simage.FILENAME = namehash;//(String)filenames[i];
+					simage.MODIFIEDDATE = GetSysDate().Get(); // get date scalar
+					simage.FILETYPE = FileExt;
+					simage.FILESIZE = Size;
+					simage.REALFILEPATH = FilePath;
+					simage.TAG = filename;
+					simage.DESCRIPTION =  filename;
+					simage.STATUS =  1;
+				//----------------------
+				D_IMAGEFILE image;
+				image.Create(simage);
+				//----------------------
+				Cout()<<" Saved File "<< simage.FILENAME<<"\n";
+			}
+			else
+			{
+				LOG("Can not save file ");
+			}
 		}
-	
 	}
 }
 

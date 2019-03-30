@@ -1,0 +1,98 @@
+#include "util.h"
+/*
+ backup full folder
+	modified by Ngoc Tuan Nguyen
+*/
+
+#include "TIS.h"
+#include "Poco.h"
+#include "Poco_Impl.h"
+#include "TISDB.h"
+#include <Core/Core.h>
+#include <SysExec/SysExec.h>
+
+using namespace Upp;
+
+bool BackupRestore(String filetar, bool isBackup)
+{
+	#ifdef PLATFORM_POSIX
+	String term = "tar";
+#else
+	String term = "tar.exe";
+#endif
+
+	String srcDB = "TISDB";
+	String src = "USERS";
+
+	String bargs ="-cvf " + filetar + "  " + src ;
+	
+//	String rfilepath = AppendFileName(dest, rfilename);
+	String rargs ="-xvf " + filetar ;
+
+	bool res;
+	
+	if(isBackup==true)
+		res = SysExec(term, bargs);
+	else
+		res = SysExec(term, rargs);
+	
+	return res;
+}
+
+bool PassAPIKey(Http &http)
+{
+	// get by apikey
+	Value const &apikeystr = http["APIKEY"];
+	Value const &sessionstr = http["@__skylark_session_cookie__"];
+	
+	// check who upload these files
+	int apikey = atoi(AsString(apikeystr));
+	D_USERINFO user;
+	
+	user = user.GetByApiKey(apikey);
+	
+	if(user.data.ID>0) return true;
+	else
+		return false;
+}
+SKYLARK ( backup, "backup" )
+{
+	bool res =false;
+	LOG("BACKUP NOW");
+	// get by apikey
+	if(PassAPIKey(http)==false) return;
+	
+	// get session
+	
+	int id= atoi(AsString(http["BACKUPID"]));
+	D_BACKUPRESTORETASK backup;
+	backup = backup.GetById(id);
+	if(backup.data.ID>0)
+	{
+		String dest = "BACKUP";
+		String filename = AsString(GetSysTime().Get()) + ".tar.gz";
+		String filepath = AppendFileName(dest, filename);
+		RealizeDirectory(dest);
+		
+		if(backup.data.ISBACKUPTASK==true)
+		{
+			 
+			res = BackupRestore(filepath,true);
+		}
+		else
+		{
+			 
+			res = BackupRestore(backup.data.FOLDERPATH,false);
+		}
+		backup.data.FOLDERPATH = filepath;
+		backup.data.STATUS = 1;
+		backup.Edit(backup.data);
+	}
+	// check user role admin
+
+	
+
+	
+	http<<AsString(res);
+}
+

@@ -1,184 +1,111 @@
-<uploadform>
-		<input type='hidden' id='uploadurl' value='upload' >
-			
-			<form  draggable="true" action='' method='POST' id='myForm' enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
+<imageblock>
 
-				<input id='uploadform_input' type='file' name='filestoupload[]' multiple=''>
-				<br><br>
-				<input id='uploadform_submit'  type='submit' value='Start Upload'>
-				<br>
-			</form>
-			
-			<!-- Progress bar -->
-			<div id='progress_container'>
-				<div id='progress'></div>
+    <div class="card card-bordered">
+        <img class="card-img-top img-fluid" src="{data.SHARELINK}" alt="image">
+        <div class="card-body">
+            <h5 class="title">{data.TAG}</h5>
+            
+            <div class="btn-group mb-xl-3" role="group" aria-label="Basic example">
+				<button onclick={OnClickShare} type="button" class="btn btn-xs btn-outline-primary"><i class="ti-share"/>Share</button>
+	 <!--		<button onclick={OnClickDetail} type="button" class="btn btn-xs btn-outline-primary"><i class="ti-new-window"/>Edit</button>
+	 -->	
+				<button onclick={OnClickDeactive} type="button" class="btn btn-xs {item.STATUS?'btn-primary':'btn-outline-primary'}"><i class="ti-unlink"/>{item.STATUS?"Deactive":"Active"}</button>
 			</div>
-
-
-			<!--
-				hidden frame doing the upload process
-				it's used to 'free' the browser window during upload phase
-			--> 
-			<iframe id='hidden_iframe' name='hidden_iframe' src='about:blank'></iframe>
-
-		
-  <!-- style -->
-  <style scoped>
-    h3 {
-      font-size: 14px;
-    }
-
-	uploadform {
-		border: 1px solid;
-		display: block;
-		padding: 10px;
-		border-radius: 5px;
-		height:300;
-	}
-	uploadform form
-	{
-		width:100%;
-		height:100%;
-	}
-	uploadform form.dragover{
-		 background-color: grey;
-	}
-	iframe{
-		display:none;
-
-	}
-  </style>
-
-
-
-  <!-- logic -->
-  <script>
-    var me = this
-   	
-    this.data = {
-    	session:document.getElementById("session").value,
-    	submittime:Date.now(),
-    }
-	// UI controls
-	this.UI ={
-		form:null,
-		fileinput:null,
-		submitinput:null
-	};
-
-    this.on('mount', function(){
-		// on mount
-		this.UI.form = $("form", this.root);
-		this.UI.fileinput = $("#uploadform_input", this.root);
-		this.UI.submitinput = $("#uploadform_submit", this.root);
-		// init events for form drag & drop
-		this.UI.form.off();
-		this.UI.form.on("ondrop",this.OnDrop);
-		this.UI.form.on("ondragover",this.OnDragOver);
-		this.UI.form.on("ondragleave",this.OnLeave);
-		
-  	});
-	this.on('upadte', function(){
-		// on update
-		this.UI.form = $("form", this.root);
-		this.UI.fileinput = $("#uploadform_input", this.root);
-		this.UI.submitinput = $("#uploadform_submit", this.root);
-		// init events for form drag & drop
-		this.UI.form.off();
-		this.UI.form.on("ondrop",this.OnDrop);
-		this.UI.form.on("ondragover",this.OnDragOver);
-		this.UI.form.on("ondragleave",this.OnLeave);
-	});
-
-	/*
-		starting to upload
-	*/
-
-    startUpload(e) {
-      console.log("start upload");
-
-      this.data.submittime = Date.now()
         
-      var input = e.target[0]
-      var form = input.parentElement
-      
-      form.action =`upload?uploadid=${ this.data.session + this.data.submittime}`;
-      
- 	  console.log(form.action); // debug
+           
+        </div>
+    </div>
+	
 
-		setTimeout(this.progress(),200);
 
-      return true;
-      
-    }
-	/*
-		call to server for progress of upload
-	*/
-    progress()
-    {
-    	 console.log("progress ");
-    	var self = this;
-
-    	var url =`progress?uploadid=${ this.data.session + this.data.submittime}`;
-      
-    	 fetch(url, {method:'get'})
-    	.then(response => response.json())
-		.then(jsonData => { 
-			console.log(jsonData); 
-			if(jsonData<100)
-				setTimeout(self.progress(),200);
-			else
-			{
-				this.UI.fileinput[0].value=null; // done upload
-				alert("Upload Done");
-			}
-				
-		})
-		.catch(err => {
-
-				console.error(err);
-		});
-    }
-
-	/*Drag and Drop files support*/
-	OnDrag(event)
-	{	
-		event.preventDefault();
-		event.stopPropagation();
-
-		this.UI.form.addClass('dragover');
-
-	}
-	OnLeave(event){
-		event.preventDefault();
-		event.stopPropagation();
-
-		this.UI.form.removeClass('dragover');
-
-	}
-    OnDrop(event)
-    {
-    	event.preventDefault();
-   		event.stopPropagation();
-   		this.UI.form.removeClass('dragover');
-
-		console.log(event);
-    	
-    	var droppedFiles = event.dataTransfer.files;
-
-		var uploadinput = $("#uploadform_input", this.root)[0];
-		if(uploadinput)
-		{
-			uploadinput.files = droppedFiles;
-			this.UI.submitinput.trigger("click");
-		}
+     <script>
+   
+   		var self = this;
+		this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
+		this.API = {
+			SEARCH:`api/imagefile/get/${this.APIKEY}`,
+			UPDATE:`api/imagefile/update/${this.APIKEY}`,
+		};
 		
-    }
-    // the mixin object bind
-    this.mixin(OptsMixin);
-  </script>
+     	this.item = this.opts.riotSrc;
+        this.data ={
+        	SHARELINK:this.item.SHARELINK,
+        	TAG:this.item.TAG
+        };
+		//-----------------------------------------------
+		InitUI()
+		{	
+		
+		}
 
-</uploadform>
+        this.on('mount', function() {
+            // right after the tag is mounted on the page
+            console.log("mount");
+        })
+
+        this.on('update', function() {
+            // allows recalculation of context data before the update
+            console.log("update");
+
+            this.InitUI();
+        })
+
+        this.on('updated', function() {
+            // right after the tag template is updated after an update call
+            console.log("updated");
+        })
+        //--------------------------
+        OnClickShare()
+	  	{
+            console.log("OnClickShare");
+			var uri=`${window.location.hostname}:${window.location.port}/${this.data.SHARELINK}`;
+            window.prompt("Share link of the image", uri);
+        }
+        
+         OnClickDetail()
+	  	{
+            console.log("OnClickDetail");
+        }
+         OnClickDeactive()
+	  	{
+            console.log("OnClickDeactive");
+            var item =this.item;
+
+			item.STATUS=item.STATUS?0:1;
+			var obj={ID:item.ID, STATUS: item.STATUS};
+			
+
+			this.DoUpdate(obj);
+        }
+     
+
+		DoUpdate(item)
+		{
+			var url = `${this.API.UPDATE}?${QueryStr(item)}`;
+			console.log(url);
+			
+	  		fetch(url, {method:'get'})
+			.then(response => response.json())
+			.then(jsonData => { 
+				console.log(jsonData); 
+				if(jsonData.IsError==false)
+				{
+					console.log("DONE updated");
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+     </script>
+
+</imageblock>
+
+
 
 
 
@@ -327,7 +254,7 @@
                         </div>
                         <div class="form-group">
                            <i class="ti-shield"></i>
-							<input class="form-control mt-2" type="password" ref="CONFIRMPASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
+							<input class="form-control mt-2" type="password" ref="CONFIRMPASSWORD" placeholder="Password"    onchange={OnChange}>
                         </div>
                         
                       
@@ -1252,8 +1179,7 @@
                                                     <td>{item.FOLDERPATH}</td>
                                                     <td>{item.ISBACKUPTASK?"Backup":"Restore"}</td>
                                                     <td><span class="status-p bg-primary">{item.STATUS==0?"Proccessing":"Ready"}</span></td>
-                                                    <td> <button onclick={OnClickRestore(item)} if={item.STATUS==1 && item.ISBACKUPTASK==true} type="button" class="btn btn-warning mt-4 pr-4 pl-4">Restore</button> </td>
-                                                   
+                                                    <td  > <i   onclick={OnClickRestore} if={item.STATUS==1 && item.ISBACKUPTASK==true}  class="ti-back-right"></i>  </td>
                          
                                                 </tr>
                                                 
@@ -1272,19 +1198,22 @@
 		this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
 		this.API={
 			GET:`api/backuprestoretask/get/${this.APIKEY}`,
-			CREATE:`api/backuprestoretask/create/${this.APIKEY}`
+			CREATE:`api/backuprestoretask/create/${this.APIKEY}`,
+			BACKUP:`backup`,
+
 		};
 
 		this.items =[];
 
 		this.on('mount', function() {
 			console.log("mount");
-			this.LoadData();
 			
+			this.LoadData();
 		})
 
 		 this.on('update', function() {
 			console.log("update");
+
 	  	})
 
 	  	LoadData()
@@ -1302,6 +1231,8 @@
 					self.items = jsonData.Data || self.items;
 					
 					self.update();
+
+					//self.DoBackup(jsonData.Data[0].ID);
 				}
 				else
 					console.error(jsonData.Status);
@@ -1324,7 +1255,12 @@
 		OnClickRestore(e, item)
 		{
 			console.log("Click Restore");
-			var params = {ISBACKUPTASK:0};
+			var item = e.item.item;
+			
+			var params = {
+					FROMID: item.ID,
+					ISBACKUPTASK:0
+			};
 			this.DoCreate(params);
 		}
 
@@ -1347,6 +1283,8 @@
 					{
 						self.items.unshift(jsonData.Data[0]);
 						self.update();
+
+						self.DoBackup(jsonData.Data[0].ID);
 					}
 				}
 				else
@@ -1357,7 +1295,35 @@
 
 					console.error(err);
 			});
+
 		}
+
+
+			DoBackup(backupid)
+			{
+				var param={APIKEY:this.APIKEY, BACKUPID:backupid};
+				 var url = `${this.API.BACKUP}?${QueryStr(param)}`;
+
+				 fetch(url, 
+				 {
+					method:'get'
+				 })
+				.then(response => response.json())
+				.then(jsonData => {
+					console.log(jsonData);
+					if(jsonData==true)
+					{
+						self.LoadData();
+					}
+					else
+						console.error("Can not backup/restore");
+
+				})
+				.catch(err => {
+
+						console.error(err);
+				});
+			}
 	
 </script>
 </backupform>
@@ -1427,17 +1393,7 @@
 			
 		}
 
-	  	this.on('mount', function() {
-	    // right after the tag is mounted on the page
-	    console.log("mount");
-	   
-		
-
-
-
-
-	  })
-	
+	 
 	  this.on('update', function() {
 	    // allows recalculation of context data before the update
 	    console.log("update");
@@ -1837,6 +1793,7 @@
 	    console.log("mount");
 	   
 		this.SEARCH.USERID = localStorage.getItem("SelectedUser");
+		this.LoadData();
 
 	  })
 	
@@ -1851,13 +1808,10 @@
 	    // right after the tag template is updated after an update call
 	    console.log("updated");
 	  })
-	  	
 
-		//-----------------------------------------
-		this.on('mount', function() {
-	    // right after the tag is mounted on the page
-	    console.log("mount");
-	   		var url =`${this.API}?${QueryStr(this.SEARCH)}`;
+	  LoadData()
+	  {
+	  	var url =`${this.API}?${QueryStr(this.SEARCH)}`;
     	 fetch(url, {method:'get'})
     	.then(response => response.json())
 		.then(jsonData => { 
@@ -1878,9 +1832,10 @@
 
 				console.error(err);
 		});
+	  }
+	  	
 
-
-	  });
+	
 	 
 
 
@@ -2023,8 +1978,8 @@
 				return;
 			}
 //
-			
-			this.DoUpdate();
+			this.item.CONFIRMPASSWORD = this.refs.CONFIRMPASSWORD.value;
+			this.DoUpdate(this.item);
 	  	}
 
 		OnDeleteActiveClick(event)
@@ -2042,7 +1997,7 @@
 
 		DoUpdate(item)
 		{
-			var url = `${this.API.UPDATE}?${QueryStr(this.item)}`;
+			var url = `${this.API.UPDATE}?${QueryStr(item)}`;
 			console.log(url);
 			
 	  		fetch(url, {method:'get'})
@@ -2573,3 +2528,727 @@
 	</script>
 
 </usersettingform>
+
+
+
+<imagefilesmanagement>
+
+
+<!--imagefilesmanagement form start -->
+	<div class="header-title">               
+		<!-- search row start -->
+		<div class="row">
+			<div class="col-12">
+				<div class="search-box pull-left">
+					<form action="#">
+						<input ref="txtSearch" type="text" name="search" placeholder="Search by name..." required>
+						<i onclick={OnClickSearch} class="ti-search"></i>
+					</form>
+				</div>
+
+				<!-- ordering row start -->
+				<div class="btn-group col-lg-4   pull-right" role="group" aria-label="Button group with nested dropdown">
+			
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-flat btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Order
+						</button>
+						<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+							<a onclick={OnClickOrderDateAsc} class="dropdown-item" href="#">Modified Date Ascending</a>
+							<a onclick={OnClickOrderDateDesc} class="dropdown-item" href="#">Modified Date Descending</a>
+						</div>
+					</div>
+				</div>
+				<!-- ordering row start -->
+			</div>
+
+
+
+		</div>
+		<!-- search row end -->
+
+	</div>
+
+
+
+
+	<!-- Grid start -->
+	<div class="row">
+		<div each={item in items}    class="col-lg-3 col-md-5 mt-5">
+			<imageblock src={item}></imageblock>
+		</div>
+	</div>
+	<!-- Grid start -->
+
+
+
+	<!-- Pagination start -->
+	 <nav aria-label="">
+		<ul class="pagination mt-3">
+			<li class="page-item">
+				<a onclick={OnClickPrevPage} class="page-link" href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+					<span class="sr-only">Previous</span>
+				</a>
+			</li>
+
+			<li  each={page in pages}  class="page-item {this.SEARCH.PAGE==page-1?'disabled':''}">
+				<a href="#" class="page-link" onclick={OnClickPage}>{page}</a>
+			</li>
+
+
+
+			<li class="page-item">
+				<a onclick={OnClickNextPage} class="page-link" href="#" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+					<span class="sr-only">Next</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<!-- Pagination end -->
+
+<!-- imagefilesmanagement form end -->
+<script>
+	var self = this;
+		this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
+		this.API={
+			SEARCH:`api/imagefile/get/${this.APIKEY}`,
+			UPDATE:`api/imagefile/update/${this.APIKEY}`,
+			TOTALFILES:`api/filestotal/${this.APIKEY}`
+		};
+
+		this.SEARCH={
+			PAGE:0,
+			SIZE:20,
+			
+			ORDERBY:"",
+			DESC:0,
+
+			USERID:'',
+			TAG:""
+		};
+		
+		this.pages =[];
+		this.items =[];
+
+		this.on('mount', function() {
+			console.log("mount");
+			this.SEARCH.USERID = localStorage.getItem("SelectedUser");
+			this.LoadTotalFiles(this.LoadData);
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+	  	})
+		
+		LoadTotalFiles(fn)
+		{
+			var url =`${this.API.TOTALFILES}?${QueryStr(this.SEARCH)}`;
+			fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					var data = jsonData.Data;
+					var totals = 0;
+					data.forEach((a)=> totals+=a.FILES);
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					// generation 
+					self.pages = [];
+					for(i=0;i<pages;i++) self.pages.push(i+1);
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.then(r=>
+			{
+				if(fn) fn();// callback
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+		
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		var url = `${this.API.SEARCH}?${QueryStr(this.SEARCH)}`;
+
+	  		 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.items = jsonData.Data || self.items;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		
+		OnClickDeleteRestore(event)
+		{
+			console.log("Click Delete Restore");
+			console.log(event.item);
+			var item = event.item.item;
+			var index = event.item.i;
+
+			item.STATUS=item.STATUS?0:1;
+			var obj={ID:item.ID, STATUS: item.STATUS};
+		
+			
+			this.DoUpdate(obj, index);
+		}
+
+		DoUpdate(params, index)
+		{
+			 
+			 var url = `${this.API.UPDATE}?${QueryStr(params)}`;
+
+			 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					
+					if(jsonData.Data.length>0)
+					{
+						self.items[index] = jsonData.Data[0];
+						self.update();
+					}
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+
+		
+		
+		OnClickOrderDateAsc()
+		{
+			this.SEARCH.ORDERBY = "MODIFIEDDATE";
+			this.SEARCH.DESC=0;
+			this.LoadData();
+		}
+		OnClickOrderDateDesc()
+		{
+			this.SEARCH.ORDERBY = "MODIFIEDDATE";
+			this.SEARCH.DESC=1;
+			this.LoadData();
+		}
+		
+		
+
+		OnClickSearch()
+		{
+			var txtSearch = this.refs.txtSearch;
+			this.SEARCH.TAG= txtSearch.value;
+
+			this.LoadData();
+		}
+
+		
+		//--------- pagination
+		OnClickPage(event)
+		{
+			event.preventDefault();
+
+			var item = event.item;
+			this.SEARCH.PAGE = item.page-1;
+			this.LoadData();
+		}
+
+		
+	
+</script>
+</imagefilesmanagement>
+
+
+
+<imagefilesmanagement2>
+
+
+<!--imagefilesmanagement2 form start -->
+	<div class="header-title">               
+		<!-- search row start -->
+		<div class="row">
+			<div class="col-12">
+				<div class="search-box pull-left">
+					<form action="#">
+						<input ref="txtSearch" type="text" name="search" placeholder="Search by name..." required>
+						<i onclick={OnClickSearch} class="ti-search"></i>
+					</form>
+				</div>
+
+				<!-- ordering row start -->
+				<div class="btn-group col-lg-4   pull-right" role="group" aria-label="Button group with nested dropdown">
+			
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-flat btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Order
+						</button>
+						<div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+							<a onclick={OnClickOrderDateAsc} class="dropdown-item" href="#">Modified Date Ascending</a>
+							<a onclick={OnClickOrderDateDesc} class="dropdown-item" href="#">Modified Date Descending</a>
+							<a onclick={OnClickOrderNameAsc} class="dropdown-item" href="#">Name Ascending</a>
+							<a onclick={OnClickOrderNameDesc} class="dropdown-item" href="#">Name Descending</a>
+						</div>
+					</div>
+				</div>
+				<!-- ordering row start -->
+			</div>
+
+
+
+		</div>
+		<!-- search row end -->
+
+	</div>
+
+
+    <!-- upload start -->
+    <form class="uploadform" ref="uploadform" draggable="true" action='' method='POST'  enctype='multipart/form-data' target='hidden_iframe' onsubmit={startUpload}>
+         
+        
+        <!-- Grid start -->
+        <div class="row">
+            <div each={item in items}    class="col-lg-3 col-md-5 mb-5">
+                <imageblock src={item}></imageblock>
+            </div>
+        </div>
+        <!-- Grid end -->
+        
+
+        <input class="hidencontrol" ref='uploadform_input' type='file' name='filestoupload[]' multiple='' >
+        <input class="hidencontrol" ref='uploadform_submit'  type='submit' value='Start Upload'>
+		
+    </form>
+
+    <!-- Progress bar -->
+    <div id='progress_container'>
+    <div id='progress'></div>
+    </div>
+
+
+    <!--
+    hidden frame doing the upload process
+    it's used to 'free' the browser window during upload phase
+    --> 
+    <iframe id='hidden_iframe' name='hidden_iframe' src='about:blank'></iframe>
+    <!-- Upload end -->
+
+
+
+	<!-- Pagination start -->
+	 <nav aria-label="">
+		<ul class="pagination mt-3">
+			<li class="page-item">
+				<a onclick={OnClickPrevPage} class="page-link" href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+					<span class="sr-only">Previous</span>
+				</a>
+			</li>
+
+			<li  each={page in pages}  class="page-item {this.SEARCH.PAGE==page-1?'disabled':''}">
+				<a href="#" class="page-link" onclick={OnClickPage}>{page}</a>
+			</li>
+
+
+
+			<li class="page-item">
+				<a onclick={OnClickNextPage} class="page-link" href="#" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+					<span class="sr-only">Next</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<!-- Pagination end -->
+
+<!-- imagefilesmanagement2 form end -->
+  <!-- style -->
+  <style scoped>
+	.dragover{
+		 background-color: #0030df17;
+	}
+	iframe{
+		display:none;
+
+	}
+	.uploadform{
+		padding:20px;
+		min-height:300px;
+	}
+	.hidencontrol{
+		display:none
+	}
+
+	imageblock{
+		width:310.5px;
+
+	}
+	imageblock img
+	{
+		width:inherit;
+	}
+  </style>
+
+
+<script>
+        var self = this;
+        this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
+        this.SESSION = this.opts.SESSION;  // should get from session
+		this.API={
+			SEARCH:`api/imagefile/get/${this.APIKEY}`,
+			UPDATE:`api/imagefile/update/${this.APIKEY}`,
+			TOTALFILES:`api/filestotal/${this.APIKEY}`,
+           
+        
+		};
+
+		this.SEARCH={
+			PAGE:0,
+			SIZE:20,
+			
+			ORDERBY:"",
+			DESC:0,
+
+			USERID:'',
+			TAG:""
+		};
+		
+		this.pages =[];
+		this.items =[];
+        
+        
+        
+        
+        
+
+		this.on('mount', function() {
+			console.log("mount");
+            this.InitUploadForm();
+            
+			this.SEARCH.USERID = localStorage.getItem("SelectedUser");
+			this.LoadTotalFiles(this.LoadData);
+		})
+
+		 this.on('update', function() {
+			console.log("update");
+            this.InitUploadForm();
+	  	})
+		
+		LoadTotalFiles(fn)
+		{
+			var url =`${this.API.TOTALFILES}?${QueryStr(this.SEARCH)}`;
+			fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					var data = jsonData.Data;
+					var totals = 0;
+					data.forEach((a)=> totals+=a.FILES);
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					// generation 
+					self.pages = [];
+					for(i=0;i<pages;i++) self.pages.push(i+1);
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.then(r=>
+			{
+				if(fn) fn();// callback
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+		
+	  	LoadData()
+	  	{
+	  		console.log("Load Data");
+	  		var url = `${this.API.SEARCH}?${QueryStr(this.SEARCH)}`;
+
+	  		 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					self.items = jsonData.Data || self.items;
+					
+					self.update();
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+	  	}
+
+		
+		OnClickDeleteRestore(event)
+		{
+			console.log("Click Delete Restore");
+			console.log(event.item);
+			var item = event.item.item;
+			var index = event.item.i;
+
+			item.STATUS=item.STATUS?0:1;
+			var obj={ID:item.ID, STATUS: item.STATUS};
+		
+			
+			this.DoUpdate(obj, index);
+		}
+
+		DoUpdate(params, index)
+		{
+			 
+			 var url = `${this.API.UPDATE}?${QueryStr(params)}`;
+
+			 fetch(url, 
+	  		 {
+	  		 	method:'get'
+	  		 })
+			.then(response => response.json())
+			.then(jsonData => {
+				console.log(jsonData);
+				if(jsonData.IsError==false)
+				{
+					
+					if(jsonData.Data.length>0)
+					{
+						self.items[index] = jsonData.Data[0];
+						self.update();
+					}
+				}
+				else
+					console.error(jsonData.Status);
+
+			})
+			.catch(err => {
+
+					console.error(err);
+			});
+		}
+
+		
+		
+		OnClickOrderDateAsc()
+		{
+			this.SEARCH.ORDERBY = "MODIFIEDDATE";
+			this.SEARCH.DESC=0;
+			this.LoadData();
+		}
+		OnClickOrderDateDesc()
+		{
+			this.SEARCH.ORDERBY = "MODIFIEDDATE";
+			this.SEARCH.DESC=1;
+			this.LoadData();
+		}
+		OnClickOrderNameAsc()
+		{
+			this.SEARCH.ORDERBY = "TAG";
+			this.SEARCH.DESC=0;
+			this.LoadData();
+		}
+		OnClickOrderNameDesc()
+		{
+			this.SEARCH.ORDERBY = "TAG";
+			this.SEARCH.DESC=1;
+			this.LoadData();
+		}
+		
+
+		OnClickSearch()
+		{
+			var txtSearch = this.refs.txtSearch;
+			this.SEARCH.TAG= txtSearch.value;
+
+			this.LoadData();
+		}
+
+		
+		//--------- pagination
+		OnClickPage(event)
+		{
+			event.preventDefault();
+
+			var item = event.item;
+			this.SEARCH.PAGE = item.page-1;
+			this.LoadData();
+		}
+
+		
+	
+//----------------------
+        //-- upload section
+        this.UPLOADAPI={
+            UPLOAD:`upload`,
+            PROGRESS:`progress`,
+        };
+        this.UI={
+        	form:null,
+        	fileinput:null,
+        	submitinput:null
+        	
+        };
+        
+       this.uploaddata={uploadid:this.SESSION+Date.now()};
+        //----------------------
+        
+        
+        InitUploadForm()
+        {
+            // on mount
+            this.UI.form = $(this.refs.uploadform);
+            this.UI.fileinput = $(this.refs.uploadform_input);
+            this.UI.submitinput = $(this.refs.uploadform_submit);
+            // init events for form drag & drop
+            this.refs.uploadform.addEventListener('dragover', this.OnDrag, false);
+            this.refs.uploadform.addEventListener('dragleave', this.OnLeave, false);
+			this.refs.uploadform.addEventListener('drop', this.OnDrop, false);
+        }
+        /*
+		starting to upload
+	*/
+
+    startUpload(e) {
+      console.log("start upload");
+
+      this.uploaddata.submittime = Date.now()
+        
+      var input = e.target[0]
+      var form = this.refs.uploadform;
+
+     
+      this.uploaddata={
+      		uploadid:this.SESSION+Date.now(),
+      		APIKEY:this.APIKEY,
+      		SESSION:this.SESSION
+      	};
+      
+      form.action =`${this.UPLOADAPI.UPLOAD}?${QueryStr( this.uploaddata)}`;
+      
+ 	  console.log(form.action); // debug
+
+		setTimeout(this.progress(),1000);
+
+      return true;
+      
+    }
+	/*
+		call to server for progress of upload
+	*/
+    progress()
+    {
+    	 console.log("progress ");
+    	var self = this;
+
+    	var url =`${this.UPLOADAPI.PROGRESS}?${QueryStr( this.uploaddata)}`;;
+      
+    	 fetch(url, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData<100)
+				setTimeout(self.progress(),300);
+			else
+			{
+				this.LoadData();
+				this.UI.fileinput[0].value=null; // done upload
+				alert("Upload Done");
+			}
+				
+		})
+		.catch(err => {
+
+				console.error(err);
+		});
+    }
+
+	/*Drag and Drop files support*/
+	OnDrag(event)
+	{	
+		event.preventDefault();
+		event.stopPropagation();
+		//console.log(event);
+
+		this.UI.form.addClass('dragover');
+
+	}
+	OnLeave(event){
+		event.preventDefault();
+		event.stopPropagation();
+
+		this.UI.form.removeClass('dragover');
+
+	}
+    OnDrop(event)
+    {
+    	event.preventDefault();
+   		event.stopPropagation();
+   		this.UI.form.removeClass('dragover');
+
+		//console.log(event);
+    	
+    	var droppedFiles = event.dataTransfer.files;
+
+		var uploadinput =this.refs.uploadform_input;
+		if(uploadinput)
+		{
+			uploadinput.files = droppedFiles;
+			var btnSubmit = this.refs.uploadform_submit;
+			setTimeout(function(){
+				$(btnSubmit).trigger("click");
+			},500);
+			
+		}
+		
+    }
+        
+</script>
+</imagefilesmanagement2>
+

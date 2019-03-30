@@ -13,11 +13,12 @@ using namespace Upp;
 
 
 // include db functionalities
-const String DBFILE ="TISDB";
+const String DBFILE ="TISDB.db";
 
 void InitTISDB();
 void InitTISModel();
 void OpenSQLite(Sqlite3Session& sqlite3);
+void dummydata();
 
 //----------------------------------------------
 

@@ -11,6 +11,7 @@ void D_USERINFO::Jsonize(JsonIO & json)
 	("DATEOFBIRTH",data.DATEOFBIRTH)
 	("STATUS",data.STATUS)
 	("ISADMIN",data.ISADMIN)
+	("SESSION",data.SESSION)
 	;
 }
 
@@ -80,9 +81,20 @@ D_USERINFO D_USERINFO::Edit(Http& http){
 		pObj.ID =atoi((String)http["ID"]);    // most important
 		pObj.EMAIL =((String)http["EMAIL"]);
 		pObj.PASSWORD =(String)http["PASSWORD"];	
+		
 		if(!(pObj.PASSWORD.IsEmpty() || pObj.PASSWORD.IsVoid()) )
-			pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
-		pObj.PASSWORD =AsString(GetHashValue(pObj.PASSWORD));
+		{
+			String confirmpass= (String)http["CONFIRMPASSWORD"];
+			if(!(confirmpass.IsEmpty() || confirmpass.IsVoid()) )
+			{
+				if(pObj.PASSWORD == confirmpass)
+				{
+					pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
+				}
+			}
+		}
+		
+		
 		//pObj.APIKEY= GetHashValue(pObj.EMAIL);    // gen the api key
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];
@@ -155,6 +167,8 @@ Vector<D_USERINFO> D_USERINFO::Retrieve(Http& http){
 		pObj.ID =atoi((String)http["ID"]);
 		pObj.EMAIL =(String)http["EMAIL"];
 		pObj.PASSWORD =((String)http["PASSWORD"]);
+		if(!(pObj.PASSWORD.IsEmpty() || pObj.PASSWORD.IsVoid()) )
+			pObj.PASSWORD = AsString(GetHashValue(pObj.PASSWORD));
 		pObj.APIKEY=atoi((String)http["APIKEY"]);
 		pObj.FULLNAME =(String)http["FULLNAME"];
 		pObj.PHONE =(String)http["PHONE"];

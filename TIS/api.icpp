@@ -365,7 +365,8 @@ SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create/*" )
 {
 	PrintParams(http);
 
-	tCreate<D_BACKUPRESTORETASK>(http);
+    tCreate<D_BACKUPRESTORETASK>(http);
+	
 }
 
 /*
@@ -446,11 +447,7 @@ SKYLARK ( transformationtaskget, "api/transformationtask/get/*" )
 /*
 	Upload file
 */
-SKYLARK ( upload, "api/upload" )
-{
-	PrintParams(http);
-//	tGet<D_TRANSFORMATIONTASK>(http);
-}
+
 
 /*
 	Download file
@@ -473,8 +470,8 @@ SKYLARK ( share, "api/share/**" )
 		String filename = http[1]; // filename
 		image= image.GetByFileName(filename);
 		
-		bool isValidImage = image.data.ID > 0;
-		bool isValidUser = user.data.ID > 0;
+		bool isValidImage = image.data.ID > 0 && image.data.STATUS==1;
+		bool isValidUser = user.data.ID > 0 && user.data.ID == image.data.USERID;
 		
 		if(isValidUser && isValidImage)
 		{
@@ -485,7 +482,14 @@ SKYLARK ( share, "api/share/**" )
 			 
 			//----------------------------------------
 			isError=false;
-			http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
+			String filepath = GetFileOnPath(image.data.REALFILEPATH, SkylarkApp::Config().path, true);
+		//	http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
+			http.Content(image.data.FILETYPE, LoadFile(filepath));
+		}
+		else
+		{
+			String filepath = GetFileOnPath("no.png", SkylarkApp::Config().path, true);
+			http.Content(image.data.FILETYPE, LoadFile(filepath));
 		}
 	}
 	catch(...){
@@ -496,18 +500,16 @@ SKYLARK ( share, "api/share/**" )
 	// if has error send default file
 	if(isError==true)
 	{
-		String filepath = GetFileOnPath("default.png", SkylarkApp::Config().path, false);
+			String filepath = GetFileOnPath("no.png", SkylarkApp::Config().path, true);
 		if(!filepath.GetCount()) {
 			http.Response(404, "Not found");
 			return;
 		}
-		http.Content("image/png", LoadFile(filepath));
+		
+			http.Content("image/png", LoadFile(filepath));
+	
 	}
-	else
-	{
-		http.Response(404, "Not found");
-		return;
-	}
+
 }
 
 /*
