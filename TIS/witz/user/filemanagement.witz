@@ -1,0 +1,191 @@
+<html>
+	<head>
+	
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="ie=edge">
+	    <title>User Management - TIS</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="shortcut icon" type="image/png" href="static/assets/images/icon/favicon.ico">
+
+	    <link rel="stylesheet" href="static/assets/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="static/assets/css/font-awesome.min.css">
+	    <link rel="stylesheet" href="static/assets/css/themify-icons.css">
+
+		<link rel="stylesheet" href="static/assets/css/metisMenu.css">
+		<link rel="stylesheet" href="static/assets/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="static/assets/css/slicknav.min.css">
+		<!-- amchart css -->
+		<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+
+	 	<!-- others css -->
+	    <link rel="stylesheet" href="static/assets/css/typography.css">
+	    <link rel="stylesheet" href="static/assets/css/default-css.css">
+	    <link rel="stylesheet" href="static/assets/css/styles.css">
+	    <link rel="stylesheet" href="static/assets/css/responsive.css">
+	    <!-- modernizr css -->
+	    <script src="static/assets/js/vendor/modernizr-2.8.3.min.js"></script>
+
+		<!-- <inner-tag/> is specified on external file -->
+		<script src="static/assets/js/tis/tis.js"></script>
+		<script src="static/assets/js/tis/tisTags.js" type="riot/tag"></script>
+		
+		
+		<!-- include riot.js and the compiler -->
+		<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+
+	<style>
+ 		loginform h4.titleLogin{
+ 			background: url(static/assets/images/icon/logo.png) no-repeat;
+		    background-position: left;
+		    background-size: 64px;
+ 		}
+ 	</style>
+
+
+
+	</head>
+<body class="body-bg">
+
+	<!--
+		these fields are used to build an unique identifier of this upload job
+				in order to allow progress handler to identify correctly its related upload job
+				(we need it because we can have more upload jobs calls on server
+	-->
+	
+	<input type='hidden' id='LOGAPIKEY' value='$.LOGAPIKEY'>
+	<input type='hidden' id='SESSION' value='$@__skylark_session_cookie__'>
+	
+
+  <!-- preloader area start -->
+    <preloader></preloader>
+    <!-- preloader area end -->
+    <!-- main wrapper start -->
+    <div class="horizontal-main-wrapper">
+        <!-- main header area start -->
+        <div class="mainheader-area">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <div class="logo">
+                            <a href="index.html"><img src="static/assets/images/icon/logo.png" alt="logo"></a>
+                        </div>
+                    </div>
+                    <!-- profile info & task notification -->
+                    <div class="col-md-9 clearfix text-right">
+                       
+                        <div class="clearfix d-md-inline-block d-block">
+                            <div class="user-profile m-0">
+                                <img class="avatar user-thumb" src="static/assets/images/author/avatar.png" alt="avatar">
+                                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Admin<i class="fa fa-angle-down"></i></h4>
+                                <div class="dropdown-menu">
+                                     <a class="dropdown-item" href="usersetting">Settings</a>
+                                    <a class="dropdown-item" href="login">Log Out</a>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- main header area end -->
+        <!-- header area start -->
+        <div class="header-area header-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-9  d-none d-lg-block">
+                        <div class="horizontal-menu">
+                            <nav>
+                                 <ul id="nav_menu">
+                                    <li class="active">
+                                        <a href="user"><i class="ti-dashboard"></i><span>Dashboard</span></a>
+                                       
+                                    </li>
+                                    <li >
+                                        <a href="userfilemanagement"><i class="ti-layout-sidebar-left"></i><span>File management</span></a>
+                                        
+                                    </li>
+                                    <li>
+                                        <a href="usersetting"><i class="ti-settings"></i><span>Setting</span></a>
+                                        
+                                    </li>
+                                   </ul>
+                            </nav>
+                        </div>
+                    </div>
+                
+                    <!-- mobile_menu -->
+                    <div class="col-12 d-block d-lg-none">
+                        <div id="mobile_menu"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header area end -->
+        <!--  main content area start -->
+          <div class="main-content-inner" style="min-height: 897px;">
+            <div class="container">
+                      
+                <div class="row">
+
+                     <!-- statistic start -->
+                    <div class="col-3 mt-5">
+                        <!-- Advertising area start -->
+						<UsersPieChart></UsersPieChart>
+                        <!-- Advertising area end -->
+                    </div>
+                     <!-- statistic end -->
+
+               		<!-- Progress Table start -->
+                    <div class="col-9 mt-5">
+                       <usermanagement></usermanagement>
+                    </div>
+                    <!-- Progress Table end --> 
+                          
+                </div>
+            </div>
+        </div>
+        <!-- main content area end -->
+        <!-- footer area start-->
+        <footer>
+            <div class="footer-area">
+                <p> TIS - <a href="http://simaget.com:8001/tis/html/index.html">Simaget</a>.</p>
+            </div>
+        </footer>
+        <!-- footer area end-->
+    </div>
+    <!-- main wrapper start -->
+
+
+
+
+ <!-- bootstrap 4 js -->
+    <script src="static/assets/js/popper.min.js"></script>
+    <script src="static/assets/js/bootstrap.min.js"></script>
+    <script src="static/assets/js/owl.carousel.min.js"></script>
+    <script src="static/assets/js/metisMenu.min.js"></script>
+    <script src="static/assets/js/jquery.slimscroll.min.js"></script>
+    <script src="static/assets/js/jquery.slicknav.min.js"></script>
+
+    <!-- start chart js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <!-- start highcharts js -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <!-- start amcharts -->
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/ammap.js"></script>
+    <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+      
+
+
+	
+   <script>riot.mount('*', {SESSION:'$@__skylark_session_cookie__', LOGAPIKEY:'$.LOGAPIKEY'  })</script>
+</body>
+</html>

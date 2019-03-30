@@ -1,0 +1,58 @@
+<html>
+	<head>
+	
+	    <meta charset="utf-8">
+	    <meta http-equiv="x-ua-compatible" content="ie=edge">
+	    <title>Login - TIS</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
+
+	    <link rel="stylesheet" href="static/assets/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="static/assets/css/font-awesome.min.css">
+	    <link rel="stylesheet" href="static/assets/css/themify-icons.css">
+
+	 	<!-- others css -->
+	    <link rel="stylesheet" href="static/assets/css/typography.css">
+	    <link rel="stylesheet" href="static/assets/css/default-css.css">
+	    <link rel="stylesheet" href="static/assets/css/styles.css">
+	    <link rel="stylesheet" href="static/assets/css/responsive.css">
+	    <!-- modernizr css -->
+	    <script src="static/assets/js/vendor/modernizr-2.8.3.min.js"></script>
+
+		<!-- <inner-tag/> is specified on external file -->
+		<script src="static/assets/js/tis/tis.js"></script>
+		<script src="static/assets/js/tis/tisTags.js" type="riot/tag"></script>
+		
+		
+		<!-- include riot.js and the compiler -->
+		<script src="https://cdn.jsdelivr.net/npm/riot@3.13/riot+compiler.min.js"></script>
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.js"></script>
+
+	<style>
+ 		loginform h4.titleLogin{
+ 			background: url(static/assets/images/icon/logo.png) no-repeat;
+		    background-position: left;
+		    background-size: 64px;
+ 		}
+ 	</style>
+
+
+
+	</head>
+<body>
+
+	<!--
+		these fields are used to build an unique identifier of this upload job
+				in order to allow progress handler to identify correctly its related upload job
+				(we need it because we can have more upload jobs calls on server
+	-->
+	<input type='hidden' id='LOGAPIKEY' value='$.LOGAPIKEY'>
+	<input type='hidden' id='SESSION' value='$@__skylark_session_cookie__'>
+	
+
+  <signupform></signupform>
+	
+  <script>riot.mount('*', {SESSION:'$@__skylark_session_cookie__' })</script>
+</body>
+</html>
