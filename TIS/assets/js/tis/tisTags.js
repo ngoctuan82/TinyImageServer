@@ -208,7 +208,7 @@
                             <button id="btnSubmit" type="button" onclick = {OnClick}>Submit <i class="ti-arrow-right"></i></button>
                         </div>
                         <div class="form-footer text-center mt-5">
-                            <p class="text-muted">Don't have an account? <a href="register.html">Sign up</a></p>
+                            <p class="text-muted">Don't have an account? <a href="signup">Sign up</a></p>
                         </div>
                     </div>
                <form>
@@ -287,6 +287,152 @@
     	this.mixin(OptsMixin);
 	</script>
 </loginform>
+
+
+
+<signupform>
+
+ <!-- login area start -->
+    <div class="login-area">
+        <div class="container">
+            <div class="login-box ptb--100">
+                <form >
+                    <div class="login-form-head">
+                    	
+                        <h4 class="titleLogin">Sign In</h4>
+                        
+                    </div>
+                    <div class="login-form-body">
+                        
+                        
+                        <div class="form-group">
+							<i class="ti-user"></i> 
+                            <input class="form-control mt-2"  type="text" ref="FULLNAME" placeholder="Full Name" value={item.FULLNAME}  onchange={OnChange} >				
+                        </div>
+                        <div class="form-group">
+                            <i class="ti-email"></i>
+							<input class="form-control mt-2"  type="email" ref="EMAIL" placeholder="Email" value={item.EMAIL} onchange={OnChange}>
+                        </div>
+                        <div class="form-group">
+                            <i class="ti-calendar"></i>
+							<input class="form-control mt-2" ref="DATEOFBIRTH" type="date" value="2019-03-05" value={item.EMAIL} onchange={OnChange} >
+                        </div>
+                        <div class="form-group">
+                            	<i class="ti-mobile"></i>
+								<input class="form-control mt-2"  type="phone" ref="PHONE" placeholder="Phone"  value={item.PHONE}  onchange={OnChange}>
+                        </div>
+                        <div class="form-group">
+                           <i class="ti-shield"></i>
+							<input class="form-control mt-2"  type="password" ref="PASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
+                        </div>
+                        <div class="form-group">
+                           <i class="ti-shield"></i>
+							<input class="form-control mt-2" type="password" ref="CONFIRMPASSWORD" placeholder="Password"  value={item.PASSWORD}  onchange={OnChange}>
+                        </div>
+                        
+                      
+                        
+                        <div class="submit-btn-area">
+                             <div class="login-other row mt-4">
+                                <div class="col-6">
+                                	<button ref="btnClose" type="button" onclick = {OnClickClose}>Cancel<i class="ti-close"></i></button>
+                                </div>
+                                <div class="col-6">	
+                                    <button ref="btnSubmit" type="button" onclick = {OnClick}>Sign Up<i class="ti-arrow-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+               <form>
+            </div>
+        </div>
+    </div>
+    <!-- login area end -->
+
+
+	<script>
+		var self = this;
+		//this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
+		this.API={
+			CREATE:`api/user/create`
+		};
+		//--------
+        
+        this.item={
+			EMAIL:"",
+			FULLNAME:"",
+			DATEOFBIRTH:"",
+			PHONE:"",
+			PASSWORD:"",
+            CONFIRMPASSWORD:"",
+		};      
+      
+	  this.on('mount', function() {
+	    // right after the tag is mounted on the page
+	    console.log("mount");
+	   
+	  })
+	
+	  this.on('update', function() {
+	    // allows recalculation of context data before the update
+	    console.log("update");
+
+	 
+	  })
+	
+	  this.on('updated', function() {
+	    // right after the tag template is updated after an update call
+	    console.log("updated");
+	  });
+
+      OnChange(e)
+		{
+			var ctrl= e.target;
+			this.item[ctrl.attributes.ref.value] = ctrl.value;
+		}
+      
+      
+	  OnClickClose()
+	  {
+	  	window.location.href="login";
+	  }
+	  
+	  OnClick()
+	  {
+	      console.log("click");
+
+			if(this.refs.PASSWORD.value !== this.refs.CONFIRMPASSWORD.value)
+			{
+				alert("Password does not match");
+				return;
+			}
+//-----------------------------
+	     var url = `${this.API.CREATE}?${QueryStr(this.item)}`;
+      
+    	 fetch(url, {method:'get'})
+    	.then(response => response.json())
+		.then(jsonData => { 
+			console.log(jsonData); 
+			if(jsonData.IsError==false)
+			{
+				console.log("DONE Create");
+				window.location.replace("login");
+			}
+			else
+				alert(jsonData.Status);
+		})
+		.catch(err => {
+				console.error(err);
+		});
+	      
+	  }
+	  
+	    // the mixin object bind
+    	this.mixin(OptsMixin);
+	</script>
+</signupform>
+
 
 <preloader>
 	<!-- preloader area start -->
@@ -1810,7 +1956,6 @@
 			DATEOFBIRTH:"",
 			STATUS:"",
 			PHONE:"",
-			APIKEY:"",
 			//PASSWORD:"",
 			ISADMIN:0
 		};

@@ -1,6 +1,11 @@
 #include "TIS.h"
 
 	
+	SKYLARK(Signup, "signup")
+	{
+		http.ClearSession();
+		http.RenderResult("witz/signup");
+	}
 	SKYLARK(Login, "login")
 	{
 		//if(http["@__skylark_session_cookie__"].IsNull())		

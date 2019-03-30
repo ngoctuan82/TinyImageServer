@@ -1,7 +1,4 @@
-var OptsMixin = {
-  APIKEY:null,
-  API:null, //`/api/user/get/${this.APIKEY}`,
-	
+var OptsMixin = {	
   // the `opts` argument is the option object received by the tag as well
   init: function(opts) {
       this.SESSION = this.opts.SESSION;
