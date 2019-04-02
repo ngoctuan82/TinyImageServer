@@ -23,7 +23,11 @@ void InitTISModel()
 */
 void OpenSQLite(Sqlite3Session& sqlite3)
 {
-	if(!sqlite3.Open(ConfigFile(DBFILE))) {
+	//if(!sqlite3.Open(ConfigFile(DBFILE))) 
+	
+	String dbFile = AppendFileName(GetCurrentDirectory(), DBFILE);
+	if(!sqlite3.Open(dbFile)) 
+	{
 		LOG("Can't create or open TIS database file\n");
 		Exit(1);
 	}

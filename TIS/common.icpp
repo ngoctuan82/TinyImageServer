@@ -80,20 +80,10 @@
 	}
 	
 	
-	SKYLARK(Params, "params/**")
-	{
-		http << "<!DOCTYPE html><html><body>Parameters: ";
-		for(int i = 0; i < http.GetParamCount(); i++)
-			http << http[i] << " ";
-		http << "</html></body>";
-	}
 	
 	SKYLARK(HomePage, "")
 	{
-		if(http["@__skylark_session_cookie__"].IsNull())
-		http.NewSessionId();
-		//http.Redirect(Params);
-		http.RenderResult("witz/index");
+		http.Redirect(Login);
 	}
 	
 	SKYLARK(CatchAll, "**")

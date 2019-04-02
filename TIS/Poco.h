@@ -12,6 +12,7 @@ using namespace Upp;
 template <typename T>
 struct DataPacket
 {
+	String Message;
 	String Status;
 	bool IsError;
 	Vector<T> Data;
@@ -22,12 +23,14 @@ struct DataPacket
 		("Status",Status)
 		("IsError",IsError)
 		("Data", Data)
+		("Message", Message)
 		;
 	}
-	void SetError(String error)
+	void SetError(String error, String message = "")
 	{
 		this->IsError = true;
 		this->Status = error;
+		this->Message = message;
 	}
 };
 

@@ -26,7 +26,7 @@ String TraceParams(Http& http)
 	
 	String json = StoreAsJson(v, true);
 	//---------------------------------
-	LOG(json);
+	Cout()<<(json);
 	//http<<json;
 	return json;
 }
@@ -114,7 +114,7 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 	TraceParams(http);
 	
 	
-	
+
 
 
 	Value const &contents = http["filestoupload[]"];
@@ -131,7 +131,9 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 	user = user.GetByApiKey(apikey);
 	
 	if(user.data.ID < 0) {
-		Cout()<<"This APIKEY not allow to upload "<< apikey;
+		String message="This APIKEY not allow to upload ";
+		
+		Cout()<<message<< apikey;
 		return; // dont allow anonym upload
 	}
 	else
@@ -162,8 +164,12 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 		
 		String savepath = AppendFileName(GetCurrentDirectory(), userpath);
 		savepath = AppendFileName(savepath, FileName);
+		
+		Cout()<<"\n Save File "<< savepath << "\n";
+		Cout()<<"\n Normalize path "<< NormalizePath("./") << "\n";
 		if(RealizePath(savepath))
 		{	
+		
 			if(SaveFile(savepath, contents[i]))
 			{
 				// check size 
@@ -194,6 +200,10 @@ SKYLARK_PROGRESS(PostUpload, "upload:POST", &ProgressHandler)
 				else
 				{
 					LOG(" File bigger than limitation ");
+					LOG(size);
+					LOG(us.data.MAXFILESIZE );
+					
+					
 					FileDelete(savepath);
 				}
 				

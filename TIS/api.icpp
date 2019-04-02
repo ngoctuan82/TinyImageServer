@@ -13,8 +13,7 @@ using namespace Upp;
 */
 String PrintParams(Http& http)
 {
-	LOG(GetSysTime());
-	LOG(GetSysTime().Get());
+
 	
 	int count = http.GetParamCount();
 	Vector<String> v;
@@ -25,7 +24,7 @@ String PrintParams(Http& http)
 	
 	String json = StoreAsJson(v, true);
 	//---------------------------------
-	Cout()<< json;
+
 	//http<<json;
 	return json;
 }
@@ -190,8 +189,9 @@ SKYLARK ( userlogin, "api/user/login" )
 	}
 	else
 	{
-		packet.SetError("Can not login. Try again!!");
+		packet.SetError("Can not login. Try again!!", StoreAsJson(user));
 		packet.Status = "login";
+	
 	}
 	http << StoreAsJson(packet, true);
 }
@@ -482,8 +482,9 @@ SKYLARK ( share, "api/share/**" )
 			 
 			//----------------------------------------
 			isError=false;
+			String path=SkylarkApp::Config().path;
 			String filepath = GetFileOnPath(image.data.REALFILEPATH, SkylarkApp::Config().path, true);
-		//	http.Content(image.data.FILETYPE, LoadFile(image.data.REALFILEPATH));
+	
 			http.Content(image.data.FILETYPE, LoadFile(filepath));
 		}
 		else
@@ -605,4 +606,78 @@ SKYLARK ( filestotal, "api/filestotal/*" )
 	DataPacket< Jsonew > packet;
 	packet.Data = image.GetFilesTotal(http);
 	http<< StoreAsJson(packet, true);
+}
+
+
+
+SKYLARK ( Recovery, "api/recovery/*" )
+{
+		Cout()<<"\n Starting Recovery \n";
+		Cout()<<"\n Normalize path "<< NormalizePath("./") << "\n";
+		
+	// clean data base
+	String command= http[0];
+	if(command == "FLASH")
+	{
+		SQL * Delete(USERINFO).Where(ID>0);
+		SQL * Delete(USERSETTING).Where(ID>0);
+		SQL * Delete(IMAGEFILE).Where(ID>0);
+		SQL * Delete(ADMINSETTING).Where(ID>0);
+		SQL * Delete(DAILYSUMMARY).Where(ID>0);
+		SQL * Delete(TRANSFORMATIONSETTING).Where(ID>0);
+		SQL * Delete(TRANSFORMATIONTASK).Where(ID>0);
+		
+		//----------------
+		String mail ="1234";
+		int hash = CombineHash ( mail, 10 + mail.GetCount() );
+		
+		
+		D_USERINFO user;
+		hash = user.GetHashValue("1234");// default pass
+		
+		user.data.FULLNAME="TIS Admin";
+		user.data.EMAIL="admin@simaget.com";
+		user.data.PASSWORD=AsString(hash);
+		user.data.APIKEY=999;
+		user.data.PHONE="123456789";
+		user.data.DATEOFBIRTH="2019/01/01";
+		user.data.STATUS=1;
+		user.data.ISADMIN=1;
+		
+		Cout()<<StoreAsJson(user.Create(user.data), true);				
+					
+
+		D_ADMINSETTING asetting;
+		
+		asetting.data.ROOTPATH = "tis";
+		asetting.data.STATICPATH = "./TISDATA";
+		asetting.data.IMAGEPATH = "USERS";
+		asetting.data.BACKUPPATH = "BACKUP";
+		asetting.data.SERVERPORT = "8001";
+		asetting.data.HOSTNAME = "www.simaget.com";
+		
+					
+		Cout()<<StoreAsJson(asetting.Create(asetting.data), true);			
+			
+		
+		user.data.FULLNAME="TIS User";
+		user.data.EMAIL="user@simaget.com";
+		user.data.PASSWORD=AsString(hash);
+		user.data.APIKEY=user.GetHashValue(user.data.EMAIL);
+		user.data.PHONE="123456789";
+		user.data.DATEOFBIRTH="2019/01/01";
+		user.data.STATUS=1;
+		user.data.ISADMIN=0;
+		
+		Cout() <<StoreAsJson(user.Create(user.data), true);				
+	}
+	
+	if(command =="ADMIN")
+	{
+		D_USERINFO user;
+		int hash = user.GetHashValue("1234");// default pass
+		SQL * Update(USERINFO)("PASSWORD",hash).Where(ISADMIN == 1);
+	}
+	
+	http<< "<h1>TIS Recovery Done!! ";
 }

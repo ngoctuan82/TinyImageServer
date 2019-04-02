@@ -45,8 +45,10 @@ D_USERSETTING D_USERSETTING::Create(S_USERSETTING& pObj){
 				(MAXFILESIZE,pObj.MAXFILESIZE)
 				(FILEEXTENSION,pObj.FILEEXTENSION)
 				;
+		int id= SQL.GetInsertedId();
+		tObj = tObj.GetById(id);
 		//----------------------------------------
-		Cout()<<"\nCreated User:"<<tObj<<"\n";
+		Cout()<<"\nCreated D_USERSETTING:"<<tObj<<"\n";
 	}
 	else
 	{
@@ -192,6 +194,14 @@ D_USERSETTING D_USERSETTING::GetByUserId(int uid){
 		while ( SQL.Fetch ( x ) ){
 			rs = D_USERSETTING(x);
 			break;
+		}
+		
+		if(x.ID<0)
+		{
+			rs.data.USERID = uid;
+			rs.data.FILEEXTENSION = "png jpg bmp";
+			rs.data.MAXFILESIZE = 10;
+			rs = rs.Create(rs.data);
 		}
 	}
 	catch(...){
