@@ -3185,11 +3185,12 @@
       
  	  console.log(form.action); // debug
 
-	//	setTimeout(this.progress(),1000);
+	  setTimeout(this.progress(),1000);
 
       return true;
       
     }
+  
 	/*
 		call to server for progress of upload
 	*/

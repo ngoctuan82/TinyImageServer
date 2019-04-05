@@ -17,11 +17,11 @@ CONSOLE_APP_MAIN
 #endif
 
 
-	Cout()<< "Directory "<<GetCurrentDirectory();
-	Cout()<< "DB file "<< DBFILE;
-	Cout()<< "Local file "<<NormalizePath(".");
+	Cout()<< "\n Directory "<<GetCurrentDirectory();
+	Cout()<< "\n DB file "<< DBFILE;
+	Cout()<< "\n Local file "<<NormalizePath(".");
 	
-	DeleteFile(ConfigFile(DBFILE)); // for this example, always create a new DB
+//	DeleteFile(ConfigFile(DBFILE)); // for this example, always create a new DB
 	InitTISDB();
 	
 	

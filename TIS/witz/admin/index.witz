@@ -133,18 +133,17 @@
                 <div class="row">
                     <!-- seo fact area start -->
                     <div class="col-lg-8">
-                        <AdminSummary></AdminSummary>
+                    	<div class="row">
+							<AdminSummary></AdminSummary>
+                    	</div>
+                    	<div class="row">
+                    	 	 <!-- Statistics area start -->
+							 <DownloadStatistic></DownloadStatistic>
+							 <!-- Statistics area end -->
+                    	</div>
+                        
                     </div>
-                    <!-- seo fact area end -->
-                   
-                    <!-- Statistics area start -->
-                    <div class="col-lg-8 mt-5">
-                        <DownloadStatistic></DownloadStatistic>
-                         <div id="user-statistics"></div>
-
-                    </div>
-                    <!-- Statistics area end -->
-                    
+                    <!-- seo fact area end -->                      
 					<div class="col-lg-4 mt-5">
 
                     	<DiskUsagePieCharts max-height='300px'></DiskUsagePieCharts>
