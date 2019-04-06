@@ -134,12 +134,16 @@
                     <!-- seo fact area start -->
                     <div class="col-lg-8">
                     	<div class="row">
-							<AdminSummary></AdminSummary>
+							<div class="col-lg-12">	
+							 <AdminSummary></AdminSummary>
+							</div>
                     	</div>
-                    	<div class="row">
+                    	<div class="row mt-5">
+							<div class="col-lg-12">	
                     	 	 <!-- Statistics area start -->
 							 <DownloadStatistic></DownloadStatistic>
 							 <!-- Statistics area end -->
+							</div>
                     	</div>
                         
                     </div>

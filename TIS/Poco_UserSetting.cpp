@@ -35,7 +35,7 @@ D_USERSETTING D_USERSETTING::Create(S_USERSETTING& pObj){
 	
 	
 	// check any same email registered
-	D_USERSETTING tObj = GetById(pObj.ID);
+	D_USERSETTING tObj = GetByUserId(pObj.USERID);
 	
 	if(tObj.data.ID < 0)
 	{

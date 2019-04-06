@@ -35,6 +35,7 @@ file
 	TIS.cpp,
 	witz readonly separator,
 	witz\admin\setting.witz,
+	witz/admin/index.witz,
 	witz\login.witz,
 	witz\admin\userdetail.witz,
 	witz\admin\usermanagement.witz,

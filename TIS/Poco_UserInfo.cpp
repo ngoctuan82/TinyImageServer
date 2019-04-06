@@ -369,7 +369,15 @@ bool D_USERINFO::ValidateUserApiKey(Http &http, bool isAdmin){
 		int apikey = atoi(userId);
 		D_USERINFO user= GetByApiKey(apikey);
 		
-		if(user.data.ID >0) rs =true;
+		if(user.data.ID >0) 
+		{
+			
+			if(isAdmin == true && user.data.ISADMIN == false) rs =false;
+			else
+			rs =true;
+			
+				
+		}
 	}
 	catch(...)
 	{

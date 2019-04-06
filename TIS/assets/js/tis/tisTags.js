@@ -93,7 +93,7 @@
 					console.log("DONE updated");
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -202,7 +202,7 @@
 			}
 				
 			else
-				alert(jsonData.Status);
+				alert(jsonData.Message);
 		})
 		.catch(err => {
 				console.error(err);
@@ -347,7 +347,7 @@
 				window.location.replace("login");
 			}
 			else
-				alert(jsonData.Status);
+				alert(jsonData.Message);
 		})
 		.catch(err => {
 				console.error(err);
@@ -502,7 +502,7 @@
 				self.update();
 			}
 			else
-				console.error(jsonData.Status);
+				window.location.replace(jsonData.Status);
 				
 		})
 		.catch(err => {
@@ -592,7 +592,7 @@
 				self.update();
 			}
 			else
-				console.error(jsonData.Status);
+				window.location.replace(jsonData.Status);
 				
 		})
 		.catch(err => {
@@ -716,7 +716,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -859,7 +859,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -975,7 +975,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1006,7 +1006,7 @@
 					console.log("DONE updated");
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1114,7 +1114,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1235,7 +1235,7 @@
 					//self.DoBackup(jsonData.Data[0].ID);
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1288,7 +1288,7 @@
 					}
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1356,7 +1356,7 @@
 			var container = this.refs.container;
 			var ctx = this.refs.piechart;
 			
-			var labels =[ "Deleted:","Active:"];
+			var labels =[ "Active:","Deleted:"];
 			var values =this.data;
 			
 
@@ -1423,7 +1423,7 @@
 				self.update();
 			}
 			else
-				console.error(jsonData.Status);
+				window.location.replace(jsonData.Status);
 				
 		})
 		.catch(err => {
@@ -1568,13 +1568,13 @@
 					var data = jsonData.Data;
 					var totals = 0;
 					data.forEach((a)=>totals+=a.USERS);
-					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:10) );
 					// generation 
 					self.pages = [];
 					for(i=0;i<pages;i++) self.pages.push(i+1);
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.then(r=>
@@ -1606,7 +1606,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1651,7 +1651,7 @@
 					}
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -1825,7 +1825,7 @@
 				self.update();
 			}
 			else
-				console.error(jsonData.Status);
+				window.location.replace(jsonData.Status);
 				
 		})
 		.catch(err => {
@@ -1952,7 +1952,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2009,7 +2009,7 @@
 					console.log("DONE updated");
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2120,7 +2120,7 @@
 
 		this.SEARCH={
 			PAGE:0,
-			SIZE:20,
+			SIZE:10,
 			
 			ORDERBY:"",
 			DESC:0,
@@ -2157,13 +2157,13 @@
 					var data = jsonData.Data;
 					var totals = 0;
 					data.forEach((a)=> totals+=a.FILES);
-					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:10) );
 					// generation 
 					self.pages = [];
 					for(i=0;i<pages;i++) self.pages.push(i+1);
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.then(r=>
@@ -2195,7 +2195,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2241,7 +2241,7 @@
 					}
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2371,7 +2371,7 @@
 				self.update();
 			}
 			else
-				console.error(jsonData.Status);
+				window.location.replace(jsonData.Status);
 				
 		})
 		.catch(err => {
@@ -2491,7 +2491,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2525,7 +2525,7 @@
 					console.log("DONE updated");
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2631,7 +2631,7 @@
 
 		this.SEARCH={
 			PAGE:0,
-			SIZE:20,
+			SIZE:10,
 			
 			ORDERBY:"",
 			DESC:0,
@@ -2668,13 +2668,13 @@
 					var data = jsonData.Data;
 					var totals = 0;
 					data.forEach((a)=> totals+=a.FILES);
-					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:10) );
 					// generation 
 					self.pages = [];
 					for(i=0;i<pages;i++) self.pages.push(i+1);
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.then(r=>
@@ -2706,7 +2706,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2752,7 +2752,7 @@
 					}
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -2947,7 +2947,7 @@
 
 		this.SEARCH={
 			PAGE:0,
-			SIZE:20,
+			SIZE:10,
 			
 			ORDERBY:"",
 			DESC:0,
@@ -2992,13 +2992,13 @@
 					var data = jsonData.Data;
 					var totals = 0;
 					data.forEach((a)=> totals+=a.FILES);
-					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:20) );
+					var pages =Math.ceil( totals/(this.SEARCH.SIZE?this.SEARCH.SIZE:10) );
 					// generation 
 					self.pages = [];
 					for(i=0;i<pages;i++) self.pages.push(i+1);
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.then(r=>
@@ -3030,7 +3030,7 @@
 					self.update();
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {
@@ -3076,7 +3076,7 @@
 					}
 				}
 				else
-					console.error(jsonData.Status);
+					window.location.replace(jsonData.Status);
 
 			})
 			.catch(err => {

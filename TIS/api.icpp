@@ -130,6 +130,17 @@ SKYLARK ( usercreate, "api/user/create" )
 */
 SKYLARK ( userupdate, "api/user/update/*" )
 {
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tUpdate<D_USERINFO>(http);
 	/*
 	D_USERINFO user;
@@ -149,6 +160,16 @@ SKYLARK ( userupdate, "api/user/update/*" )
 SKYLARK ( userget, "api/user/get/*" )
 {
 	PrintParams(http);
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
 	
 	tGet<D_USERINFO>(http);
 }
@@ -176,16 +197,19 @@ SKYLARK ( userlogin, "api/user/login" )
 		http.NewSessionId();	
 		http.NewIdentity();
 		//-----------------------------------------------------------
+		String identity = AsString(http[".__identity__"]);
 		int64 session = 0;
-		session = StrInt64(AsString(http["@__skylark_session_cookie__"]));
-		//session = StrInt64(AsString(http[".__identity__"]));
+		session = user.GetHashValue(identity);
+
 		// set session for apikey
 		http.SessionSet(".LOGAPIKEY", user.data.APIKEY);
-		LOG(user.data);
+		
 		
 		// update session for this user
 		user.data.SESSION = session;
 		user.Edit(user.data);
+		
+		LOG(user.data);
 	}
 	else
 	{
@@ -201,25 +225,20 @@ SKYLARK ( userlogin, "api/user/login" )
 */
 SKYLARK ( usersettingcreate, "api/usersetting/create" )
 {
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tCreate<D_USERSETTING>(http);
-	/*
-	D_USERSETTING obj;
 	
-	obj = obj.Create(http);
-	//------------------------------------------
-	DataPacket<D_USERSETTING> packet;
 	
-	if(obj.data.ID > 0) 
-	{
-		packet.Data.Add(obj);
-	}
-	else
-	{
-		packet.SetError("Can not create UserSetting");
-	}
-	
-	http << StoreAsJson(packet);
-	*/
 }
 
 /*
@@ -228,25 +247,19 @@ SKYLARK ( usersettingcreate, "api/usersetting/create" )
 */
 SKYLARK ( usersettingupdate, "api/usersetting/update/*" )
 {
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tUpdate<D_USERSETTING>(http);
-	/*
-	D_USERSETTING obj;
-	
-	obj = obj.Edit(http);
-	//------------------------------------------
-	DataPacket<D_USERSETTING> packet;
-	
-	if(obj.data.ID > 0) 
-	{
-		packet.Data.Add(obj);
-	}
-	else
-	{
-		packet.SetError("Can not update UserSetting");
-	}
-	
-	http << StoreAsJson(packet);
-	*/
+
 }
 
 /*
@@ -255,6 +268,17 @@ SKYLARK ( usersettingupdate, "api/usersetting/update/*" )
 SKYLARK ( usersettingget, "api/usersetting/get/*" )
 {
 	PrintParams(http);
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	D_USERSETTING d;
 	Vector<D_USERSETTING> v=d.Retrieve(http);
 	if(v.GetCount()==0)
@@ -281,6 +305,17 @@ SKYLARK ( usersettingget, "api/usersetting/get/*" )
 SKYLARK ( adminsettingcreate, "api/adminsetting/create" )
 {
 	PrintParams(http);
+	// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tCreate<D_ADMINSETTING>(http);
 }
 
@@ -291,6 +326,17 @@ SKYLARK ( adminsettingcreate, "api/adminsetting/create" )
 SKYLARK ( adminsettingupdate, "api/adminsetting/update/*" )
 {
 	PrintParams(http);
+		// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tUpdate<D_ADMINSETTING>(http);
 }
 
@@ -299,6 +345,17 @@ SKYLARK ( adminsettingupdate, "api/adminsetting/update/*" )
 */
 SKYLARK ( adminsettingget, "api/adminsetting/get/*" )
 {
+		// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tGet<D_ADMINSETTING>(http);
 }
 
@@ -310,6 +367,17 @@ SKYLARK ( adminsettingget, "api/adminsetting/get/*" )
 SKYLARK ( imagefilecreate, "api/imagefile/create" )
 {
 	PrintParams(http);
+		// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tCreate<D_IMAGEFILE>(http);
 }
 
@@ -319,6 +387,17 @@ SKYLARK ( imagefilecreate, "api/imagefile/create" )
 SKYLARK ( imagefileupdate, "api/imagefile/update/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tUpdate<D_IMAGEFILE>(http);
 }
 
@@ -328,6 +407,17 @@ SKYLARK ( imagefileupdate, "api/imagefile/update/*" )
 SKYLARK ( imagefileget, "api/imagefile/get/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tGet<D_IMAGEFILE>(http);
 }
 //-----------------------------------------------------------------
@@ -337,6 +427,17 @@ SKYLARK ( imagefileget, "api/imagefile/get/*" )
 SKYLARK ( dailysummarycreate, "api/dailysummary/create" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tCreate<D_DAILYSUMMARY>(http);
 }
 
@@ -346,6 +447,17 @@ SKYLARK ( dailysummarycreate, "api/dailysummary/create" )
 SKYLARK ( dailysummaryupdate, "api/dailysummary/update/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tUpdate<D_DAILYSUMMARY>(http);
 }
 
@@ -355,6 +467,17 @@ SKYLARK ( dailysummaryupdate, "api/dailysummary/update/*" )
 SKYLARK ( dailysummaryget, "api/dailysummary/get/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
 	tGet<D_DAILYSUMMARY>(http);
 }
 //---------------------------------------------------------------
@@ -364,7 +487,16 @@ SKYLARK ( dailysummaryget, "api/dailysummary/get/*" )
 SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create/*" )
 {
 	PrintParams(http);
-
+		// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
     tCreate<D_BACKUPRESTORETASK>(http);
 	
 }
@@ -375,6 +507,16 @@ SKYLARK ( backuprestoretaskcreate, "api/backuprestoretask/create/*" )
 SKYLARK ( backuprestoretaskupdate, "api/backuprestoretask/update/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
 	tUpdate<D_BACKUPRESTORETASK>(http);
 	
 }
@@ -385,6 +527,16 @@ SKYLARK ( backuprestoretaskupdate, "api/backuprestoretask/update/*" )
 SKYLARK ( backuprestoretaskget, "api/backuprestoretask/get/*" )
 {
 	PrintParams(http);
+			// validation
+	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
 	tGet<D_BACKUPRESTORETASK>(http);
 }
 
@@ -520,7 +672,18 @@ SKYLARK ( adminsummary, "api/summary/*" )
 {
 	PrintParams(http);
 	
+			// validation
 	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
+
 
 	try
 	{
@@ -559,11 +722,21 @@ SKYLARK ( adminsummary, "api/summary/*" )
 /*
 	get download statistics
 */
-SKYLARK ( admindownloadstatictis, "api/download/*" )
+SKYLARK ( downloadstatictis, "api/download/*" )
 {
 	PrintParams(http);
-	
+			// validation
 	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
+	
 	D_DAILYSUMMARY summary;
 	packet.Data = summary.GetMonthlyDownload(http);
 	http << StoreAsJson(packet);
@@ -576,8 +749,17 @@ SKYLARK ( admindownloadstatictis, "api/download/*" )
 SKYLARK ( admindiskusage, "api/diskusage/*" )
 {
 	PrintParams(http);
-	
+			// validation
 	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+
 	packet.Data = GetDrivesInfo();
 	http<< StoreAsJson(packet, true);
 }
@@ -588,9 +770,18 @@ SKYLARK ( admindiskusage, "api/diskusage/*" )
 SKYLARK ( adminuserstotal, "api/userstotal/*" )
 {
 	PrintParams(http);
-	
-	D_USERINFO user;
+			// validation
 	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, true)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+
+	
 	packet.Data = user.GetUsersTotal();
 	http<< StoreAsJson(packet, true);
 }
@@ -602,13 +793,39 @@ SKYLARK ( filestotal, "api/filestotal/*" )
 {
 	PrintParams(http);
 	
-	D_IMAGEFILE image;
+			// validation
 	DataPacket< Jsonew > packet;
+	D_USERINFO user;
+	if(user.ValidateUserApiKey(http, false)==false)
+	{
+		packet.SetError("login","Please login");
+		http<< StoreAsJson(packet, true);
+		return;
+	}
+	//--------------------------------------------------
+	
+	
+	
+	D_IMAGEFILE image;
+
 	packet.Data = image.GetFilesTotal(http);
 	http<< StoreAsJson(packet, true);
 }
 
-
+SKYLARK ( Info, "info" )
+{
+	Jsonew json;
+		String dbFile =NormalizePath( AppendFileName(GetCurrentDirectory(), DBFILE));
+	json
+		("DB",dbFile)
+		("Config path",ConfigFile())
+		("Current",GetCurrentDirectory())
+		("Local file",NormalizePath("."))
+		("Skylark path", SkylarkApp::Config().path)
+		;
+	
+	http<<StoreAsJson(json, true);
+}
 
 SKYLARK ( Recovery, "api/recovery/*" )
 {
