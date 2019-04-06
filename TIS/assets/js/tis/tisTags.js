@@ -226,7 +226,7 @@
                 <form >
                     <div class="login-form-head">
                     	
-                        <h4 class="titleLogin">Sign In</h4>
+                        <h4 class="titleLogin">Signup</h4>
                         
                     </div>
                     <div class="login-form-body">
