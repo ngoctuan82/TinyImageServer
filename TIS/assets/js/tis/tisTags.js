@@ -21,7 +21,7 @@
      <script>
    
    		var self = this;
-		this.APIKEY = this.opts.LOGAPIKEY;  // should get from session
+		this.APIKEY = this.opts.LOGAPIKEY || this.parent.APIKEY;  // should get from session
 		this.API = {
 			SEARCH:`api/imagefile/get/${this.APIKEY}`,
 			UPDATE:`api/imagefile/update/${this.APIKEY}`,
@@ -2586,7 +2586,7 @@
 	<!-- Grid start -->
 	<div class="row">
 		<div each={item in items}    class="col-lg-3 col-md-5 mt-5">
-			<imageblock src={item}></imageblock>
+			<imageblock src={item} ></imageblock>
 		</div>
 	</div>
 	<!-- Grid start -->
