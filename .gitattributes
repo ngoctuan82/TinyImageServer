@@ -1,2 +1,2 @@
 * linguist-vendored
-*.cpp linguist-vendored=false
+*.cpp *.js *.html *.css linguist-vendored=false
