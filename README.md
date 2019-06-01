@@ -15,3 +15,6 @@ TIS - Tiny Image Server
 3. Copy file executable TIS to folder TIS_APP
 
 4. Run  
+
+# Detail:
+Multiplatform image server which has integrated web interface for both user and admin. 
