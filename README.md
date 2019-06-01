@@ -2,7 +2,7 @@
 Project for Applied Research 
 TIS - Tiny Image Server
 1. Prerequisites
-  a. Downlad and Install U++ TheIDE from site https://www.ultimatepp.org/www$uppweb$download$en-us.html
+  a. Download and Install U++ TheIDE from site https://www.ultimatepp.org/www$uppweb$download$en-us.html
   b. Prepare source code and prebuilt data in folder TIS
 2. Compile TIS
     Open bash shell
