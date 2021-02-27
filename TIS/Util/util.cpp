@@ -44,6 +44,7 @@ Vector<Jsonew> GetDrivesSummaryInfo(){
 				
 	return rs;
 }
+
 /*
 	Get all drives info 
 */
@@ -60,9 +61,7 @@ Vector<Jsonew> GetDrivesInfo(){
 		if (mounted) {
 			uint64 freeBytesUser, totalBytesUser, totalFreeBytes;
 			if(GetDriveSpace(drives[i], freeBytesUser, totalBytesUser, totalFreeBytes))
-			{
-			
-				
+			{					
 				Jsonew vm;
 				vm
 					("Drive", drives[i] )

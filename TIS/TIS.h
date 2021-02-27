@@ -5,15 +5,6 @@
 
 using namespace Upp;
 
-/*
-#define  MODEL         <TinyImageServer/TIS/tisdb.sch>
-#define  SCHEMADIALECT <plugin/sqlite3/Sqlite3Schema.h>
-#include <Sql/sch_header.h>
-#include <Sql/sch_schema.h>
-#include <Sql/sch_source.h>
-// include db functionalities
-*/
-
 struct TISApp : SkylarkApp {
 	
 	virtual void WorkThread();
@@ -26,7 +17,7 @@ struct TISApp : SkylarkApp {
 //		path << ";"<<"/html";
 //		path << ";"<<".";
 //		path << ";C:/upp/MyApps/TinyImageServer/TIS";
-//		path << ";/home/tony/MyApps/TinyImageServer/TIS";//		; 											// deployment path for current folder
+//		path << ";/home/tony/MyApps/TinyImageServer/TIS";// deployment path for current folder
 		
 		threads= 1; // because sqlite3 does not work correct with multiple threads
 		
@@ -34,11 +25,7 @@ struct TISApp : SkylarkApp {
 		prefork = 0;
 		use_caching = false;
 	#endif
-	}
-	
+	}	
 };
-
-
-
 
 #endif
